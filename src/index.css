@@ -1,0 +1,25 @@
+.tinygrailMagic {
+  font-family: "PingFang SC", "HarmonyOS_Regular", "Helvetica Neue", "Microsoft YaHei", Helvetica, Arial, "Hiragino Sans GB", "Heiti SC", "WenQuanYi Micro Hei", sans-serif !important;
+
+  * {
+    --tw-outline-style: none;
+    outline-style: none;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  /* Webkit滚动条样式 */
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--border);
+    border-radius: var(--radius-md);
+  }
+}
