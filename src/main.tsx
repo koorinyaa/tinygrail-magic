@@ -1,4 +1,3 @@
-import { AppStateProvider } from '@/components/app-state-provider';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
@@ -101,9 +100,7 @@ const createReactDom = (): void => {
     })(),
   ).render(
     <React.StrictMode>
-      <AppStateProvider>
-        <App />
-      </AppStateProvider>
+      <App />
     </React.StrictMode>,
   );
 }

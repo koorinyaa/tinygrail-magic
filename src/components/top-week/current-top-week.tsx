@@ -1,11 +1,11 @@
 import { getTopWeek, TopWeekResponse } from "@/api/character";
-import { useAppState } from "@/components/app-state-provider";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { getCoverUrl } from "@/lib/utils";
+import { useStore } from "@/store";
 import { AlertCircle, RotateCw } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { PhotoSlider } from 'react-photo-view';
@@ -214,7 +214,7 @@ interface ContentSectionProps {
  * @param {(src: string) => void} props.setPhotoSliderSrc - 设置照片查看器图片地址
  */
 const ContentSection = ({ loading, topWeekData, scoreMultiplier, setIsPhotoSliderOpen, setPhotoSliderSrc }: ContentSectionProps) => {
-  const { dispatch } = useAppState();
+  const { setCharacterDrawer } = useStore();
 
   return (
     <div
@@ -242,10 +242,7 @@ const ContentSection = ({ loading, topWeekData, scoreMultiplier, setIsPhotoSlide
             }
           }}
           handleCharacterDrawer={(characterId) => {
-            dispatch({
-              type: "SET_CHARACTER_DRAWER",
-              payload: { open: true, characterId: characterId }
-            })
+            setCharacterDrawer({ open: true, characterId: characterId });
           }}
           handleAuction={() => {
             toast.error("暂未开放");

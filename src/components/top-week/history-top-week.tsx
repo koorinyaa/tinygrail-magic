@@ -1,5 +1,4 @@
 import { getTopWeekHistory, HistoryTopWeekItem } from '@/api/character';
-import { useAppState } from "@/components/app-state-provider";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -13,9 +12,10 @@ import {
 import { PaginationWrapper } from "@/components/ui/pagination-wrapper";
 import { Skeleton } from '@/components/ui/skeleton';
 import { formatCurrency, formatInteger, getAvatarUrl } from "@/lib/utils";
+import { useStore } from '@/store';
 import { AlertCircle, UsersRound } from "lucide-react";
 import { useEffect, useState } from 'react';
-import BadgeLevel from "../ui/badge-level";
+import BadgeLevel from "@/components/ui/badge-level";
 
 /**
  * 历史萌王
@@ -145,7 +145,7 @@ interface TopWeekHistoryItemProps {
  * @param {HistoryTopWeekItem} props.data - 历史萌王项数据
  */
 const TopWeekHistoryItem = ({ data }: TopWeekHistoryItemProps) => {
-  const { dispatch } = useAppState();
+  const { setCharacterDrawer } = useStore();
   const {
     CharacterId,
     CharacterLevel,
@@ -157,10 +157,9 @@ const TopWeekHistoryItem = ({ data }: TopWeekHistoryItemProps) => {
     Avatar: characterAvatar
   } = data;
 
-  const handleItemClick = () => dispatch({
-    type: "SET_CHARACTER_DRAWER",
-    payload: { open: true, characterId: CharacterId }
-  });
+  const handleItemClick = () => {
+    setCharacterDrawer({ open: true, characterId: CharacterId });
+  }
   return (
     <div
       className="py-2.5 first:pt-0 last:pb-0 cursor-pointer"

@@ -8,11 +8,17 @@ import {
 } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import './App.css';
-import { useAppState } from "./components/app-state-provider";
 import { CharacterSearchDialog } from "./components/character-search-dialog";
+import { useStore } from "@/store";
+import { useEffect } from "react";
 
 export default function App() {
-  const { state } = useAppState();
+  const { theme, setTheme } = useStore()
+
+  useEffect(() => {
+    // 初始化主题
+    setTheme(document.documentElement.getAttribute('data-theme') === "dark" ? "dark" : "light")
+  }, [])
 
   return (
     <div
@@ -25,7 +31,7 @@ export default function App() {
           <MainContent />
         </SidebarInset>
       </SidebarProvider>
-      <Toaster richColors theme={state.theme} />
+      <Toaster richColors theme={theme} />
       <CharacterDrawer />
       <CharacterSearchDialog />
     </div>

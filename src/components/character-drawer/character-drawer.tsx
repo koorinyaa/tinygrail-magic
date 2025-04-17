@@ -1,19 +1,19 @@
-import { useAppState } from "@/components/app-state-provider";
 import { Drawer, DrawerContent } from "@/components/ui/drawer";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import CharacterDrawerContent from "./character-drawer-content";
+import { useStore } from "@/store";
 
 /**
  * 角色抽屉
  */
 export function CharacterDrawer() {
-  const { state, dispatch } = useAppState();
+  const { characterDrawer, setCharacterDrawer } = useStore();
   const isMobile = useIsMobile(448);
-  const { open, characterId } = state.characterDrawer;
+  const { open, characterId } = characterDrawer;
 
   const onOpenChange = (open: boolean) => {
-    dispatch({ type: "SET_CHARACTER_DRAWER", payload: { open, characterId: null } });
+    setCharacterDrawer({ open, characterId: null });
   };
 
   return (

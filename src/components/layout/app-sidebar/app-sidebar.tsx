@@ -8,8 +8,6 @@ import {
   Sparkles,
   Trophy
 } from "lucide-react"
-
-import { useAppState } from "@/components/app-state-provider"
 import { Tinygrail } from "@/components/icons"
 import {
   Sidebar,
@@ -21,6 +19,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { formatCurrency, getAvatarUrl } from "@/lib/utils"
+import { useStore } from "@/store"
 import {
   NavProjects,
   NavSecondary,
@@ -28,8 +27,7 @@ import {
 } from "./sidebar-navigation"
 
 export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { state } = useAppState();
-  const { userAssets } = state;
+  const { userAssets } = useStore();
 
   const data = {
     navPages: {
@@ -91,10 +89,10 @@ export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sid
       },
     ],
     user: {
-      name: userAssets.name,
-      nickname: userAssets.nickname,
-      balance: formatCurrency(userAssets.balance),
-      avatar: getAvatarUrl(userAssets.avatar),
+      name: userAssets?.name || "",
+      nickname: userAssets?.nickname || "",
+      balance: formatCurrency(userAssets?.balance || 0),
+      avatar: getAvatarUrl(userAssets?.avatar || ""),
     },
   }
 

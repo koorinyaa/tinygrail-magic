@@ -1,4 +1,3 @@
-import { useAppState } from "@/components/app-state-provider";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -6,9 +5,10 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator
 } from "@/components/ui/breadcrumb";
+import { useStore } from "@/store";
 
 export function HeaderBreadcrumb({ className = '', ...props }: { className?: string }) {
-  const { state } = useAppState()
+  const { currentPage } = useStore();
 
   return (
     <Breadcrumb
@@ -17,13 +17,13 @@ export function HeaderBreadcrumb({ className = '', ...props }: { className?: str
     >
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbPage>{state.currentPage.main.title}</BreadcrumbPage>
+          <BreadcrumbPage>{currentPage.main.title}</BreadcrumbPage>
         </BreadcrumbItem>
-        {state.currentPage.sub &&
+        {currentPage.sub &&
           <BreadcrumbSeparator />}
-        {state.currentPage.sub &&
+        {currentPage.sub &&
           <BreadcrumbItem>
-            <BreadcrumbPage>{state.currentPage.sub.title}</BreadcrumbPage>
+            <BreadcrumbPage>{currentPage.sub.title}</BreadcrumbPage>
           </BreadcrumbItem>}
       </BreadcrumbList>
     </Breadcrumb>

@@ -8,8 +8,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useAppState } from "@/components/app-state-provider";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useStore } from "@/store";
 
 type NavProjectsProps = {
   projects: {
@@ -27,16 +27,13 @@ type item = {
 export function NavProjects({ projects }: NavProjectsProps) {
   const isMobile = useIsMobile();
   const { toggleSidebar } = useSidebar();
-  const { state, dispatch } = useAppState();
+  const { currentPage, setCurrentPage } = useStore()
 
   const handleClick = (item: item) => {
-    dispatch({
-      type: "SET_CURRENTPAGE",
-      payload: {
-        main: {
-          title: item.name,
-          id: item.id,
-        },
+    setCurrentPage({
+      main: {
+        title: item.name,
+        id: item.id,
       },
     });
 
@@ -53,7 +50,7 @@ export function NavProjects({ projects }: NavProjectsProps) {
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton
               asChild
-              isActive={item.id === state.currentPage.main.id}
+              isActive={item.id === currentPage.main.id}
               onClick={() => handleClick(item)}
             >
               <div className="cursor-pointer">

@@ -1,21 +1,20 @@
-import { useAppState } from "@/components/app-state-provider";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { useEffect, useState } from "react";
-import { Separator } from "../ui/separator";
-import { useDebounce } from "@/hooks/use-debounce";
-import { searchCharacter } from "@/api/character";
 import type { CharacterDetail } from "@/api/character";
-import { formatInteger, getAvatarUrl } from "@/lib/utils";
-import { toast } from "sonner";
+import { searchCharacter } from "@/api/character";
 import BadgeLevel from "@/components//ui/badge-level";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { useDebounce } from "@/hooks/use-debounce";
+import { formatInteger, getAvatarUrl } from "@/lib/utils";
+import { useStore } from "@/store";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { Separator } from "@/components/ui/separator";
 
 /**
  * 角色搜索弹窗
  */
 export function CharacterSearchDialog() {
-  const { state, dispatch } = useAppState();
+  const { characterSearchDialog, setCharacterSearchDialog, setCharacterDrawer } = useStore();
   const [keyword, setKeyword] = useState("");
   const [searchResults, setSearchResults] = useState<CharacterDetail[]>([]);
   const debouncedSearchTerm = useDebounce(keyword, 1000);
@@ -24,7 +23,7 @@ export function CharacterSearchDialog() {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
-        setOpen(!state.characterSearchDialog.open)
+        setOpen(!characterSearchDialog.open)
       }
     }
     document.addEventListener("keydown", down)
@@ -54,14 +53,11 @@ export function CharacterSearchDialog() {
   };
 
   const setOpen = (open: boolean) => {
-    dispatch({
-      type: "SET_CHARACTER_SEARCH_DIALOG",
-      payload: open
-    })
+    setCharacterSearchDialog({ open });
   }
 
   return (
-    <CommandDialog open={state.characterSearchDialog.open} onOpenChange={setOpen}>
+    <CommandDialog open={characterSearchDialog.open} onOpenChange={setOpen}>
       <CommandInput
         placeholder="输入角色名称或ID"
         value={keyword}
@@ -76,10 +72,7 @@ export function CharacterSearchDialog() {
                 className="flex flex-row gap-2 w-full"
                 onClick={() => {
                   setOpen(false);
-                  dispatch({
-                    type: "SET_CHARACTER_DRAWER",
-                    payload: { open: true, characterId: character.CharacterId }
-                  })
+                  setCharacterDrawer({ open: true, characterId: character.CharacterId });
                 }}
               >
                 <Avatar className="size-10 rounded-full">

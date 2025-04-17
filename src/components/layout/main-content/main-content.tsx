@@ -1,22 +1,20 @@
 import { getUserAssets } from "@/api/user";
-import { useAppState } from "@/components/app-state-provider";
 import { cn, decodeHTMLEntities } from "@/lib/utils";
 import NotFound from "@/pages/not-found";
 import StarTower from "@/pages/star-tower";
 import TopWeek from "@/pages/top-week";
+import { useStore } from "@/store";
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
-import { ComponentProps } from "react";
-import { useEffect, useState, useRef } from 'react';
+import { ComponentProps, useEffect, useRef, useState } from "react";
 
 export function MainContent({
   className,
   children,
   ...props
 }: ComponentProps<typeof ScrollAreaPrimitive.Root>) {
-  const { state, dispatch } = useAppState();
-  const { currentPage } = state;
+  const { currentPage, setUserAssets } = useStore();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [currentComponent, setCurrentComponent] = useState<JSX.Element>(<NotFound />);
+  const [currentComponent, setCurrentComponent] = useState<JSX.Element>(<div/>);
 
   const PAGE_COMPONENTS = {
     starTower: StarTower,
@@ -55,31 +53,24 @@ export function MainContent({
           ShowDaily: showDaily,
         } = response.Value
 
-        dispatch({
-          type: "SET_USER_ASSETS",
-          payload: {
-            id,
-            name,
-            avatar,
-            nickname: decodeHTMLEntities(nickname),
-            balance,
-            assets,
-            type,
-            state,
-            lastIndex,
-            showWeekly,
-            showDaily,
-          },
+        setUserAssets({
+          id,
+          name,
+          avatar,
+          nickname: decodeHTMLEntities(nickname),
+          balance,
+          assets,
+          type,
+          state,
+          lastIndex,
+          showWeekly,
+          showDaily,
         });
       } else {
         throw new Error(response.Message || '获取用户资产数据失败');
       }
     } catch (err) {
       console.error('获取用户资产数据失败:', err);
-      dispatch({
-        type: "SET_USER_ASSETS",
-        payload: null,
-      });
     }
   };
 

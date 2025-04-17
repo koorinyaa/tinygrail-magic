@@ -197,11 +197,11 @@ function DetailInfo({ data, scoreMultiplier, className }: DetailInfoProps) {
 
   const score = (extra + userCount * scoreMultiplier) / 100;
   const infoData = [
-    { label: "人数", value: formatInteger(userCount) },
-    { label: "均价₵", value: formatCurrency((extra + price * valhalla) / auctionCount) },
-    { label: "拍卖数", value: formatInteger(auctionCount) },
-    { label: "英灵殿", value: formatInteger(valhalla) },
-    { label: "评分", value: formatCurrency(score, {maximumFractionDigits: 0}) },
+    { id: "userCount", label: "人数", value: formatInteger(userCount) },
+    { id: "avgPrice", label: "均价₵", value: formatCurrency((extra + price * valhalla) / auctionCount) },
+    { id: "auctionCount", label: "拍卖数", value: formatInteger(auctionCount) },
+    { id: "valhalla", label: "英灵殿", value: formatInteger(valhalla) },
+    { id: "score", label: "评分", value: formatCurrency(score, {maximumFractionDigits: 0}) },
   ]
 
   return (
@@ -211,7 +211,7 @@ function DetailInfo({ data, scoreMultiplier, className }: DetailInfoProps) {
       className,
     )}>
       {infoData.map((item) => (
-        <div className="flex items-center gap-2 w-full text-sm text-white/90">
+        <div key={item.id} className="flex items-center gap-2 w-full text-sm text-white/90">
           <span className="text-left min-w-6">{item.label}</span>
           <span className="flex-1 text-right font-bold truncate">
             {item.value}

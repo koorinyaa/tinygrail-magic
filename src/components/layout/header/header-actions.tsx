@@ -1,15 +1,19 @@
-import { Search } from "lucide-react";
+import { Moon, Search, Sun } from "lucide-react";
 
-import { useAppState } from "@/components/app-state-provider";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
+import { useStore } from "@/store";
 import { ComponentProps } from "react";
 import { FaGithub } from "react-icons/fa";
 
 export function HeaderActions({ className, ...props }: ComponentProps<"div">) {
-  const { dispatch } = useAppState();
+  const { setCharacterSearchDialog } = useStore();
+  const { theme, setTheme } = useStore()
+
+  const toggleTheme = () => {
+    setTheme(theme === "light" ? "dark" : "light")
+  }
 
   return (
     <div
@@ -20,20 +24,18 @@ export function HeaderActions({ className, ...props }: ComponentProps<"div">) {
         variant="ghost"
         size="icon"
         className="h-7 w-7 cursor-pointer"
-        onClick={() => {
-          dispatch({
-            type: "SET_CHARACTER_SEARCH_DIALOG",
-            payload: true
-          })
-        }}
+        onClick={() => { setCharacterSearchDialog({ open: true }) }}
       >
         <Search />
       </Button>
-      <ThemeToggle
+      <Button
         variant="ghost"
         size="icon"
         className="h-7 w-7 cursor-pointer"
-      />
+        onClick={toggleTheme}
+      >
+        {theme === "light" ? <Moon /> : <Sun />}
+      </Button>
       <Separator orientation="vertical" className="h-4" />
       <Button variant="ghost" size="icon" className="h-7 w-7 cursor-pointer text-foreground">
         <FaGithub />

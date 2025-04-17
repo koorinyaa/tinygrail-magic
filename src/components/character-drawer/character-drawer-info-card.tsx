@@ -10,7 +10,7 @@ import { AiFillMoon, AiFillStar, AiFillSun, AiOutlineStar } from "react-icons/ai
 import { BsStars } from "react-icons/bs";
 import { TbCaretRightFilled, TbX } from "react-icons/tb";
 import { toast } from "sonner";
-import BadgeLevel from "../ui/badge-level";
+import BadgeLevel from "@/components/ui/badge-level";
 
 interface CharacterDrawerInfoCardProps {
   loading: boolean;
