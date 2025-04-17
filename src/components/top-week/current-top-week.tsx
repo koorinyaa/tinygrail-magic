@@ -3,6 +3,7 @@ import { useAppState } from "@/components/app-state-provider";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { getCoverUrl } from "@/lib/utils";
 import { AlertCircle, RotateCw } from "lucide-react";
@@ -11,7 +12,6 @@ import { PhotoSlider } from 'react-photo-view';
 import 'react-photo-view/dist/react-photo-view.css';
 import { toast } from "sonner";
 import { TopWeekCard } from "./top-week-card";
-import { TopWeekCardSkeleton } from "./top-week-card-skeleton";
 
 /**
  * 当前萌王组件
@@ -218,13 +218,16 @@ const ContentSection = ({ loading, topWeekData, scoreMultiplier, setIsPhotoSlide
 
   return (
     <div
-      className="grid h-fit w-full flex-1 gap-4 xl:gap-6 rounded-3xl
+      className="grid w-full flex-1 gap-4 2xl:gap-x-6
               grid-cols-[repeat(auto-fill,minmax(136px,1fr))]
-              xl:grid-cols-[repeat(auto-fill,minmax(160px,1fr))]
-              2xl:grid-cols-[repeat(auto-fill,minmax(216px,1fr))]"
+              lg:grid-cols-[repeat(auto-fill,minmax(176px,1fr))]
+              xl:grid-cols-[repeat(auto-fill,minmax(172px,1fr))]
+              2xl:grid-cols-[repeat(auto-fill,minmax(180px,1fr))]"
     >
       {(loading || !topWeekData) ? Array.from({ length: 12 }).map((_, index) => (
-        <TopWeekCardSkeleton key={index} />
+        <div key={index} className="w-full aspect-[3/4] group">
+          <Skeleton className="w-full h-full rounded-lg" />
+        </div>
       )) : topWeekData?.Value.map((item, index) => (
         <TopWeekCard
           key={item.CharacterId}
@@ -232,17 +235,20 @@ const ContentSection = ({ loading, topWeekData, scoreMultiplier, setIsPhotoSlide
           rank={index + 1}
           scoreMultiplier={scoreMultiplier}
           data={item}
-          onHeaderClick={(characterId) => {
+          handleCoverPreview={() => {
+            if (item.Cover) {
+              setIsPhotoSliderOpen(true);
+              setPhotoSliderSrc(getCoverUrl(item.Cover, "large"));
+            }
+          }}
+          handleCharacterDrawer={(characterId) => {
             dispatch({
               type: "SET_CHARACTER_DRAWER",
               payload: { open: true, characterId: characterId }
             })
           }}
-          onCoverClick={() => {
-            if (item.Cover) {
-              setIsPhotoSliderOpen(true);
-              setPhotoSliderSrc(getCoverUrl(item.Cover, "large"));
-            }
+          handleAuction={() => {
+            toast.error("暂未开放");
           }}
         />
       ))}
