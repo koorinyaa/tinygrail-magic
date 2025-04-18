@@ -17,7 +17,7 @@ export default function CharacterDrawerAssets() {
   const { characterDrawerData } = useStore();
   const {
     loading = false,
-    characterDetail = null, 
+    characterDetail = null,
     userCharacterData = null,
     userTemple = null,
   } = characterDrawerData;
@@ -237,6 +237,7 @@ interface ActionProps {
  * @param {TempleItem | null} props.userTemple 我的圣殿数据
  */
 function Action({ loading, userTemple }: ActionProps) {
+  const [moreActionsOpen, setMoreActionsOpen] = useState(false);
   const {
     Assets: assets = 0,
     Sacrifices: sacrifices = 0,
@@ -296,7 +297,7 @@ function Action({ loading, userTemple }: ActionProps) {
         </span>
       ))}
       {!isEmpty(moreActions) &&
-        <DropdownMenu>
+        <DropdownMenu open={moreActionsOpen} onOpenChange={setMoreActionsOpen}>
           <DropdownMenuTrigger asChild>
             <span
               className="inline-flex items-center justify-center bg-slate-300/50 dark:bg-slate-700/50 hover:bg-slate-300/80 dark:hover:bg-slate-700/80 
