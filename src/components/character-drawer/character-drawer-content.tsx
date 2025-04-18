@@ -27,6 +27,8 @@ export default function CharacterDrawerContent({ characterId }: CharacterDrawerC
   } = characterDrawerData;
 
   useEffect(() => {
+    setBackgroundImage("");
+    
     if (characterId) {
       initializeCharacterData();
     }
