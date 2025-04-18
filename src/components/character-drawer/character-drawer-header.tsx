@@ -1,28 +1,27 @@
-import { CharacterDetail } from "@/api/character";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useScroll } from "@/hooks/use-scroll";
 import { cn, getAvatarUrl } from "@/lib/utils";
+import { useStore } from "@/store";
 
 interface CharacterDrawerHeaderProps {
   scrollContainerRef: React.RefObject<HTMLDivElement>;
-  data: CharacterDetail | null;
 }
 /**
  * 角色抽屉头部
  * @param { CharacterDrawerHeaderProps } props
  * @param { React.RefObject<HTMLDivElement> } props.scrollContainerRef - 滚动容器的 ref
- * @param { CharacterDetail | null } props.data - 角色详情数据
  */
-export default function CharacterDrawerHeader({ scrollContainerRef, data }: CharacterDrawerHeaderProps) {
+export default function CharacterDrawerHeader({ scrollContainerRef }: CharacterDrawerHeaderProps) {
   const isMobile = useIsMobile(448);
   const { scrollPosition } = useScroll(scrollContainerRef);
+  const { characterDrawerData } = useStore();
 
   const {
     CharacterId: characterId = 0,
     Icon: icon = "",
     Name: name = "",
-  } = data || {};
+  } = characterDrawerData.characterDetail || {};
 
   return (
     <div

@@ -1,45 +1,44 @@
-import { CharacterDetail } from "@/api/character";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import BadgeLevel from "@/components/ui/badge-level";
 import { DrawerContent, DrawerNested, DrawerTrigger } from "@/components/ui/drawer";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn, formatCurrency, getAvatarUrl } from "@/lib/utils";
+import { useStore } from "@/store";
 import { ChartNoAxesColumn, Copy, Crown, EllipsisVertical } from "lucide-react";
 import { AiFillMoon, AiFillStar, AiFillSun, AiOutlineStar } from "react-icons/ai";
 import { BsStars } from "react-icons/bs";
 import { TbCaretRightFilled, TbX } from "react-icons/tb";
 import { toast } from "sonner";
-import BadgeLevel from "@/components/ui/badge-level";
 
-interface CharacterDrawerInfoCardProps {
-  loading: boolean;
-  data: CharacterDetail | null;
-}
 /**
  * 角色信息
- * @param {CharacterDrawerInfoCardProps} props
- * @param {boolean} props.loading - 是否加载中
- * @param {CharacterDetail | null} props.data - 角色详情
  */
-export default function CharacterDrawerInfoCard({ loading, data }: CharacterDrawerInfoCardProps) {
+export default function CharacterDrawerInfoCard() {
+  const { characterDrawerData } = useStore();
   const {
-    Icon = '',
-    Name = '',
-    CharacterId = 0,
-    Level = 0,
-    ZeroCount = 0,
-    Crown = 0,
-    Bonus = 0,
-    Rank = 0,
-    Fluctuation = 0,
-    Stars = 0,
-    Current = 0,
-    Price = 0,
-    Total = 0,
-    Rate = 0,
-    StarForces = 0,
-  } = data || {};
+    loading = false,
+    characterDetail = null,
+  } = characterDrawerData;
+
+  const {
+    Icon: icon = '',
+    Name: name = '',
+    CharacterId: characterId = 0,
+    Level: level = 0,
+    ZeroCount: zeroCount = 0,
+    Crown: crown = 0,
+    Bonus: bonus = 0,
+    Rank: rank = 0,
+    Fluctuation: fluctuation = 0,
+    Stars: stars = 0,
+    Current: current = 0,
+    Price: price = 0,
+    Total: total = 0,
+    Rate: rate = 0,
+    StarForces: starForces = 0,
+  } = characterDetail || {};
 
   return (
     <>
@@ -47,7 +46,7 @@ export default function CharacterDrawerInfoCard({ loading, data }: CharacterDraw
         <CharacterDrawerInfoCardSkeleton /> :
         <div className="mt-20 p-3 bg-background rounded-t-md relative">
           <div className="absolute -top-6 left-4">
-            <CharacterAvatar src={getAvatarUrl(Icon)} name={Name} />
+            <CharacterAvatar src={getAvatarUrl(icon)} name={name} />
           </div>
           <div className="h-12 relative">
             <Action />
@@ -55,62 +54,62 @@ export default function CharacterDrawerInfoCard({ loading, data }: CharacterDraw
           <div className="flex flex-row gap-x-8">
             <div className="flex-1 flex flex-col overflow-hidden">
               <div className="flex flex-row items-center text-md text-foreground font-semibold">
-                <span className="truncate">{Name}</span>
-                <BadgeLevel level={Level} zeroCount={ZeroCount} />
+                <span className="truncate">{name}</span>
+                <BadgeLevel level={level} zeroCount={zeroCount} />
               </div>
               <div
                 className="flex items-center gap-1 mt-0.5 text-xs cursor-pointer opacity-60"
                 title="复制ID"
                 onClick={() => {
-                  navigator.clipboard.writeText(`#${CharacterId.toString()}`)
+                  navigator.clipboard.writeText(`#${characterId.toString()}`)
                     .then(() => {
                       toast.success("复制成功")
                     })
                     .catch(console.error);
                 }}
               >
-                #{CharacterId}
+                #{characterId}
                 <Copy className="size-3" />
               </div>
             </div>
             <div className="flex flex-col h-full min-w-11 rounded-md overflow-hidden bg-secondary text-secondary-foreground">
               <div
-                className={Rank <= 500 ?
+                className={rank <= 500 ?
                   "bg-violet-400 text-violet-800 dark:bg-violet-400/20 dark:text-violet-400" :
                   "bg-slate-300 text-slate-800 dark:bg-slate-700/20 dark:text-slate-400"}
                 title="通天塔排名"
               >
                 <div className="flex items-center justify-center h-3/4 text-md font-semibold scale-80">
                   <ChartNoAxesColumn className="inline-block size-4" />
-                  {Rank}
+                  {rank}
                 </div>
               </div>
-              <div className="flex items-center justify-center h-1/4 text-xs opacity-60 scale-80" title={`角色星之力：${StarForces}`}>
+              <div className="flex items-center justify-center h-1/4 text-xs opacity-60 scale-80" title={`角色星之力：${starForces}`}>
                 <BsStars className="inline-block size-3" />
                 {
-                  StarForces < 10000 ?
-                    formatCurrency(StarForces) :
-                    `${formatCurrency(StarForces / 10000, { maximumFractionDigits: 1 })}w`
+                  starForces < 10000 ?
+                    formatCurrency(starForces) :
+                    `${formatCurrency(starForces / 10000, { maximumFractionDigits: 1 })}w`
                 }
               </div>
             </div>
           </div>
           <div className="flex flex-row flex-wrap items-center mt-1.5 gap-2">
             <Attribute
-              fluctuation={Fluctuation}
-              crown={Crown}
-              bonus={Bonus}
+              fluctuation={fluctuation}
+              crown={crown}
+              bonus={bonus}
             />
-            <CharacterStarLevel stars={Stars} />
+            <CharacterStarLevel stars={stars} />
           </div>
           <div className="mt-2">
             <CharacterInfo
-              current={Current}
-              price={Price}
-              total={Total}
-              rank={Rank}
-              rate={Rate}
-              stars={Stars}
+              current={current}
+              price={price}
+              total={total}
+              rank={rank}
+              rate={rate}
+              stars={stars}
             />
           </div>
         </div>

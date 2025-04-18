@@ -5,24 +5,22 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Skeleton } from "@/components/ui/skeleton";
 import { TempleCard } from "@/components/ui/temple-card";
 import { formatCurrency, formatInteger, getAvatarUrl, getCoverUrl, isEmpty } from "@/lib/utils";
+import { useStore } from "@/store";
 import { Ban, Box, ChevronsRight, CircleFadingArrowUp, MoreHorizontal, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
 
-interface CharacterDrawerAssetsProps {
-  loading: boolean;
-  characterDetail: CharacterDetail | null;
-  userCharacterData: UserCharacterValue | null;
-  myTemple: TempleItem | null;
-}
 /**
  * 资产栏
- * @param {CharacterDrawerAssetsProps} props
- * @param {CharacterDetail | null} props.characterDetail 角色详情
- * @param {UserCharacterValue | null} props.userCharacterData 用户角色数据
- * @param {TempleItem | null} props.myTemple 我的圣殿数据
  */
-export default function CharacterDrawerAssets({ loading, characterDetail, userCharacterData, myTemple }: CharacterDrawerAssetsProps) {
+export default function CharacterDrawerAssets() {
   const [userItems, setUserItems] = useState<UserItemValue[]>([]);
+  const { characterDrawerData } = useStore();
+  const {
+    loading = false,
+    characterDetail = null, 
+    userCharacterData = null,
+    userTemple = null,
+  } = characterDrawerData;
 
   useEffect(() => {
     fetchUserItems();
@@ -45,32 +43,32 @@ export default function CharacterDrawerAssets({ loading, characterDetail, userCh
   return (
     <div className="flex flex-col gap-y-2">
       <div className="flex flex-row">
-        <MyTempleCard loading={loading} data={myTemple} />
-        <MyAssetsInfo
+        <UserTempleCard loading={loading} data={userTemple} />
+        <UserAssetsInfo
           loading={loading}
           characterDetail={characterDetail}
           userCharacterData={userCharacterData}
-          myTemple={myTemple}
+          userTemple={userTemple}
         />
       </div>
-      <Action loading={loading} myTemple={myTemple} />
+      <Action loading={loading} userTemple={userTemple} />
       <Items loading={loading} data={userItems} />
     </div>
   );
 }
 
-interface MyTempleCardProps {
+interface UserTempleCardProps {
   loading: boolean;
   data: TempleItem | null;
 }
 
 /**
- * 我的圣殿卡片
- * @param { MyTempleCardProps } porps
+ * 用户圣殿卡片
+ * @param { UserTempleCardProps } porps
  * @param {boolean} porps.loading 是否正在加载
  * @param {TempleItem | null} porps.data 我的圣殿数据
  */
-function MyTempleCard({ loading, data }: MyTempleCardProps) {
+function UserTempleCard({ loading, data }: UserTempleCardProps) {
   const {
     Assets: assets = 0,
     Sacrifices: sacrifices = 0,
@@ -131,22 +129,22 @@ function MyTempleCard({ loading, data }: MyTempleCardProps) {
   );
 }
 
-interface MyAssetsInfoProps {
+interface UserAssetsInfoProps {
   loading: boolean;
   characterDetail: CharacterDetail | null;
   userCharacterData: UserCharacterValue | null;
-  myTemple: TempleItem | null;
+  userTemple: TempleItem | null;
 }
 
 /**
- * 我的资产信息
- * @param {MyAssetsInfoProps} props
+ * 用户资产信息
+ * @param {UserAssetsInfoProps} props
  * @param {boolean} porps.loading 是否正在加载
  * @param {CharacterDetail | null} porps.characterDetail 角色详情
  * @param {UserCharacterValue | null} porps.userCharacterData 用户角色数据
- * @param {TempleItem | null} porps.myTemple 我的圣殿数据
+ * @param {TempleItem | null} porps.userTemple 我的圣殿数据
  */
-function MyAssetsInfo({ loading, characterDetail, userCharacterData, myTemple }: MyAssetsInfoProps) {
+function UserAssetsInfo({ loading, characterDetail, userCharacterData, userTemple }: UserAssetsInfoProps) {
   const {
     Rank: rank = 0,
     Rate: rate = 0,
@@ -159,7 +157,7 @@ function MyAssetsInfo({ loading, characterDetail, userCharacterData, myTemple }:
     Refine: refine = 0,
     Level: templeLevel = 0,
     StarForces: starForces = 0,
-  } = myTemple || {};
+  } = userTemple || {};
 
   const {
     Total: total = 0,
@@ -190,7 +188,7 @@ function MyAssetsInfo({ loading, characterDetail, userCharacterData, myTemple }:
 
   if (loading) {
     return (
-      <MyAssetsInfoSkeleton />
+      <UserAssetsInfoSkeleton />
     )
   }
 
@@ -213,9 +211,9 @@ function MyAssetsInfo({ loading, characterDetail, userCharacterData, myTemple }:
 }
 
 /**
- * 我的资产信息骨架屏
+ * 用户资产信息骨架屏
  */
-function MyAssetsInfoSkeleton() {
+function UserAssetsInfoSkeleton() {
   return (
     <div className="w-full flex-1 ml-2">
       <div className="flex flex-col w-full h-full">
@@ -229,38 +227,44 @@ function MyAssetsInfoSkeleton() {
 
 interface ActionProps {
   loading: boolean;
-  myTemple: TempleItem | null;
+  userTemple: TempleItem | null;
 }
 
 /**
  * 操作按钮
  * @param {ActionProps} props
  * @param {boolean} porps.loading 是否正在加载
- * @param {TempleItem | null} props.myTemple 我的圣殿数据
+ * @param {TempleItem | null} props.userTemple 我的圣殿数据
  */
-function Action({ loading, myTemple }: ActionProps) {
+function Action({ loading, userTemple }: ActionProps) {
+  const {
+    Assets: assets = 0,
+    Sacrifices: sacrifices = 0,
+    Level: templeLevel = 0,
+  } = userTemple || {};
+
   const buttons = [
     { Icon: Box, text: '资产重组' },
-    ...(myTemple ? [
+    ...(userTemple ? [
       { Icon: Sparkles, text: '转换星之力' },
     ] : []),
-    ...(myTemple
-      && myTemple.Level > 0
-      && myTemple.Sacrifices >= 2500
-      && myTemple.Assets >= 2500
+    ...(userTemple
+      && templeLevel > 0
+      && sacrifices >= 2500
+      && assets >= 2500
       ? [
         { Icon: CircleFadingArrowUp, text: '精炼' },
       ] : []),
   ];
 
   const moreActions = [
-    ...(myTemple && myTemple.Level > 0 ? [
+    ...(userTemple && templeLevel > 0 ? [
       { text: '修改塔图', onClick: () => { } },
       { text: '重置塔图', onClick: () => { } },
       { text: 'LINK', onClick: () => { } },
       { text: '台词', onClick: () => { } },
     ] : []),
-    ...(myTemple && myTemple.Sacrifices === myTemple.Assets ? [
+    ...(userTemple && sacrifices === assets ? [
       { text: '拆除圣殿', onClick: () => { } }, // TODO: 超出上限圣殿是否可以拆除待测试
     ] : []),
   ];

@@ -8,11 +8,12 @@ import { useStore } from "@/store";
  * 角色抽屉
  */
 export function CharacterDrawer() {
-  const { characterDrawer, setCharacterDrawer } = useStore();
+  const { characterDrawer, setCharacterDrawer, resetCharacterDrawerData } = useStore();
   const isMobile = useIsMobile(448);
   const { open, characterId } = characterDrawer;
 
   const onOpenChange = (open: boolean) => {
+    resetCharacterDrawerData();
     setCharacterDrawer({ open, characterId: null });
   };
 
