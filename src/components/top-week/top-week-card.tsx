@@ -125,18 +125,16 @@ function CoverSection({ data, rank }: CoverSectionProps) {
           style={{ backgroundImage: `url('${getAvatarUrl(avatar)}')` }}
         />
       )}
-      <div
-        className={cn(
-          "absolute left-0 top-0 flex items-center justify-center size-6 pb-0.5 pr-0.5",
-          "text-white text-xs font-bold font-mono",
-          "rounded-br-full",
-          {
-            "bg-amber-500 dark:bg-amber-600": rank <= 3,
-            "bg-cyan-500 dark:bg-cyan-600": rank > 3 && rank <= 6,
-            "bg-green-500 dark:bg-green-600": rank > 6,
-          }
-        )}
-      >
+      <div className={cn(
+        "absolute left-0 top-0 flex items-center justify-center size-6 pb-0.5 pr-0.5",
+        "text-white text-xs font-bold font-mono",
+        "rounded-br-full",
+        {
+          "bg-amber-500 dark:bg-amber-600": rank <= 3,
+          "bg-purple-500 dark:bg-purple-600": rank > 3 && rank <= 6,
+          "bg-green-500 dark:bg-green-600": rank > 6,
+        }
+      )}>
         {rank}
       </div>
     </div>
@@ -201,7 +199,7 @@ function DetailInfo({ data, scoreMultiplier, className }: DetailInfoProps) {
     { id: "avgPrice", label: "均价₵", value: formatCurrency((extra + price * valhalla) / auctionCount) },
     { id: "auctionCount", label: "拍卖数", value: formatInteger(auctionCount) },
     { id: "valhalla", label: "英灵殿", value: formatInteger(valhalla) },
-    { id: "score", label: "评分", value: formatCurrency(score, {maximumFractionDigits: 0}) },
+    { id: "score", label: "评分", value: formatCurrency(score, { maximumFractionDigits: 0 }) },
   ]
 
   return (
@@ -248,7 +246,7 @@ function ActionButtons({ data, handleCoverPreview, handleCharacterDrawer, handle
             "bg-gray-800/50 backdrop-blur-xs",
           )}
           title="查看大图"
-          onClick={(e) => { 
+          onClick={(e) => {
             e.stopPropagation();
             handleCoverPreview();
           }}
@@ -264,9 +262,9 @@ function ActionButtons({ data, handleCoverPreview, handleCharacterDrawer, handle
           "bg-gray-800/50 backdrop-blur-xs",
         )}
         title="打开角色面板"
-        onClick={(e) => { 
+        onClick={(e) => {
           e.stopPropagation();
-          handleCharacterDrawer(data.CharacterId); 
+          handleCharacterDrawer(data.CharacterId);
         }}
       >
         <Maximize2 className="size-4" />
@@ -279,7 +277,7 @@ function ActionButtons({ data, handleCoverPreview, handleCharacterDrawer, handle
           "bg-gray-800/50 backdrop-blur-xs",
         )}
         title="参与拍卖"
-        onClick={(e) => { 
+        onClick={(e) => {
           e.stopPropagation();
           handleAuction(data.CharacterId);
         }}
