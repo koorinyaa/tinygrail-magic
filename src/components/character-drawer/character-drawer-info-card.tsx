@@ -1,12 +1,13 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import BadgeLevel from "@/components/ui/badge-level";
-import { DrawerContent, DrawerNested, DrawerTrigger } from "@/components/ui/drawer";
+import { DrawerContent, DrawerNested, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn, formatCurrency, formatInteger, getAvatarUrl } from "@/lib/utils";
 import { useStore } from "@/store";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { ChartNoAxesColumn, Copy, Crown, EllipsisVertical, HelpCircle } from "lucide-react";
 import { AiFillMoon, AiFillStar, AiFillSun, AiOutlineStar } from "react-icons/ai";
 import { BsStars } from "react-icons/bs";
@@ -34,10 +35,6 @@ export default function CharacterDrawerInfoCard() {
     Rank: rank = 0,
     Fluctuation: fluctuation = 0,
     Stars: stars = 0,
-    Current: current = 0,
-    Price: price = 0,
-    Total: total = 0,
-    Rate: rate = 0,
     StarForces: starForces = 0,
   } = characterDetail || {};
 
@@ -418,7 +415,13 @@ function CharacterDetailButton() {
           </span>
         </div>
       </DrawerTrigger>
-      <DrawerContent className={cn("bg-background border-none overflow-hidden outline-none", { "rounded-l-md": !isMobile })}>
+      <DrawerContent
+        className={cn("bg-background border-none overflow-hidden outline-none", { "rounded-l-md": !isMobile })}
+        aria-describedby={undefined}
+      >
+        <VisuallyHidden asChild>
+          <DrawerTitle />
+        </VisuallyHidden>
         <div
           className={cn(
             "flex items-center justify-center h-8 px-4 py-2",
