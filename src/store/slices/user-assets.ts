@@ -19,9 +19,16 @@ export interface UserAssetsState {
   setUserAssets: (assets: UserAssets | null) => void;
 }
 
+const STORAGE_KEY = 'tinygrail-magic:user-assets';
+
 export const createUserAssetsSlice: StateCreator<UserAssetsState> = (set) => ({
   userAssets: null,
   setUserAssets: (userAssets) => {
     set({ userAssets });
+    if (userAssets) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(userAssets));
+    } else {
+      localStorage.removeItem(STORAGE_KEY);
+    }
   }
 });

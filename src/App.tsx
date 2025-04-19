@@ -11,6 +11,7 @@ import './App.css';
 import { CharacterSearchDialog } from "./components/character-search-dialog";
 import { useStore } from "@/store";
 import { useEffect } from "react";
+import { LoginDialog } from "./components/ui/login-dialog";
 
 export default function App() {
   const { theme, setTheme } = useStore()
@@ -34,6 +35,7 @@ export default function App() {
       <Toaster richColors theme={theme} />
       <CharacterDrawer />
       <CharacterSearchDialog />
+      <LoginDialog />
     </div>
   )
 }

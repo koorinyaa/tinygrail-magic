@@ -3,18 +3,18 @@ import { searchCharacter } from "@/api/character";
 import BadgeLevel from "@/components//ui/badge-level";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Separator } from "@/components/ui/separator";
 import { useDebounce } from "@/hooks/use-debounce";
-import { formatInteger, getAvatarUrl } from "@/lib/utils";
+import { formatInteger, getAvatarUrl, isEmpty } from "@/lib/utils";
 import { useStore } from "@/store";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Separator } from "@/components/ui/separator";
 
 /**
  * 角色搜索弹窗
  */
 export function CharacterSearchDialog() {
-  const { characterSearchDialog, setCharacterSearchDialog, setCharacterDrawer } = useStore();
+  const { characterSearchDialog, setCharacterSearchDialog, setCharacterDrawer, userAssets } = useStore();
   const [keyword, setKeyword] = useState("");
   const [searchResults, setSearchResults] = useState<CharacterDetail[]>([]);
   const debouncedSearchTerm = useDebounce(keyword, 1000);
@@ -32,9 +32,10 @@ export function CharacterSearchDialog() {
 
   useEffect(() => {
     fetchResults();
-  }, [debouncedSearchTerm]);
+  }, [debouncedSearchTerm, userAssets?.name]);
 
   const fetchResults = async () => {
+    if (isEmpty(userAssets)) return;
     try {
       const response = await searchCharacter(debouncedSearchTerm);
       if (response.State !== 0) {

@@ -1,5 +1,7 @@
 import { httpService, TinygrailBaseResponse } from "@/lib/http";
 
+export const AUTHORIZE_URL = 'https://bgm.tv/oauth/authorize?response_type=code&client_id=bgm2525b0e4c7d93fec&redirect_uri=https%3A%2F%2Ftinygrail.com%2Fapi%2Faccount%2Fcallback'
+
 /**
  * 用户资产数据
  * @property {number} Id - 用户内部ID
