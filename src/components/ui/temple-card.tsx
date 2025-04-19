@@ -36,6 +36,7 @@ export function TempleCard({ cover, assets, sacrifices, starForces, templeLevel,
       <img
         src={cover}
         alt="圣殿"
+        draggable="false"
         className={cn(
           "w-full h-full object-cover object-top",
           !isCoverLoaded && "hidden"
@@ -48,15 +49,13 @@ export function TempleCard({ cover, assets, sacrifices, starForces, templeLevel,
       <div
         className={cn(
           "absolute top-0 right-0 size-8 m-1 p-1",
-          "flex items-center justify-center scale-80",
-          "rounded-full border-2",
-          "text-sm font-semibold font-mono",
-          "bg-gray-300/30 backdrop-blur-xs",
+          "flex items-center justify-center rounded-full scale-80",
+          "text-sm font-bold font-mono",
           {
-            "border-gray-300 text-gray-300": templeLevel <= 0,
-            "border-green-400 text-green-400": templeLevel === 1,
-            "border-purple-400 text-purple-400": templeLevel === 2,
-            "border-amber-300 text-amber-300": templeLevel === 3,
+            "bg-gray-300 text-black/70": templeLevel <= 0,
+            "bg-green-500 dark:bg-green-600 text-white dark:text-white/80": templeLevel === 1,
+            "bg-purple-500 dark:bg-purple-600 text-white dark:text-white/80": templeLevel === 2,
+            "bg-amber-500 dark:bg-amber-600 text-white dark:text-white/80": templeLevel === 3,
           }
         )}
       >
@@ -80,9 +79,9 @@ export function TempleCard({ cover, assets, sacrifices, starForces, templeLevel,
             rootColor="bg-white/20"
             indicatorColor={cn({
               "bg-gray-300": templeLevel <= 0,
-              "bg-green-400": templeLevel === 1,
-              "bg-purple-400": templeLevel === 2,
-              "bg-amber-300": templeLevel === 3,
+              "bg-green-500 dark:bg-green-600": templeLevel === 1,
+              "bg-purple-500 dark:bg-purple-600": templeLevel === 2,
+              "bg-amber-500 dark:bg-amber-600": templeLevel === 3,
             })}
             className="h-1"
           />

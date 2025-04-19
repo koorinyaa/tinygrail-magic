@@ -4,7 +4,6 @@ import path from 'path';
 import { defineConfig } from 'vite';
 import monkey from 'vite-plugin-monkey';
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     react(),
@@ -22,12 +21,6 @@ export default defineConfig({
           'https://bangumi.tv/*',
           'https://chii.in/*',
         ],
-      },
-      build: {
-        externalGlobals: {
-          // react: cdn.jsdelivr('React', 'umd/react.production.min.js'),
-          // 'react-dom': cdn.jsdelivr('ReactDOM', 'umd/react-dom.production.min.js'),
-        },
       },
     }),
   ],
