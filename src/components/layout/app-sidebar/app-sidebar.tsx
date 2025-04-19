@@ -28,6 +28,7 @@ import {
 
 export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { userAssets } = useStore();
+  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
 
   const data = {
     navPages: {
@@ -77,14 +78,14 @@ export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sid
     },
     navSecondary: [
       {
-        title: "超展开",
-        url: "/rakuen",
-        icon: ExternalLink,
-      },
-      {
         title: "fuyuake",
         url: "https://fuyuake.top",
         target: "_blank",
+        icon: ExternalLink,
+      },
+      {
+        title: "返回bangumi",
+        url: currentPath,
         icon: ExternalLink,
       },
     ],

@@ -18,9 +18,9 @@ export default defineConfig({
         icon: 'https://tinygrail.com/favicon.ico',
         namespace: 'tinygrail-magic',
         match: [
-          'https://bgm.tv/rakuen$',
-          'https://bangumi.tv/rakuen$',
-          'https://chii.in/rakuen$',
+          'https://bgm.tv/*',
+          'https://bangumi.tv/*',
+          'https://chii.in/*',
         ],
       },
       build: {

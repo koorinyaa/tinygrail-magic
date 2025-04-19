@@ -5,7 +5,7 @@ import './index.css';
 
 // 初始化入口按钮
 const initTinygrailButton = (element: HTMLElement): void => {
-  const li = element.querySelector<HTMLLIElement>('li:nth-child(2)');
+  const li = element.querySelector<HTMLLIElement>('li:nth-child(1)');
   if (li) {
     // 创建tinygrail按钮
     const tinygrailButtonLink = document.createElement('a');
