@@ -1,6 +1,10 @@
 .tinygrailMagic {
   font-family: "PingFang SC", "HarmonyOS_Regular", "Helvetica Neue", "Microsoft YaHei", Helvetica, Arial, "Hiragino Sans GB", "Heiti SC", "WenQuanYi Micro Hei", sans-serif !important;
-
+  box-sizing: border-box;
+  border: 0 solid;
+  margin: 0;
+  padding: 0;
+  
   * {
     --tw-outline-style: none;
     outline-style: none;

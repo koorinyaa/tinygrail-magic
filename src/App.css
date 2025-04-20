@@ -1,7 +1,21 @@
-@import "tailwindcss";
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
 @import "tw-animate-css";
-
 @custom-variant dark (&:is(.dark *));
+
+.tinygrailMagic {
+  /* 处理tailwind全局样式冲突 */
+  @import "tailwindcss/preflight.css" layer(base);
+
+  @layer base {
+    * {
+      @apply border-border outline-ring/50;
+    }
+
+    @apply bg-background text-foreground;
+  }
+}
 
 :root {
   --radius: 0.625rem;
@@ -116,14 +130,4 @@
   --color-sidebar-ring: var(--sidebar-ring);
   --dark-tremor-ring: var(----dark-tremor-ring);
   --tremor-ring: var(----tremor-ring);
-}
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-
-  body {
-    @apply bg-background text-foreground;
-  }
 }
