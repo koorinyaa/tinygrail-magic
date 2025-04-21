@@ -1,13 +1,12 @@
 import { CharacterDetail, TempleItem } from "@/api/character";
 import { getUserItems, UserItemValue } from "@/api/magic-item";
 import { UserCharacterValue } from "@/api/user";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TempleCard } from "@/components/ui/temple-card";
 import { formatCurrency, formatInteger, getAvatarUrl, getCoverUrl, isEmpty } from "@/lib/utils";
 import { useStore } from "@/store";
-import { Ban, Box, ChevronsRight, CircleFadingArrowUp, MoreHorizontal, Sparkles } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Ban, Box, ChevronLeft, ChevronRight, ChevronsRight, CircleFadingArrowUp, Sparkles } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * 资产栏
@@ -237,8 +236,10 @@ interface ActionProps {
  * @param {TempleItem | null} props.userTemple 我的圣殿数据
  */
 function Action({ loading, userTemple }: ActionProps) {
-  const { characterDrawer } = useStore();
-  const [moreActionsOpen, setMoreActionsOpen] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [showLeftArrow, setShowLeftArrow] = useState(false);
+  const [showRightArrow, setShowRightArrow] = useState(false);
+
   const {
     Assets: assets = 0,
     Sacrifices: sacrifices = 0,
@@ -246,30 +247,104 @@ function Action({ loading, userTemple }: ActionProps) {
   } = userTemple || {};
 
   const buttons = [
-    { Icon: Box, text: '资产重组' },
+    <span className="flex flex-row items-center justify-center gap-1">
+      <Box className="size-3" />
+      资产重组
+    </span>,
     ...(userTemple ? [
-      { Icon: Sparkles, text: '转换星之力' },
+      <span className="flex flex-row items-center justify-center gap-1">
+        <Sparkles className="size-3" />
+        转换星之力
+      </span>,
     ] : []),
     ...(userTemple
       && templeLevel > 0
       && sacrifices >= 2500
       && assets >= 2500
       ? [
-        { Icon: CircleFadingArrowUp, text: '精炼' },
+        <span className="flex flex-row items-center justify-center gap-1">
+          <CircleFadingArrowUp className="size-3" />
+          精炼
+        </span>
       ] : []),
-  ];
-
-  const moreActions = [
     ...(userTemple && templeLevel > 0 ? [
-      { text: '修改塔图', onClick: () => { } },
-      { text: '重置塔图', onClick: () => { } },
-      { text: 'LINK', onClick: () => { } },
-      { text: '台词', onClick: () => { } },
+      <span className="flex flex-row items-center justify-center gap-1">
+        <Box className="size-3" />
+        修改塔图
+      </span>,
+      <span className="flex flex-row items-center justify-center gap-1">
+        <Box className="size-3" />
+        重置塔图
+      </span>,
+      <span className="flex flex-row items-center justify-center gap-1">
+        <Box className="size-3" />
+        LINK
+      </span>,
+      <span className="flex flex-row items-center justify-center gap-1">
+        <Box className="size-3" />
+        台词
+      </span>,
     ] : []),
     ...(userTemple && sacrifices === assets ? [
-      { text: '拆除圣殿', onClick: () => { } }, // TODO: 超出上限圣殿是否可以拆除待测试
+      <span className="flex flex-row items-center justify-center gap-1">
+        <Box className="size-3" />
+        拆除圣殿
+      </span>,
     ] : []),
   ];
+
+  // 检查是否需要显示滚动箭头
+  const checkScrollPosition = () => {
+    if (scrollContainerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollContainerRef.current;
+
+      setShowLeftArrow(scrollLeft > 0);
+      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 5);
+    }
+  };
+
+  // 滚动到左侧
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: -100, behavior: 'smooth' });
+    }
+  };
+
+  // 滚动到右侧
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: 100, behavior: 'smooth' });
+    }
+  };
+
+  // 监听滚动容器变化
+  useEffect(() => {
+    const scrollContainer = scrollContainerRef.current;
+    if (scrollContainer) {
+      // 初始检查
+      checkScrollPosition();
+
+      // 使用函数引用以确保事件监听器能正确移除
+      const handleScroll = () => checkScrollPosition();
+      scrollContainer.addEventListener('scroll', handleScroll);
+
+      // ResizeObserver 监听容器大小变化
+      const resizeObserver = new ResizeObserver(() => {
+        checkScrollPosition();
+      });
+      resizeObserver.observe(scrollContainer);
+
+      return () => {
+        scrollContainer.removeEventListener('scroll', handleScroll);
+        resizeObserver.disconnect();
+      };
+    }
+  }, [buttons]);
+
+  // 内容变化时重新检查滚动状态
+  useEffect(() => {
+    checkScrollPosition();
+  }, [buttons.length, userTemple]);
 
   if (loading) {
     return (
@@ -278,45 +353,48 @@ function Action({ loading, userTemple }: ActionProps) {
   }
 
   return (
-    <div
-      className="w-full flex flex-nowrap gap-1.5 overflow-x-auto"
-      style={{
-        scrollbarWidth: 'none',
-      }}
-    >
-      {buttons.map(({ Icon, text }, index) => (
-        <span
-          key={index}
-          className="inline-flex items-center justify-center 
-            bg-slate-300/50 dark:bg-slate-700/50 hover:bg-slate-300/80 dark:hover:bg-slate-700/80 
-            text-xs rounded-full 
-            gap-1 first:ml-0 py-1 px-2 cursor-pointer
-            transition-all duration-200 flex-shrink-0"
+    <div className="w-full relative">
+      {showLeftArrow && (
+        <div
+          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 size-5 flex items-center justify-center
+            bg-slate-200/90 dark:bg-slate-800/90 rounded-full cursor-pointer shadow-sm
+            hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors"
+          onClick={scrollLeft}
         >
-          <Icon className="size-3" />
-          {text}
-        </span>
-      ))}
-      {!isEmpty(moreActions) &&
-        <DropdownMenu open={moreActionsOpen && characterDrawer.open} onOpenChange={setMoreActionsOpen}>
-          <DropdownMenuTrigger asChild>
-            <span
-              className="inline-flex items-center justify-center bg-slate-300/50 dark:bg-slate-700/50 hover:bg-slate-300/80 dark:hover:bg-slate-700/80 
-              text-xs rounded-full 
-              gap-1 p-1 cursor-pointer
-              transition-colors flex-shrink-0"
-            >
-              <MoreHorizontal className="size-4" />
-            </span>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {moreActions.map(({ text, onClick }, index) => (
-              <DropdownMenuItem key={index} onClick={onClick}>
-                {text}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>}
+          <ChevronLeft className="size-3.5 text-slate-600 dark:text-slate-300" />
+        </div>
+      )}
+
+      <div
+        ref={scrollContainerRef}
+        className="w-full flex flex-nowrap gap-1.5 overflow-x-auto px-1 py-0.5"
+        style={{
+          scrollbarWidth: 'none',
+        }}
+      >
+        {buttons.map((button, index) => (
+          <div
+            key={index}
+            className="inline-flex items-center justify-center 
+              bg-slate-300/50 dark:bg-slate-700/50 hover:bg-slate-300/80 dark:hover:bg-slate-700/80 
+              text-xs rounded-full first:ml-0 py-1 px-2 cursor-pointer
+              transition-all duration-200 flex-shrink-0"
+          >
+            {button}
+          </div>
+        ))}
+      </div>
+
+      {showRightArrow && (
+        <div
+          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 size-5 flex items-center justify-center
+            bg-slate-200/90 dark:bg-slate-800/90 rounded-full cursor-pointer shadow-sm
+            hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors"
+          onClick={scrollRight}
+        >
+          <ChevronRight className="size-3.5 text-slate-600 dark:text-slate-300" />
+        </div>
+      )}
     </div>
   );
 }
