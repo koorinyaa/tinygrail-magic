@@ -1,4 +1,5 @@
 import { httpService, TinygrailBaseResponse } from "@/lib/http";
+import { TempleItem } from "./character";
 
 export const AUTHORIZE_URL = 'https://bgm.tv/oauth/authorize?response_type=code&client_id=bgm2525b0e4c7d93fec&redirect_uri=https%3A%2F%2Ftinygrail.com%2Fapi%2Faccount%2Fcallback'
 
@@ -88,6 +89,79 @@ export async function getUserCharacterData(
     );
   } catch (error) {
     console.error('获取用户角色数据失败:', (error as Error).message);
+    throw error;
+  }
+}
+
+/**
+ * 英灵殿角色数据
+ * @property {number} AuctionUsers - 竞拍用户数
+ * @property {number} AuctionTotal - 竞拍数量
+ */
+export interface TinygrailCharacterValue extends UserCharacterValue {
+  AuctionUsers: number;
+  AuctionTotal: number;
+}
+
+export interface TinygrailCharacterrResponse extends TinygrailBaseResponse<TinygrailCharacterValue> {}
+
+/**
+ * 获取英灵殿角色数据
+ * @param {number} characterId - 角色ID
+ * @returns {Promise<ExtendedUserCharacterResponse>} - 用户角色拍卖数据
+ */
+export async function getTinygrailCharacterData(
+  characterId: number
+): Promise<TinygrailCharacterrResponse> {
+  try {
+    return await httpService.get<TinygrailCharacterrResponse>(
+      `/chara/user/${characterId}/tinygrail/false`
+    );
+  } catch (error) {
+    console.error('获取英灵殿角色数据失败:', (error as Error).message);
+    throw error;
+  }
+}
+/**
+ * 用户圣殿列表分页数据
+ * @property {number} CurrentPage - 当前页码
+ * @property {number} TotalPages - 总页数
+ * @property {number} TotalItems - 数据总数
+ * @property {number} ItemsPerPage - 每页数量
+ * @property {TempleItem[]} Items - 圣殿列表
+ * @property {any} Context - 上下文信息
+ */
+export interface UserTemplePageValue {
+  CurrentPage: number;
+  TotalPages: number;
+  TotalItems: number;
+  ItemsPerPage: number;
+  Items: TempleItem[];
+  Context: any;
+}
+
+export interface UserTempleResponse extends TinygrailBaseResponse<UserTemplePageValue> {}
+
+/**
+ * 获取用户圣殿列表
+ * @param {string} userName - 用户名
+ * @param {number} page - 页码
+ * @param {number} pageSize - 每页数量
+ * @param {string} [keyword] - 搜索关键词
+ * @returns {Promise<UserTempleResponse>} - 用户圣殿列表数据
+ */
+export async function getUserTemples(
+  userName: string,
+  page: number = 1,
+  pageSize: number = 10,
+  keyword?: string
+): Promise<UserTempleResponse> {
+  page = Math.max(page, 1);
+  try {
+    const url = `/chara/user/temple/${userName}/${page}/${pageSize}${keyword ? `?keyword=${keyword}` : ''}`;
+    return await httpService.get<UserTempleResponse>(url);
+  } catch (error) {
+    console.error('获取用户圣殿列表失败:', (error as Error).message);
     throw error;
   }
 }

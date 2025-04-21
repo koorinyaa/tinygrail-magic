@@ -19,21 +19,25 @@ export function CharacterDrawer() {
   };
 
   return (
-    <>
-      <Drawer direction={isMobile ? "bottom" : "right"} open={open} onOpenChange={onOpenChange}>
-        <DrawerContent
-          className={cn("bg-background border-none overflow-hidden", { "rounded-l-md": !isMobile })}
-          aria-describedby={undefined}
-        >
-          <VisuallyHidden asChild>
-            <DrawerTitle />
-          </VisuallyHidden>
-          <CharacterDrawerContent
-            characterId={characterId}
-          />
-        </DrawerContent>
-      </Drawer>
-    </>
+    <Drawer direction={isMobile ? "bottom" : "right"} open={open} onOpenChange={onOpenChange}>
+      <DrawerContent
+        className={cn("bg-background border-none overflow-hidden", { "rounded-l-md": !isMobile })}
+        aria-describedby={undefined}
+        onOpenAutoFocus={(e) => {
+          e.preventDefault();
+        }}
+        onCloseAutoFocus={(e) => {
+          e.preventDefault();
+        }}
+      >
+        <VisuallyHidden asChild>
+          <DrawerTitle />
+        </VisuallyHidden>
+        <CharacterDrawerContent
+          characterId={characterId}
+        />
+      </DrawerContent>
+    </Drawer>
   );
 }
 

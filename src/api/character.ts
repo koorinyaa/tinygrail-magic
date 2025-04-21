@@ -290,48 +290,191 @@ export async function searchCharacter(keyword: string): Promise<CharacterSearchR
   }
 }
 
+export interface CharacterPoolResponse extends TinygrailBaseResponse<number> {}
 
 /**
- * 用户圣殿列表分页数据
+ * 获取角色奖池数据
+ * @param {number} characterId - 角色ID
+ * @returns {Promise<CharacterPoolResponse>} - 角色奖池数据
+ */
+export async function getCharacterPoolAmount(
+  characterId: number
+): Promise<CharacterPoolResponse> {
+  try {
+    return await httpService.get<CharacterPoolResponse>(
+      `/chara/pool/${characterId}`
+    );
+  } catch (error) {
+    console.error('获取角色池数据失败:', (error as Error).message);
+    throw error;
+  }
+}
+
+/**
+ * 角色持有者数据
+ * @property {number} Id - 用户内部ID
+ * @property {number} Type - 用户类型
+ * @property {string} Name - 用户名称
+ * @property {number} Level - 等级（未知用途）
+ * @property {string | null} CellPhone - 手机号
+ * @property {number} State - 用户状态（666为封禁）
+ * @property {string | null} Email - 邮箱
+ * @property {number} Contents - 内容（未知用途）
+ * @property {number} Comments - 评论（未知用途）
+ * @property {number} Favorites - 收藏数（未知用途）
+ * @property {number} Followers - 粉丝数（未知用途）
+ * @property {number} Following - 关注数（未知用途）
+ * @property {number} Auctions - 拍卖数（未知用途）
+ * @property {number} Messages - 消息（未知用途）
+ * @property {string} Avatar - 头像URL
+ * @property {number} Gender - 性别（未知用途）
+ * @property {string} Nickname - 昵称
+ * @property {string | null} Signature - 签名（未知用途）
+ * @property {number} Balance - 持股数
+ * @property {number} TotalBalance - 总余额（未知用途）
+ * @property {number} Sacrifices - 固定资产（未知用途）
+ * @property {number} Win - 胜利次数（疑似未实装道具数据）
+ * @property {number} Lose - 失败次数（疑似未实装道具数据）
+ * @property {number} Draw - 平局次数（疑似未实装道具数据）
+ * @property {string | null} CoverId - 封面ID（未知用途）
+ * @property {string | null} Description - 描述（未知用途）
+ * @property {string | null} Points - 积分（未知用途）
+ * @property {string | null} LastLoginDate - 最后登录时间（未知用途）
+ * @property {string | null} RegisterDate - 注册时间（未知用途）
+ * @property {string} LastActiveDate - 最后活跃时间
+ * @property {number} Language - 语言（未知用途）
+ * @property {string | null} Universe - 未知
+ * @property {string | null} HomeX - 未知
+ * @property {string | null} HomeY - 未知
+ * @property {number} CreditPaid - 已付信用点（未知用途）
+ * @property {number} CreditFree - 免费信用点（未知用途）
+ * @property {number} GuildId - 公会ID（未知用途）
+ * @property {string | null} StoryProgress - 故事进度（未知用途）
+ * @property {number} BangumiUserGroup - bangumi用户组（未知用途）
+ * @property {number} Assets - 资产（未知用途）
+ * @property {number} Principal - 本金（未知用途）
+ * @property {number} TopIndex - 最高排名（未知用途）
+ * @property {number} LastIndex - 番市首富排名
+ * @property {number} Share - 分享数（未知用途）
+ * @property {string | null} IpAddress - IP地址
+ * @property {boolean} IsWiki - 是否有wiki权限（未知用途）
+ */
+export interface CharacterUserValue {
+  Id: number;
+  Type: number;
+  Name: string;
+  Level: number;
+  CellPhone: string | null;
+  State: number;
+  Email: string | null;
+  Contents: number;
+  Comments: number;
+  Favorites: number;
+  Followers: number;
+  Following: number;
+  Auctions: number;
+  Messages: number;
+  Avatar: string;
+  Gender: number;
+  Nickname: string;
+  Signature: string | null;
+  Balance: number;
+  TotalBalance: number;
+  Sacrifices: number;
+  Win: number;
+  Lose: number;
+  Draw: number;
+  CoverId: string | null;
+  Description: string | null;
+  Points: string | null;
+  LastLoginDate: string | null;
+  RegisterDate: string | null;
+  LastActiveDate: string;
+  Language: number;
+  Universe: string | null;
+  HomeX: string | null;
+  HomeY: string | null;
+  CreditPaid: number;
+  CreditFree: number;
+  GuildId: number;
+  StoryProgress: string | null;
+  BangumiUserGroup: number;
+  Assets: number;
+  Principal: number;
+  TopIndex: number;
+  LastIndex: number;
+  Share: number;
+  IpAddress: string | null;
+  IsWiki: boolean;
+}
+
+/**
+ * 角色持有者列表分页数据
  * @property {number} CurrentPage - 当前页码
  * @property {number} TotalPages - 总页数
  * @property {number} TotalItems - 数据总数
  * @property {number} ItemsPerPage - 每页数量
- * @property {TempleItem[]} Items - 圣殿列表
+ * @property {CharacterUserValue[]} Items - 持有者列表
  * @property {any} Context - 上下文信息
  */
-export interface UserTemplePageValue {
+export interface CharacterUserPageValue {
   CurrentPage: number;
   TotalPages: number;
   TotalItems: number;
   ItemsPerPage: number;
-  Items: TempleItem[];
+  Items: CharacterUserValue[];
   Context: any;
 }
 
-export interface UserTempleResponse extends TinygrailBaseResponse<UserTemplePageValue> {}
+export interface CharacterUserResponse extends TinygrailBaseResponse<CharacterUserPageValue> {}
 
 /**
- * 获取用户圣殿列表
- * @param {string} userName - 用户名
+ * 获取角色持有者列表
+ * @param {number} characterId - 角色ID
  * @param {number} page - 页码
  * @param {number} pageSize - 每页数量
- * @param {string} [keyword] - 搜索关键词
- * @returns {Promise<UserTempleResponse>} - 用户圣殿列表数据
+ * @returns {Promise<CharacterUserResponse>} - 角色持有者列表数据
  */
-export async function getUserTemples(
-  userName: string,
+export async function getCharacterUsers(
+  characterId: number,
   page: number = 1,
-  pageSize: number = 10,
-  keyword?: string
-): Promise<UserTempleResponse> {
+  pageSize: number = 24
+): Promise<CharacterUserResponse> {
   page = Math.max(page, 1);
+  pageSize = Math.max(pageSize, 1);
   try {
-    const url = `/chara/user/temple/${userName}/${page}/${pageSize}${keyword ? `?keyword=${keyword}` : ''}`;
-    return await httpService.get<UserTempleResponse>(url);
+    return await httpService.get<CharacterUserResponse>(
+      `/chara/users/${characterId}/${page}/${pageSize}`
+    );
   } catch (error) {
-    console.error('获取用户圣殿列表失败:', (error as Error).message);
+    console.error('获取角色持有者列表失败:', (error as Error).message);
     throw error;
   }
 }
+
+/**
+ * 角色更新响应数据
+ * @property {number} State - 更新状态
+ * @property {string} Value - 更新提示信息
+ */
+export interface CharacterUpdateResponse extends TinygrailBaseResponse<string> {}
+
+/**
+ * 更新角色信息
+ * @param {number} characterId - 角色ID
+ * @returns {Promise<CharacterUpdateResponse>} - 角色更新响应数据
+ */
+export async function updateCharacter(
+  characterId: number
+): Promise<CharacterUpdateResponse> {
+  try {
+    return await httpService.get<CharacterUpdateResponse>(
+      `/chara/update/${characterId}`
+    );
+  } catch (error) {
+    console.error('更新角色信息失败:', (error as Error).message);
+    throw error;
+  }
+}
+
 

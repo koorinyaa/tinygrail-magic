@@ -1,5 +1,5 @@
-import { getCharacterDetail, getCharacterLinks, getCharacterTemple, getUserTemples, TempleItem } from "@/api/character";
-import { getUserCharacterData, UserCharacterValue } from "@/api/user";
+import { getCharacterDetail, getCharacterLinks, getCharacterPoolAmount, getCharacterTemple, getCharacterUsers, TempleItem } from "@/api/character";
+import { getTinygrailCharacterData, getUserCharacterData, UserCharacterValue, getUserTemples } from "@/api/user";
 import { cn, getCoverUrl } from "@/lib/utils";
 import { useStore } from "@/store";
 import { useEffect, useRef, useState } from "react";
@@ -31,6 +31,9 @@ export default function CharacterDrawerContent({ characterId }: CharacterDrawerC
     
     if (characterId) {
       initializeCharacterData();
+      fatchTinygrailCharacterData(characterId);
+      fetchGensokyoCharacterData(characterId);
+      fetchCharacterPoolAmount(characterId);
     }
   }, [characterId, userAssets?.name]);
 
@@ -62,11 +65,12 @@ export default function CharacterDrawerContent({ characterId }: CharacterDrawerC
       setCharacterDrawerData({
         loading: true,
       })
-      const [characterDetailRes, userCharacterDataRes, templeDataRes, linkDataRes] = await Promise.all([
+      const [characterDetailRes, userCharacterDataRes, templeDataRes, linkDataRes, characterUsersRes] = await Promise.all([
         getCharacterDetail(characterId),
         getUserCharacterData(characterId, userAssets.name),
         getCharacterTemple(characterId),
         getCharacterLinks(characterId),
+        getCharacterUsers(characterId),
       ]);
 
       if (characterDetailRes.State !== 0) {
@@ -85,6 +89,10 @@ export default function CharacterDrawerContent({ characterId }: CharacterDrawerC
         throw new Error(linkDataRes.Message || '获取LINK圣殿数据失败');
       }
 
+      if (characterUsersRes.State !== 0) {
+        throw new Error(characterUsersRes.Message || '获取角色持股用户失败');
+      }
+
       const userTemple = await getUserTemple(userCharacterDataRes.Value, templeDataRes.Value, linkDataRes.Value);
 
       setCharacterDrawerData({
@@ -93,6 +101,8 @@ export default function CharacterDrawerContent({ characterId }: CharacterDrawerC
         characterTemples: templeDataRes.Value,
         characterlinks: linkDataRes.Value,
         userTemple: userTemple,
+        currentCharacterUserPages: characterUsersRes.Value.Items,
+        characterBoardMembers: characterUsersRes.Value.Items.slice(0, 10),
       });
     } catch (err) {
       const errMsg = err instanceof Error ? err.message : "数据加载失败";
@@ -144,7 +154,10 @@ export default function CharacterDrawerContent({ characterId }: CharacterDrawerC
     return myTemple || null;
   }
 
-  // 获取角色详情
+  /**
+   * 获取角色详情
+   * @param {number | null} characterId - 角色ID
+   */
   const fetchCharacterDetail = async (characterId: number | null) => {
     if (!characterId) return;
     try {
@@ -162,7 +175,11 @@ export default function CharacterDrawerContent({ characterId }: CharacterDrawerC
     }
   };
 
-  // 获取用户角色数据
+  /**
+   * 获取用户角色数据
+   * @param {number | null} characterId - 角色ID
+   * @param {string} userName - 用户名
+   */
   const fetchUserCharacterData = async (characterId: number | null, userName: string) => {
     if (!characterId || !userName) return;
     try {
@@ -180,7 +197,10 @@ export default function CharacterDrawerContent({ characterId }: CharacterDrawerC
     }
   };
 
-  // 获取圣殿数据
+  /**
+   * 获取圣殿数据
+   * @param {number | null} characterId - 角色ID
+   */
   const fetchCharacterTemple = async (characterId: number | null) => {
     if (!characterId) return;
     try {
@@ -198,7 +218,10 @@ export default function CharacterDrawerContent({ characterId }: CharacterDrawerC
     }
   };
 
-  // 获取LINK数据
+  /**
+   * 获取LINK数据
+   * @param {number | null} characterId - 角色ID
+   */
   const fetchCharacterLinks = async (characterId: number | null) => {
     if (!characterId) return;
     try {
@@ -212,6 +235,92 @@ export default function CharacterDrawerContent({ characterId }: CharacterDrawerC
       }
     } catch (err) {
       const errMsg = err instanceof Error ? err.message : "获取LINK圣殿数据失败";
+      console.error(errMsg);
+    }
+  };
+
+  /**
+   * 获取英灵殿角色数据
+   * @param {number | null} characterId - 角色ID
+   */
+  const fatchTinygrailCharacterData = async (characterId: number | null) => {
+    if (!characterId) return;
+    try {
+      const data = await getTinygrailCharacterData(characterId);
+      if (data.State === 0) {
+        setCharacterDrawerData({
+          tinygrailCharacterData: data.Value,
+        });
+      } else {
+        throw new Error(data.Message || '获取英灵殿角色数据失败');
+      }
+    } catch (err) {
+      const errMsg = err instanceof Error ? err.message : "获取英灵殿角色数据失败";
+      console.error(errMsg);
+    }
+  }
+
+  /**
+   * 获取幻想乡角色数据
+   * @param {number | null} characterId - 角色ID
+   */
+  const fetchGensokyoCharacterData = async (characterId: number) => {
+    if (!characterId) return;
+    try {
+      const data = await getUserCharacterData(characterId, "blueleaf");
+      if (data.State === 0) {
+        setCharacterDrawerData({
+          gensokyoCharacterData: data.Value,
+        });
+      } else {
+        throw new Error(data.Message || '获取幻想乡角色数据失败');
+      }
+    } catch (err) {
+      const errMsg = err instanceof Error ? err.message : "获取幻想乡角色数据失败";
+      console.error(errMsg);
+    }
+  };
+
+  /**
+   * 获取角色奖池数据
+   * @param {number | null} characterId - 角色ID
+   */
+  const fetchCharacterPoolAmount = async (characterId: number | null) => {
+    if (!characterId) return;
+    try {
+      const data = await getCharacterPoolAmount(characterId);
+      if (data.State === 0) {
+        setCharacterDrawerData({
+          characterPoolAmount: data.Value,
+        });
+      } else {
+        throw new Error(data.Message || '获取角色奖池数据失败');
+      }
+    } catch (err) {
+      const errMsg = err instanceof Error ? err.message : "获取角色奖池数据失败";
+      console.error(errMsg);
+    }
+  };
+
+  /**
+   * 获取角色持股用户分页数据
+   * @param {number | null} characterId - 角色ID
+   * @param {number} page - 页码
+   */
+  const fetchCharacterUserPages = async (characterId: number | null, page: number) => {
+    if (!characterId) return;
+    page = Math.max(page, 1);
+    try {
+      const data = await getCharacterUsers(characterId, page);
+      if (data.State === 0) {
+        setCharacterDrawerData({
+          currentCharacterUserPages: data.Value.Items,
+        });
+      } else {
+        throw new Error(data.Message || '获取角色持股用户分页数据失败');
+      }
+    } catch (err) {
+      const errMsg = err instanceof Error ? err.message : "获取角色持股用户分页数据失败";
       console.error(errMsg);
     }
   };

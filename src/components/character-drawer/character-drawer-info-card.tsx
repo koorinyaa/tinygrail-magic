@@ -1,7 +1,9 @@
+import { getCharacterDetail, updateCharacter } from "@/api/character";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import BadgeLevel from "@/components/ui/badge-level";
 import { DrawerContent, DrawerNested, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -9,10 +11,12 @@ import { cn, formatCurrency, formatInteger, getAvatarUrl } from "@/lib/utils";
 import { useStore } from "@/store";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { ChartNoAxesColumn, Copy, Crown, EllipsisVertical, HelpCircle } from "lucide-react";
+import { useState } from "react";
 import { AiFillMoon, AiFillStar, AiFillSun, AiOutlineStar } from "react-icons/ai";
 import { BsStars } from "react-icons/bs";
 import { TbCaretRightFilled, TbX } from "react-icons/tb";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
 /**
  * 角色信息
@@ -122,20 +126,60 @@ interface CharacterAvatarProps {
  * @param {string} props.className 类名
  */
 function CharacterAvatar({ src, name, className }: CharacterAvatarProps) {
+  const isMobile = useIsMobile(448);
+
   return (
-    <div
-      className={cn("flex size-16 shrink-0 items-center justify-center rounded-full", className)}
-      aria-hidden="true"
-    >
-      <Avatar className="size-16 rounded-full border-2 border-secondary">
-        <AvatarImage
-          className="object-cover object-top pointer-events-none"
-          src={src}
-          alt={name}
-        />
-        <AvatarFallback className="rounded-full">C</AvatarFallback>
-      </Avatar>
-    </div>
+
+    <DrawerNested direction={isMobile ? "bottom" : "right"}>
+      <DrawerTrigger asChild>
+        <div
+          className={cn("relative flex size-16 shrink-0 items-center justify-center rounded-full cursor-pointer z-10", className)}
+          aria-hidden="true"
+        >
+          <Avatar className="size-16 rounded-full border-2 border-secondary">
+            <AvatarImage
+              className="object-cover object-top pointer-events-none"
+              src={src}
+              alt={name}
+            />
+            <AvatarFallback className="rounded-full">C</AvatarFallback>
+          </Avatar>
+        </div>
+      </DrawerTrigger>
+      <DrawerContent
+        className={cn("bg-background border-none overflow-hidden outline-none", { "rounded-l-md": !isMobile })}
+        aria-describedby={undefined}
+      >
+        <VisuallyHidden asChild>
+          <DrawerTitle />
+        </VisuallyHidden>
+        <div
+          className={cn(
+            "flex items-center justify-center h-8 px-4 py-2",
+            { "pt-0": isMobile }
+          )}
+        >
+          <span className="text-xs text-foreground font-semibold">角色头像</span>
+        </div>
+        <div className="flex flex-col pt-6 gap-y-4">
+          <div className="flex justify-center">
+            <img
+              src={src}
+              alt={name}
+              className="size-64 object-cover object-top rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.1)]"
+            />
+          </div>
+          <div className="flex flex-col items-center">
+            <Button 
+            variant="secondary" 
+            className="w-48 bg-slate-300/50 dark:bg-slate-700/50 hover:bg-slate-300/80 dark:hover:bg-slate-700/80"
+            >
+              更换头像
+            </Button>
+          </div>
+        </div>
+      </DrawerContent>
+    </DrawerNested>
   )
 }
 
@@ -193,11 +237,132 @@ function Attribute({ fluctuation, crown, bonus, className }: AttributeProps) {
   )
 }
 
-const Action = () => {
+/**
+ * 操作按钮
+ */
+function Action() {
+  const { userAssets, characterDrawer, characterDrawerData, setCharacterDrawerData } = useStore();
+  const [moreActionsOpen, setMoreActionsOpen] = useState(false);
+  const [open, setOpen] = useState(false)
+  const isMobile = useIsMobile(448);
+
+  /**
+   * 判断当前用户是否有修改头像权限
+   */
+  const canEditAvatar = () => {
+    const { characterBoardMembers = [] } = characterDrawerData;
+    // 筛选可修改头像的用户列表
+    const editableMembers = characterBoardMembers.filter(member => {
+      const lastActiveDate = new Date(member.LastActiveDate);
+      const now = new Date();
+      const daysDiff = Math.floor((now.getTime() - lastActiveDate.getTime()) / (1000 * 60 * 60 * 24));
+      return daysDiff < 5;
+    });
+
+    // 判断第一个成员的状态
+    const firstMember = editableMembers[0];
+    const editableUsers = firstMember?.State !== 666 ? [firstMember] : editableMembers;
+
+    // 判断当前用户是否在可编辑列表中
+    return editableUsers.some(member => member?.Name === userAssets?.name || userAssets?.id === 702);
+  }
+
+  /**
+   * 更新角色信息
+   */
+  const updateCharacterInfo = async () => {
+    if (!characterDrawer.characterId) return;
+    try {
+      const data = await updateCharacter(characterDrawer.characterId);
+      if (data.State === 0) {
+        toast.success("同步成功", {
+          description: data.Value,
+        });
+        fetchCharacterDetail();
+      } else {
+        throw new Error(data.Message || '更新角色信息失败');
+      }
+    } catch (err) {
+      const errMsg = err instanceof Error ? err.message : "更新角色信息失败";
+      console.error(errMsg);
+      toast.error("同步失败", {
+        description: errMsg,
+      });
+    }
+  };
+
+  /**
+   * 获取角色详情
+   */
+  const fetchCharacterDetail = async () => {
+    if (!characterDrawer.characterId) return;
+    try {
+      const data = await getCharacterDetail(characterDrawer.characterId);
+      if (data.State === 0) {
+        setCharacterDrawerData({
+          characterDetail: data.Value,
+        });
+      } else {
+        throw new Error(data.Message || '获取角色详情失败');
+      }
+    } catch (err) {
+      const errMsg = err instanceof Error ? err.message : "获取角色详情失败";
+      console.error(errMsg);
+    }
+  };
+
+  const buttons = [
+    <div
+      className="w-full h-full px-2 py-1.5 rounded-sm hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer"
+      onClick={() => { updateCharacterInfo(); }}
+    >
+      同步角色名称
+    </div>,
+    ...(canEditAvatar() ? [
+      <div onClick={() => { setOpen(true) }} className="w-full h-full px-2 py-1.5 rounded-sm hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer">
+        更换头像
+      </div>,
+    ] : []),
+  ];
+
   return (
-    <button className="absolute right-0 top-0 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer">
-      <EllipsisVertical className="size-4" />
-    </button>
+    <>
+      <DropdownMenu open={moreActionsOpen && characterDrawer.open} onOpenChange={setMoreActionsOpen}>
+        <DropdownMenuTrigger asChild>
+          <button className="absolute right-0 top-0 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer">
+            <EllipsisVertical className="size-4" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          {buttons.map((button, index) => (
+            <DropdownMenuItem key={index} className="p-0">
+              {button}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <DrawerNested direction={isMobile ? "bottom" : "right"} open={open} onOpenChange={setOpen}>
+        <DrawerContent
+          className={cn("bg-background border-none overflow-hidden outline-none", { "rounded-l-md": !isMobile })}
+          aria-describedby={undefined}
+        >
+          <VisuallyHidden asChild>
+            <DrawerTitle />
+          </VisuallyHidden>
+          <div
+            className={cn(
+              "flex items-center justify-center h-8 px-4 py-2",
+              { "pt-0": isMobile }
+            )}
+          >
+            <span className="text-xs text-foreground font-semibold">角色详细数据</span>
+          </div>
+          <div className="flex flex-col px-3 gap-y-1 text-xs divide-y divide-slate-300/30 dark:divide-slate-800/70">
+            11111
+          </div>
+        </DrawerContent>
+      </DrawerNested>
+    </>
   )
 }
 
@@ -288,6 +453,12 @@ function CharacterInfo({ className }: CharacterInfoProps) {
 function CharacterDetailButton() {
   const isMobile = useIsMobile(448);
   const { characterDrawerData } = useStore();
+  const {
+    characterDetail,
+    tinygrailCharacterData,
+    gensokyoCharacterData,
+    characterPoolAmount,
+  } = characterDrawerData;
 
   const {
     Level: level = 0,
@@ -301,7 +472,7 @@ function CharacterDetailButton() {
     Total: total = 0,
     Rate: rate = 0,
     StarForces: starForces = 0,
-  } = characterDrawerData.characterDetail || {};
+  } = characterDetail || {};
   const dividend = rank <= 500 ? rate * 0.005 * (601 - rank) : stars * 2
 
   const data = [
@@ -379,17 +550,17 @@ function CharacterDetailButton() {
     {
       id: "valhalla",
       label: "英灵殿",
-      value: ""
+      value: formatInteger(tinygrailCharacterData?.Total || 0)
     },
     {
       id: "gensokyo",
       label: "幻想乡",
-      value: ""
+      value: formatInteger(gensokyoCharacterData?.Total || 0)
     },
     {
       id: "pool",
       label: "奖池",
-      value: ""
+      value: formatInteger(characterPoolAmount || 0)
     },
     {
       id: "crown",
@@ -405,7 +576,7 @@ function CharacterDetailButton() {
 
   return (
     <DrawerNested direction={isMobile ? "bottom" : "right"}>
-      <DrawerTrigger>
+      <DrawerTrigger asChild>
         <div
           className="flex items-center justify-center p-1.5 bg-slate-100/80 dark:bg-slate-900/60 rounded-sm cursor-pointer"
         >
