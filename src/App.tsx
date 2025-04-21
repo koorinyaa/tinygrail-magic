@@ -8,10 +8,10 @@ import {
 } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import './App.css';
-import { CharacterSearchDialog } from "./components/character-search-dialog";
+import { CharacterSearchDialog } from "@/components/character-search-dialog";
 import { useStore } from "@/store";
 import { useEffect } from "react";
-import { LoginDialog } from "./components/ui/login-dialog";
+import { LoginDialog } from "@/components/login-dialog";
 
 export default function App() {
   const { theme, setTheme } = useStore()

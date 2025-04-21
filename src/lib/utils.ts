@@ -137,16 +137,32 @@ export function getCoverUrl(
 /**
  * 获取头像URL
  * @param {string | null | undefined} avatar - 头像
+ * @param {'large' |'medium' |'small'} size - 尺寸
  * @returns {string}
  */
-export function getAvatarUrl(avatar: string | null | undefined): string {
+export function getAvatarUrl(
+  avatar: string | null | undefined,
+  size: 'large' | 'medium' | 'small' = 'small'
+): string {
+  const config = {
+    large: {
+      cdnSuffix: '!w480'
+    },
+    medium: {
+      cdnSuffix: '!w240'
+    },
+    small: {
+      cdnSuffix: '!w120'
+    }
+  }[size];
+
   if (!avatar) return '//lain.bgm.tv/pic/user/l/icon.jpg';
 
   if (avatar.startsWith('https://tinygrail.oss-cn-hangzhou.aliyuncs.com/'))
-    return `${TINYGRAIL_CDN_URL}${avatar.slice(46)}!w120`;
+    return `${TINYGRAIL_CDN_URL}${avatar.slice(46)}${config.cdnSuffix}`;
 
   if (avatar.startsWith('/avatar'))
-    return `${TINYGRAIL_CDN_URL}${avatar}!w120`;
+    return `${TINYGRAIL_CDN_URL}${avatar}${config.cdnSuffix}`;
 
   return avatar.replace('http://', '//');
 }

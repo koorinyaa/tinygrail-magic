@@ -30,10 +30,10 @@ export function LoginDialog() {
         </DialogHeader>
         <div className="flex flex-col gap-4">
           <p className="text-sm text-muted-foreground">
-            需要授权后才能进行此操作
+            需要授权后才能进行操作
           </p>
           <Button
-            className="rounded-full"
+            className="rounded-full cursor-pointer"
             onClick={() => {
               window.open(AUTHORIZE_URL);
             }}

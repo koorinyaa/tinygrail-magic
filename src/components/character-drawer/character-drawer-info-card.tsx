@@ -4,19 +4,19 @@ import { Badge } from "@/components/ui/badge";
 import BadgeLevel from "@/components/ui/badge-level";
 import { DrawerContent, DrawerNested, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn, formatCurrency, formatInteger, getAvatarUrl } from "@/lib/utils";
 import { useStore } from "@/store";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { ChartNoAxesColumn, Copy, Crown, EllipsisVertical, HelpCircle } from "lucide-react";
+import { ChartNoAxesColumn, CircleAlert, Copy, Crown, EllipsisVertical, HelpCircle } from "lucide-react";
 import { useState } from "react";
 import { AiFillMoon, AiFillStar, AiFillSun, AiOutlineStar } from "react-icons/ai";
 import { BsStars } from "react-icons/bs";
 import { TbCaretRightFilled, TbX } from "react-icons/tb";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 
 /**
  * 角色信息
@@ -48,7 +48,7 @@ export default function CharacterDrawerInfoCard() {
         <CharacterDrawerInfoCardSkeleton /> :
         <div className="mt-20 p-3 bg-background rounded-t-md relative">
           <div className="absolute -top-6 left-4">
-            <CharacterAvatar src={getAvatarUrl(icon)} name={name} />
+            <CharacterAvatar src={icon} name={name} />
           </div>
           <div className="h-12 relative">
             <Action />
@@ -127,19 +127,47 @@ interface CharacterAvatarProps {
  */
 function CharacterAvatar({ src, name, className }: CharacterAvatarProps) {
   const isMobile = useIsMobile(448);
+  const { userAssets, characterDrawerData } = useStore();
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  /**
+   * 判断当前用户是否有修改头像权限
+   */
+
+
+  /**
+   * 判断当前用户是否有修改头像权限
+   */
+  const canEditAvatar = () => {
+    const { characterBoardMembers = [] } = characterDrawerData;
+    // 筛选可修改头像的用户列表
+    const editableMembers = characterBoardMembers.filter(member => {
+      const lastActiveDate = new Date(member.LastActiveDate);
+      const now = new Date();
+      const daysDiff = Math.floor((now.getTime() - lastActiveDate.getTime()) / (1000 * 60 * 60 * 24));
+      return daysDiff < 5;
+    });
+
+    // 判断第一个成员的状态
+    const firstMember = editableMembers[0];
+    const editableUsers = firstMember?.State !== 666 ? [firstMember] : editableMembers;
+
+    // 判断当前用户是否在可编辑列表中
+    return editableUsers.some(member => member?.Name === userAssets?.name || userAssets?.id === 702);
+  }
 
   return (
-
-    <DrawerNested direction={isMobile ? "bottom" : "right"}>
+    <DrawerNested direction={isMobile ? "bottom" : "right"} open={drawerOpen} onOpenChange={setDrawerOpen}>
       <DrawerTrigger asChild>
         <div
           className={cn("relative flex size-16 shrink-0 items-center justify-center rounded-full cursor-pointer z-10", className)}
           aria-hidden="true"
+          id="avatar"
         >
           <Avatar className="size-16 rounded-full border-2 border-secondary">
             <AvatarImage
               className="object-cover object-top pointer-events-none"
-              src={src}
+              src={getAvatarUrl(src)}
               alt={name}
             />
             <AvatarFallback className="rounded-full">C</AvatarFallback>
@@ -153,29 +181,50 @@ function CharacterAvatar({ src, name, className }: CharacterAvatarProps) {
         <VisuallyHidden asChild>
           <DrawerTitle />
         </VisuallyHidden>
-        <div
-          className={cn(
-            "flex items-center justify-center h-8 px-4 py-2",
-            { "pt-0": isMobile }
-          )}
-        >
-          <span className="text-xs text-foreground font-semibold">角色头像</span>
-        </div>
-        <div className="flex flex-col pt-6 gap-y-4">
+        <div className="flex flex-col py-6 gap-y-4">
           <div className="flex justify-center">
             <img
-              src={src}
+              src={getAvatarUrl(src, 'medium')}
               alt={name}
-              className="size-64 object-cover object-top rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.1)]"
+              className="size-48 object-cover object-top rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.1)] pointer-events-none"
             />
           </div>
-          <div className="flex flex-col items-center">
-            <Button 
-            variant="secondary" 
-            className="w-48 bg-slate-300/50 dark:bg-slate-700/50 hover:bg-slate-300/80 dark:hover:bg-slate-700/80"
-            >
-              更换头像
-            </Button>
+          <div className="flex flex-col gap-y-2 items-center">
+            <label className={canEditAvatar() ? "cursor-pointer" : "cursor-not-allowed"}>
+              <Input
+                id="picture"
+                type="file"
+                className="hidden"
+                accept="image/*"
+                disabled={!canEditAvatar()}
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+
+                  if (!file.type.startsWith('image/')) {
+                    toast.error('仅支持图片格式文件');
+                    e.target.value = '';
+                    return;
+                  }
+                }}
+              />
+              <span className={cn(
+                "flex items-center justify-center w-32 px-4 py-1.5 rounded-sm text-sm",
+                {
+                  "bg-slate-300/50 dark:bg-slate-700/50 hover:bg-slate-300/80 dark:hover:bg-slate-700/80": canEditAvatar(),
+                  "bg-slate-200/50 dark:bg-slate-800/50": !canEditAvatar(),
+                }
+              )}>
+                更换头像
+              </span>
+            </label>
+            {
+              !canEditAvatar() &&
+              <div className="flex gap-x-1 items-center justify-center text-xs text-foreground/60">
+                <CircleAlert className="size-3 inline-block opacity-60" />
+                <span>只有满足条件的董事会成员才有更换头像的权限</span>
+              </div>
+            }
           </div>
         </div>
       </DrawerContent>
@@ -241,31 +290,8 @@ function Attribute({ fluctuation, crown, bonus, className }: AttributeProps) {
  * 操作按钮
  */
 function Action() {
-  const { userAssets, characterDrawer, characterDrawerData, setCharacterDrawerData } = useStore();
+  const { characterDrawer, setCharacterDrawerData } = useStore();
   const [moreActionsOpen, setMoreActionsOpen] = useState(false);
-  const [open, setOpen] = useState(false)
-  const isMobile = useIsMobile(448);
-
-  /**
-   * 判断当前用户是否有修改头像权限
-   */
-  const canEditAvatar = () => {
-    const { characterBoardMembers = [] } = characterDrawerData;
-    // 筛选可修改头像的用户列表
-    const editableMembers = characterBoardMembers.filter(member => {
-      const lastActiveDate = new Date(member.LastActiveDate);
-      const now = new Date();
-      const daysDiff = Math.floor((now.getTime() - lastActiveDate.getTime()) / (1000 * 60 * 60 * 24));
-      return daysDiff < 5;
-    });
-
-    // 判断第一个成员的状态
-    const firstMember = editableMembers[0];
-    const editableUsers = firstMember?.State !== 666 ? [firstMember] : editableMembers;
-
-    // 判断当前用户是否在可编辑列表中
-    return editableUsers.some(member => member?.Name === userAssets?.name || userAssets?.id === 702);
-  }
 
   /**
    * 更新角色信息
@@ -318,11 +344,6 @@ function Action() {
     >
       同步角色名称
     </div>,
-    ...(canEditAvatar() ? [
-      <div onClick={() => { setOpen(true) }} className="w-full h-full px-2 py-1.5 rounded-sm hover:bg-gray-200 dark:hover:bg-gray-700 cursor-pointer">
-        更换头像
-      </div>,
-    ] : []),
   ];
 
   return (
@@ -341,27 +362,6 @@ function Action() {
           ))}
         </DropdownMenuContent>
       </DropdownMenu>
-      <DrawerNested direction={isMobile ? "bottom" : "right"} open={open} onOpenChange={setOpen}>
-        <DrawerContent
-          className={cn("bg-background border-none overflow-hidden outline-none", { "rounded-l-md": !isMobile })}
-          aria-describedby={undefined}
-        >
-          <VisuallyHidden asChild>
-            <DrawerTitle />
-          </VisuallyHidden>
-          <div
-            className={cn(
-              "flex items-center justify-center h-8 px-4 py-2",
-              { "pt-0": isMobile }
-            )}
-          >
-            <span className="text-xs text-foreground font-semibold">角色详细数据</span>
-          </div>
-          <div className="flex flex-col px-3 gap-y-1 text-xs divide-y divide-slate-300/30 dark:divide-slate-800/70">
-            11111
-          </div>
-        </DrawerContent>
-      </DrawerNested>
     </>
   )
 }
