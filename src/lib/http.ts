@@ -77,8 +77,13 @@ export class HttpService {
     return this.request({ method: 'get', url, params, ...config });
   }
 
-  public post<T = any>(url: string, data?: object, config?: AxiosRequestConfig): Promise<T> {
-    return this.request({ method: 'post', url, data, ...config });
+  public post<T = any>(url: string, data?: object | string, config?: AxiosRequestConfig): Promise<T> {
+    return this.request({
+      method: 'post',
+      url,
+      data: JSON.stringify(data),
+      ...config
+    });
   }
 
   public put<T = any>(url: string, data?: object, config?: AxiosRequestConfig): Promise<T> {

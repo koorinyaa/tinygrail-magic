@@ -8,6 +8,7 @@ import styles from "./character-drawer-content.module.css";
 import CharacterDrawerHeader from "./character-drawer-header";
 import CharacterDrawerInfoCard from "./character-drawer-info-card";
 import CharacterDrawerTabs from "./character-drawer-tabs";
+import { verifyAuth } from "@/lib/auth";
 
 interface CharacterDrawerContentProps {
   characterId: number | null;
@@ -20,7 +21,7 @@ interface CharacterDrawerContentProps {
 export default function CharacterDrawerContent({ characterId }: CharacterDrawerContentProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [backgroundImage, setBackgroundImage] = useState("");
-  const { userAssets, characterDrawerData, setCharacterDrawerData } = useStore();
+  const { userAssets, setUserAssets, characterDrawerData, setCharacterDrawerData } = useStore();
   const {
     characterTemples = [],
     characterlinks = [],
@@ -30,6 +31,7 @@ export default function CharacterDrawerContent({ characterId }: CharacterDrawerC
     setBackgroundImage("");
     
     if (characterId) {
+      verifyAuth(setUserAssets);
       initializeCharacterData();
       fatchTinygrailCharacterData(characterId);
       fetchGensokyoCharacterData(characterId);

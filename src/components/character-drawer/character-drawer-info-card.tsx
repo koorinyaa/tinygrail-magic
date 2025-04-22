@@ -1,18 +1,22 @@
-import { getCharacterDetail, updateCharacter } from "@/api/character";
+import { getCharacterDetail, updateCharacter, uploadCharacterAvatar } from "@/api/character";
+import { AvatarCropper } from "@/components/avatar-cropper";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import BadgeLevel from "@/components/ui/badge-level";
-import { DrawerContent, DrawerNested, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
+import { Button } from "@/components/ui/button";
+import { DrawerClose, DrawerContent, DrawerNested, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { cn, formatCurrency, formatInteger, getAvatarUrl } from "@/lib/utils";
+import { cn, formatCurrency, formatInteger, getAvatarUrl, isEmpty, resizeImage } from "@/lib/utils";
 import { useStore } from "@/store";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import { md5 } from 'js-md5';
 import { ChartNoAxesColumn, CircleAlert, Copy, Crown, EllipsisVertical, HelpCircle } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { FixedCropperRef } from "react-advanced-cropper";
 import { AiFillMoon, AiFillStar, AiFillSun, AiOutlineStar } from "react-icons/ai";
 import { BsStars } from "react-icons/bs";
 import { TbCaretRightFilled, TbX } from "react-icons/tb";
@@ -22,14 +26,13 @@ import { toast } from "sonner";
  * 角色信息
  */
 export default function CharacterDrawerInfoCard() {
-  const { characterDrawerData } = useStore();
+  const { characterDrawer, characterDrawerData, setCharacterDrawerData } = useStore();
   const {
     loading = false,
     characterDetail = null,
   } = characterDrawerData;
 
   const {
-    Icon: icon = '',
     Name: name = '',
     CharacterId: characterId = 0,
     Level: level = 0,
@@ -42,16 +45,37 @@ export default function CharacterDrawerInfoCard() {
     StarForces: starForces = 0,
   } = characterDetail || {};
 
+
+  /**
+   * 获取角色详情
+   */
+  const fetchCharacterDetail = async () => {
+    if (!characterDrawer.characterId) return;
+    try {
+      const data = await getCharacterDetail(characterDrawer.characterId);
+      if (data.State === 0) {
+        setCharacterDrawerData({
+          characterDetail: data.Value,
+        });
+      } else {
+        throw new Error(data.Message || '获取角色详情失败');
+      }
+    } catch (err) {
+      const errMsg = err instanceof Error ? err.message : "获取角色详情失败";
+      console.error(errMsg);
+    }
+  };
+
   return (
     <>
       {loading ?
         <CharacterDrawerInfoCardSkeleton /> :
         <div className="mt-20 p-3 bg-background rounded-t-md relative">
           <div className="absolute -top-6 left-4">
-            <CharacterAvatar src={icon} name={name} />
+            <CharacterAvatar fetchCharacterDetail={fetchCharacterDetail} />
           </div>
           <div className="h-12 relative">
-            <Action />
+            <Action fetchCharacterDetail={fetchCharacterDetail} />
           </div>
           <div className="flex flex-row gap-x-8">
             <div className="flex-1 flex flex-col overflow-hidden">
@@ -113,27 +137,35 @@ export default function CharacterDrawerInfoCard() {
   )
 }
 
+
+
 interface CharacterAvatarProps {
-  src: string;
-  name: string;
+  fetchCharacterDetail: () => void;
   className?: string;
 }
 /**
  * 角色头像
  * @param {CharacterAvatarProps} props
- * @param {string} props.src - 头像url
- * @param {string} props.name 名称
+ * @param {() => void} props.fetchCharacterDetail - 获取角色详情
  * @param {string} props.className 类名
  */
-function CharacterAvatar({ src, name, className }: CharacterAvatarProps) {
+function CharacterAvatar({ fetchCharacterDetail, className }: CharacterAvatarProps) {
   const isMobile = useIsMobile(448);
   const { userAssets, characterDrawerData } = useStore();
+  const cropperRef = useRef<FixedCropperRef>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState<{ type?: string; src: string; } | null>(null);
+  const {
+    CharacterId: characterId = 0,
+    Icon: src = '',
+    Name: name = '',
+  } = characterDrawerData.characterDetail || {};
 
-  /**
-   * 判断当前用户是否有修改头像权限
-   */
-
+  useEffect(() => {
+    if (!drawerOpen) {
+      setUploadedImage(null);
+    }
+  }, [drawerOpen]);
 
   /**
    * 判断当前用户是否有修改头像权限
@@ -156,8 +188,103 @@ function CharacterAvatar({ src, name, className }: CharacterAvatarProps) {
     return editableUsers.some(member => member?.Name === userAssets?.name || userAssets?.id === 702);
   }
 
+  /**
+   * 上传图片按钮
+   */
+  const UploadImageButton = ({ children, className }: {
+    children: React.ReactNode;
+    className?: string;
+  }) => {
+    return (
+      <label
+        className={cn(
+          canEditAvatar() ? "cursor-pointer" : "cursor-not-allowed",
+          className
+        )}
+      >
+        <Input
+          id="picture"
+          type="file"
+          className="hidden"
+          accept="image/*"
+          disabled={!canEditAvatar()}
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+              toast.error('仅支持图片格式文件');
+              e.target.value = '';
+              return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = () => {
+              const blob = URL.createObjectURL(file);
+              setUploadedImage({
+                src: blob,
+                type: file.type
+              })
+            };
+            reader.onerror = (error) => {
+              console.error('文件读取失败:', error);
+              toast.error('图片读取失败');
+            };
+            reader.readAsDataURL(file);
+          }}
+        />
+        <span className={cn(
+          "flex items-center justify-center h-9 px-4 py-1.5 rounded-md text-sm font-medium",
+          {
+            "bg-slate-300/50 dark:bg-slate-700/50 hover:bg-slate-300/80 dark:hover:bg-slate-700/80": canEditAvatar(),
+            "bg-slate-200/50 dark:bg-slate-800/50": !canEditAvatar(),
+          },
+        )}>
+          {children}
+        </span>
+      </label>
+    )
+  }
+
+  /**
+   * 上传头像
+   */
+  const handleUploadAvatar = async () => {
+    if (cropperRef.current) {
+      const dataUrl = cropperRef.current.getCanvas()?.toDataURL("image/png");
+      if (dataUrl) {
+        try {
+          const processedDataUrl = await resizeImage(dataUrl, {
+            width: 256,
+            height: 256,
+            type: 'image/jpeg',
+            smoothing: true,
+            quality: 'high'
+          });
+          const hash = md5(processedDataUrl);
+          const result = await uploadCharacterAvatar(characterId, processedDataUrl, hash);
+          if (result.State === 0) {
+            toast.success('更换成功');
+            fetchCharacterDetail();
+          } else {
+            throw new Error(result.Message || '头像更换失败');
+          }
+        } catch (err) {
+          const errMsg = err instanceof Error ? err.message : "头像更换失败";
+          console.error(errMsg);
+          toast.error(errMsg);
+        }
+      }
+    }
+  }
+
   return (
-    <DrawerNested direction={isMobile ? "bottom" : "right"} open={drawerOpen} onOpenChange={setDrawerOpen}>
+    <DrawerNested
+      direction={isMobile ? "bottom" : "right"}
+      open={drawerOpen}
+      onOpenChange={setDrawerOpen}
+      handleOnly={!isEmpty(uploadedImage && uploadedImage.src)}
+    >
       <DrawerTrigger asChild>
         <div
           className={cn("relative flex size-16 shrink-0 items-center justify-center rounded-full cursor-pointer z-10", className)}
@@ -181,52 +308,52 @@ function CharacterAvatar({ src, name, className }: CharacterAvatarProps) {
         <VisuallyHidden asChild>
           <DrawerTitle />
         </VisuallyHidden>
-        <div className="flex flex-col py-6 gap-y-4">
-          <div className="flex justify-center">
-            <img
-              src={getAvatarUrl(src, 'medium')}
-              alt={name}
-              className="size-48 object-cover object-top rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.1)] pointer-events-none"
-            />
-          </div>
-          <div className="flex flex-col gap-y-2 items-center">
-            <label className={canEditAvatar() ? "cursor-pointer" : "cursor-not-allowed"}>
-              <Input
-                id="picture"
-                type="file"
-                className="hidden"
-                accept="image/*"
-                disabled={!canEditAvatar()}
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (!file) return;
-
-                  if (!file.type.startsWith('image/')) {
-                    toast.error('仅支持图片格式文件');
-                    e.target.value = '';
-                    return;
-                  }
-                }}
-              />
-              <span className={cn(
-                "flex items-center justify-center w-32 px-4 py-1.5 rounded-sm text-sm",
-                {
-                  "bg-slate-300/50 dark:bg-slate-700/50 hover:bg-slate-300/80 dark:hover:bg-slate-700/80": canEditAvatar(),
-                  "bg-slate-200/50 dark:bg-slate-800/50": !canEditAvatar(),
-                }
-              )}>
-                更换头像
-              </span>
-            </label>
-            {
-              !canEditAvatar() &&
-              <div className="flex gap-x-1 items-center justify-center text-xs text-foreground/60">
-                <CircleAlert className="size-3 inline-block opacity-60" />
-                <span>只有满足条件的董事会成员才有更换头像的权限</span>
+        {
+          isEmpty(uploadedImage && uploadedImage.src) ?
+            <div className={cn("flex flex-col py-4 gap-y-2 overflow-y-auto", { "pt-2": isMobile })}>
+              <div className="flex justify-center">
+                <img
+                  src={getAvatarUrl(src, 'medium')}
+                  alt={name}
+                  className="size-48 object-cover object-top rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.1)] pointer-events-none"
+                />
               </div>
-            }
-          </div>
-        </div>
+              <div className="flex flex-col gap-y-2 items-center">
+                <UploadImageButton className="w-32">
+                  更换头像
+                </UploadImageButton>
+                {
+                  !canEditAvatar() &&
+                  <div className="flex gap-x-1 items-center justify-center text-xs text-foreground/60">
+                    <CircleAlert className="size-3 inline-block opacity-50" />
+                    <span>只有满足条件的董事会成员才有更换头像的权限</span>
+                  </div>
+                }
+              </div>
+            </div> :
+            <div className={cn("flex flex-col p-2 gap-y-2", { "pt-0": isMobile })}>
+              <div className="flex flex-col rounded-md overflow-hidden">
+                <AvatarCropper cropperRef={cropperRef} src={uploadedImage && uploadedImage.src} />
+              </div>
+              <div className="flex gap-x-2 justify-center">
+                <DrawerClose asChild>
+                  <Button
+                    variant="secondary"
+                    className={cn(
+                      "flex-1 flex items-center justify-center w-full px-0 py-1.5 rounded-md text-sm cursor-pointer",
+                      "bg-slate-300/50 dark:bg-slate-700/50 hover:bg-slate-300/80 dark:hover:bg-slate-700/80"
+                    )}
+                    onClick={handleUploadAvatar}
+                  >
+                    确定
+                  </Button>
+                </DrawerClose>
+                <UploadImageButton className="flex-1 w-full">
+                  重新上传
+                </UploadImageButton>
+              </div>
+            </div>
+        }
       </DrawerContent>
     </DrawerNested>
   )
@@ -286,11 +413,17 @@ function Attribute({ fluctuation, crown, bonus, className }: AttributeProps) {
   )
 }
 
+interface ActionProps {
+  fetchCharacterDetail: () => void;
+}
+
 /**
  * 操作按钮
+ * @param {ActionProps} props
+ * @param {() => void} props.fetchCharacterDetail - 更新角色信息
  */
-function Action() {
-  const { characterDrawer, setCharacterDrawerData } = useStore();
+function Action({ fetchCharacterDetail }: ActionProps) {
+  const { characterDrawer } = useStore();
   const [moreActionsOpen, setMoreActionsOpen] = useState(false);
 
   /**
@@ -314,26 +447,6 @@ function Action() {
       toast.error("同步失败", {
         description: errMsg,
       });
-    }
-  };
-
-  /**
-   * 获取角色详情
-   */
-  const fetchCharacterDetail = async () => {
-    if (!characterDrawer.characterId) return;
-    try {
-      const data = await getCharacterDetail(characterDrawer.characterId);
-      if (data.State === 0) {
-        setCharacterDrawerData({
-          characterDetail: data.Value,
-        });
-      } else {
-        throw new Error(data.Message || '获取角色详情失败');
-      }
-    } catch (err) {
-      const errMsg = err instanceof Error ? err.message : "获取角色详情失败";
-      console.error(errMsg);
     }
   };
 

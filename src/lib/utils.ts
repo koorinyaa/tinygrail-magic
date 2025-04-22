@@ -182,3 +182,85 @@ export function formatDateTime(dateString: string): string {
     hour12: false
   }).format(new Date(dateString)).replace(/(\d+)\/(\d+)\/(\d+),?/, '$1年$2月$3日 ');
 }
+
+/**
+ * 将Data URL转换为Blob对象
+ * @param {string} dataUrl - Data URL字符串
+ * @returns {Blob} - 转换后的Blob对象
+ */
+export function dataURLtoBlob(dataUrl: string): Blob {
+  const arr = dataUrl.split(',');
+  const mime = arr[0].match(/:(.*?);/)![1];
+  const bstr = atob(arr[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+  
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+  
+  return new Blob([u8arr], { type: mime });
+}
+
+/**
+ * 调整图片尺寸并转换格式
+ * @param {string} dataUrl - 原始图片的Data URL
+ * @param {Object} options - 转换选项
+ * @param {number} options.width - 目标宽度
+ * @param {number} options.height - 目标高度
+ * @param {string} [options.type='image/jpeg'] - 输出图片格式
+ * @param {boolean} [options.smoothing=true] - 是否启用平滑处理
+ * @param {'low' | 'medium' | 'high'} [options.quality='high'] - 平滑质量
+ * @returns {Promise<string>} - 处理后的Data URL
+ */
+export function resizeImage(
+  dataUrl: string,
+  options: {
+    width: number;
+    height: number;
+    type?: string;
+    smoothing?: boolean;
+    quality?: 'low' | 'medium' | 'high';
+  }
+): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.src = dataUrl;
+
+    image.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = options.width;
+      canvas.height = options.height;
+
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        reject(new Error('无法创建Canvas上下文'));
+        return;
+      }
+
+      // 设置图像平滑
+      ctx.imageSmoothingEnabled = options.smoothing ?? true;
+      ctx.imageSmoothingQuality = options.quality ?? 'high';
+
+      // 绘制图像
+      ctx.drawImage(
+        image,
+        0,
+        0,
+        image.width,
+        image.height,
+        0,
+        0,
+        options.width,
+        options.height
+      );
+
+      // 转换为指定格式的Data URL
+      resolve(canvas.toDataURL(options.type ?? 'image/jpeg'));
+    };
+
+    image.onerror = () => {
+      reject(new Error('图片加载失败'));
+    };
+  });
+}

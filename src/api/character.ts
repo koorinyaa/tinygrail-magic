@@ -1,4 +1,6 @@
 import { httpService, TinygrailBaseResponse } from "@/lib/http";
+import { dataURLtoBlob } from "@/lib/utils";
+import { getOssSignature, uploadToOss } from "./tinygrail-oss";
 
 /**
  * 圣殿item
@@ -100,7 +102,7 @@ export interface TempleItem {
  * @property {number} Sacrifices - 英灵殿数量
  * @property {number} Type - 拍卖人数
  */
-export interface CurrentTopWeekItem extends TempleItem {}
+export interface CurrentTopWeekItem extends TempleItem { }
 export interface TopWeekResponse extends TinygrailBaseResponse<Array<CurrentTopWeekItem>> { }
 
 /**
@@ -129,7 +131,7 @@ export async function getTopWeek(): Promise<TopWeekResponse> {
  * @property {number} Create - 创建时间
  * @property {number} Level - 排名
  */
-export interface HistoryTopWeekItem extends TempleItem {}
+export interface HistoryTopWeekItem extends TempleItem { }
 export interface TopWeekHistoryResponse extends TinygrailBaseResponse<{
   Items: HistoryTopWeekItem[];
   CurrentPage: number;
@@ -137,7 +139,7 @@ export interface TopWeekHistoryResponse extends TinygrailBaseResponse<{
   TotalItems: number;
   ItemsPerPage: number;
   Context: any;
-}> {}
+}> { }
 
 /**
  * 获取历史萌王数据
@@ -227,7 +229,7 @@ export interface CharacterDetail {
   State: number;
   Type: number;
 }
-export interface CharacterDetailResponse extends TinygrailBaseResponse<CharacterDetail> {}
+export interface CharacterDetailResponse extends TinygrailBaseResponse<CharacterDetail> { }
 
 /**
  * 获取角色详细信息
@@ -243,7 +245,7 @@ export async function getCharacterDetail(characterId: number): Promise<Character
 }
 
 
-export interface TempleResponse extends TinygrailBaseResponse<TempleItem[]> {}
+export interface TempleResponse extends TinygrailBaseResponse<TempleItem[]> { }
 
 /**
  * 获取角色圣殿数据
@@ -259,7 +261,7 @@ export async function getCharacterTemple(characterId: number): Promise<TempleRes
 }
 
 
-export interface LinksResponse extends TinygrailBaseResponse<TempleItem[]> {}
+export interface LinksResponse extends TinygrailBaseResponse<TempleItem[]> { }
 
 /**
  * 获取角色LINK圣殿数据
@@ -275,7 +277,7 @@ export async function getCharacterLinks(characterId: number): Promise<LinksRespo
 }
 
 
-export interface CharacterSearchResponse extends TinygrailBaseResponse<CharacterDetail[]> {}
+export interface CharacterSearchResponse extends TinygrailBaseResponse<CharacterDetail[]> { }
 
 /**
  * 搜索角色
@@ -290,7 +292,7 @@ export async function searchCharacter(keyword: string): Promise<CharacterSearchR
   }
 }
 
-export interface CharacterPoolResponse extends TinygrailBaseResponse<number> {}
+export interface CharacterPoolResponse extends TinygrailBaseResponse<number> { }
 
 /**
  * 获取角色奖池数据
@@ -426,7 +428,7 @@ export interface CharacterUserPageValue {
   Context: any;
 }
 
-export interface CharacterUserResponse extends TinygrailBaseResponse<CharacterUserPageValue> {}
+export interface CharacterUserResponse extends TinygrailBaseResponse<CharacterUserPageValue> { }
 
 /**
  * 获取角色持有者列表
@@ -457,7 +459,7 @@ export async function getCharacterUsers(
  * @property {number} State - 更新状态
  * @property {string} Value - 更新提示信息
  */
-export interface CharacterUpdateResponse extends TinygrailBaseResponse<string> {}
+export interface CharacterUpdateResponse extends TinygrailBaseResponse<string> { }
 
 /**
  * 更新角色信息
@@ -476,5 +478,50 @@ export async function updateCharacter(
     throw error;
   }
 }
+
+
+export interface AvatarUploadResponse extends TinygrailBaseResponse<number> { }
+/**
+ * 上传角色头像
+ * @param {number} characterId - 角色ID
+ * @param {string} imageDataUrl - 图片Data URL
+ * @param {string} hash - 文件哈希值
+ * @returns {Promise<TinygrailBaseResponse>} - 上传结果
+ */
+export async function uploadCharacterAvatar(
+  characterId: number,
+  imageDataUrl: string,
+  hash: string,
+): Promise<AvatarUploadResponse> {
+  try {
+    // 转换为Blob对象
+    const blob = dataURLtoBlob(imageDataUrl);
+
+    // 获取OSS签名
+    const ossSignatureResponse = await getOssSignature(
+      'avatar',
+      hash,
+      encodeURIComponent('image/jpeg')
+    );
+
+    if (ossSignatureResponse.State !== 0) {
+      throw new Error(ossSignatureResponse.Message || '获取签名失败');
+    }
+
+    // 上传到OSS
+    await uploadToOss('avatar', hash, blob, 'image/jpeg', ossSignatureResponse.Value);
+
+    // 更新角色头像
+    return await httpService.post<AvatarUploadResponse>(
+      `/chara/avatar/${characterId}`,
+      `https://tinygrail.oss-cn-hangzhou.aliyuncs.com/avatar/${hash}.jpg`,
+    );
+  } catch (error) {
+    console.error('上传角色头像失败:', (error as Error).message);
+    throw error;
+  }
+}
+
+
 
 
