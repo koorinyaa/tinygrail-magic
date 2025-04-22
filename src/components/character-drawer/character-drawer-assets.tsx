@@ -3,10 +3,11 @@ import { getUserItems, UserItemValue } from "@/api/magic-item";
 import { UserCharacterValue } from "@/api/user";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TempleCard } from "@/components/ui/temple-card";
-import { formatCurrency, formatInteger, getAvatarUrl, getCoverUrl, isEmpty } from "@/lib/utils";
+import { cn, formatCurrency, formatInteger, getAvatarUrl, getCoverUrl, isEmpty } from "@/lib/utils";
 import { useStore } from "@/store";
 import { Ban, Box, ChevronLeft, ChevronRight, ChevronsRight, CircleFadingArrowUp, Sparkles } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import styles from './character-drawer-assets.module.css';
 
 /**
  * 资产栏
@@ -367,10 +368,10 @@ function Action({ loading, userTemple }: ActionProps) {
 
       <div
         ref={scrollContainerRef}
-        className="w-full flex flex-nowrap gap-1.5 overflow-x-auto px-1 py-0.5"
-        style={{
-          scrollbarWidth: 'none',
-        }}
+        className={cn(
+          "w-full flex flex-nowrap gap-1.5 overflow-x-auto px-1 py-0.5",
+          styles.action
+        )}
       >
         {buttons.map((button, index) => (
           <div
@@ -405,7 +406,7 @@ function Action({ loading, userTemple }: ActionProps) {
 function ActionSkeleton() {
   return (
     <div
-      className="w-full flex flex-nowrap gap-1.5 overflow-x-auto"
+      className="w-full flex flex-nowrap gap-1.5 overflow-x-auto px-1 py-0.5"
       style={{
         scrollbarWidth: 'none',
       }}

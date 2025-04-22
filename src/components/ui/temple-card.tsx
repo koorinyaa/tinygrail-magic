@@ -50,12 +50,13 @@ export function TempleCard({ cover, assets, sacrifices, starForces, templeLevel,
         className={cn(
           "absolute top-0 right-0 size-8 m-1 p-1",
           "flex items-center justify-center rounded-full scale-80",
-          "text-sm font-bold font-mono",
+          "text-sm font-bold font-mono border-2 border-slate-200/40",
+          "bg-slate-400/20 backdrop-blur-lg",
           {
-            "bg-gray-300 text-black/70": templeLevel <= 0,
-            "bg-green-500 dark:bg-green-600 text-white dark:text-white/80": templeLevel === 1,
-            "bg-purple-500 dark:bg-purple-600 text-white dark:text-white/80": templeLevel === 2,
-            "bg-amber-500 dark:bg-amber-600 text-white dark:text-white/80": templeLevel === 3,
+            "text-gray-400": templeLevel <= 0,
+            "text-green-500 dark:text-green-600": templeLevel === 1,
+            "text-purple-500 dark:text-purple-600": templeLevel === 2,
+            "text-amber-500 dark:text-amber-600": templeLevel === 3,
           }
         )}
       >
