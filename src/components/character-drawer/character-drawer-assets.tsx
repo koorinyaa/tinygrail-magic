@@ -8,6 +8,7 @@ import { cn, formatCurrency, formatInteger, getAvatarUrl, getCoverUrl, isEmpty }
 import { useStore } from "@/store";
 import { ArrowUpRight, Ban, Box, ChevronLeft, ChevronRight, CircleFadingArrowUp, Sparkles } from "lucide-react";
 import { ReactNode, useEffect, useRef, useState } from "react";
+import { PhotoProvider, PhotoView } from "react-photo-view";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { InputNumber } from "../ui/input-number";
@@ -114,42 +115,48 @@ function UserTempleCard({ loading, data }: UserTempleCardProps) {
     return (
       <div className="relative flex flex-row items-center w-[214px] h-full mt-3 shadow-card">
         <div className="absolute w-[120px] h-[165px] mr-[10px] -skew-x-10 origin-top-left overflow-hidden">
-          <div
-            className={cn(
-              "relative w-[118px] h-[160px] box-content border-2 border-r-0 rounded-l-md",
-              "bg-cover bg-center bg-no-repeat",
-              "skew-x-10 origin-top-left overflow-hidden",
-              {
-                "border-gray-400": leftLink.Level === 0,
-                "border-green-500": leftLink.Level === 1,
-                "border-purple-500": leftLink.Level === 2,
-                "border-amber-500": leftLink.Level === 3,
-              }
-            )}
-            style={{
-              backgroundImage: `url(${getAvatarUrl(leftLink.Cover, "large")})`,
-            }}
-          >
-          </div>
+          <PhotoProvider bannerVisible={false} maskOpacity={0.4}>
+            <PhotoView src={getCoverUrl(leftLink.Cover || "", "large")}>
+              <div
+                className={cn(
+                  "relative w-[118px] h-[160px] box-content border-2 border-r-0 rounded-l-md",
+                  "bg-cover bg-center bg-no-repeat",
+                  "skew-x-10 origin-top-left overflow-hidden",
+                  {
+                    "border-gray-400": leftLink.Level === 0,
+                    "border-green-500": leftLink.Level === 1,
+                    "border-purple-500": leftLink.Level === 2,
+                    "border-amber-500": leftLink.Level === 3,
+                  }
+                )}
+                style={{
+                  backgroundImage: `url(${getAvatarUrl(leftLink.Cover, "medium")})`,
+                }}
+              />
+            </PhotoView>
+          </PhotoProvider>
         </div>
         <div className="absolute flex left-[93px] w-[120px] h-[165px] mr-[10px] -skew-x-10 origin-bottom-right overflow-hidden">
-          <div
-            className={cn(
-              "relative w-[118px] h-[160px] box-content border-2 border-l-0 rounded-r-md",
-              "bg-cover bg-center bg-no-repeat",
-              "skew-x-10 origin-bottom-right overflow-hidden",
-              {
-                "border-gray-400": rightLink.Level === 0,
-                "border-green-500": rightLink.Level === 1,
-                "border-purple-500": rightLink.Level === 2,
-                "border-amber-500": rightLink.Level === 3,
-              }
-            )}
-            style={{
-              backgroundImage: `url(${getAvatarUrl(rightLink.Cover || "", "large")})`,
-            }}
-          >
-          </div>
+          <PhotoProvider bannerVisible={false} maskOpacity={0.4}>
+            <PhotoView src={getCoverUrl(rightLink.Cover || "", "large")}>
+              <div
+                className={cn(
+                  "relative w-[118px] h-[160px] box-content border-2 border-l-0 rounded-r-md",
+                  "bg-cover bg-center bg-no-repeat",
+                  "skew-x-10 origin-bottom-right overflow-hidden",
+                  {
+                    "border-gray-400": rightLink.Level === 0,
+                    "border-green-500": rightLink.Level === 1,
+                    "border-purple-500": rightLink.Level === 2,
+                    "border-amber-500": rightLink.Level === 3,
+                  }
+                )}
+                style={{
+                  backgroundImage: `url(${getAvatarUrl(rightLink.Cover || "", "medium")})`,
+                }}
+              />
+            </PhotoView>
+          </PhotoProvider>
         </div>
       </div>
     )
@@ -169,7 +176,7 @@ function UserTempleCard({ loading, data }: UserTempleCardProps) {
 
     return (
       <TempleCard
-        cover={getCoverUrl(cover, 'medium')}
+        cover={cover}
         assets={assets}
         sacrifices={sacrifices}
         starForces={starForces}

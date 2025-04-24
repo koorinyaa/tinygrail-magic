@@ -1,7 +1,8 @@
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Progress } from "@/components/ui/progress";
-import { cn, formatCurrency } from "@/lib/utils";
+import { cn, formatCurrency, getCoverUrl } from "@/lib/utils";
 import { AiFillStar } from "react-icons/ai";
+import { PhotoProvider, PhotoView } from "react-photo-view";
 
 interface TempleCardProps {
   cover: string;
@@ -30,12 +31,16 @@ export function TempleCard({ cover, assets, sacrifices, starForces, templeLevel,
       ratio={3 / 4}
       className={cn("relative border border-slate-200/50 dark:border-slate-700/50", className)}
     >
-      <img
-        src={cover}
-        alt="圣殿"
-        draggable="false"
-        className="w-full h-full object-cover object-top"
-      />
+      <PhotoProvider bannerVisible={false} maskOpacity={0.4}>
+        <PhotoView src={getCoverUrl(cover, "large")}>
+          <img
+            src={getCoverUrl(cover, "medium")}
+            alt="圣殿"
+            draggable="false"
+            className="w-full h-full object-cover object-top"
+          />
+        </PhotoView>
+      </PhotoProvider>
       <div
         className={cn(
           "absolute top-0 right-0 size-8 m-1 p-1",
