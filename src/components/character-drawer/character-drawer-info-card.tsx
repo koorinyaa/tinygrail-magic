@@ -315,7 +315,7 @@ function CharacterAvatar({ fetchCharacterDetail, className }: CharacterAvatarPro
                 <img
                   src={getAvatarUrl(src, 'medium')}
                   alt={name}
-                  className="size-48 object-cover object-top rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.1)] pointer-events-none"
+                  className="size-48 object-cover object-top rounded-sm shadow-card pointer-events-none"
                 />
               </div>
               <div className="flex flex-col gap-y-2 items-center">

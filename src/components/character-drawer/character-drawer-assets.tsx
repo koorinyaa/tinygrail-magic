@@ -1,13 +1,19 @@
-import { CharacterDetail, TempleItem } from "@/api/character";
+import { CharacterDetail, sacrificeCharacter, TempleItem } from "@/api/character";
 import { getUserItems, UserItemValue } from "@/api/magic-item";
 import { UserCharacterValue } from "@/api/user";
+import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TempleCard } from "@/components/ui/temple-card";
 import { cn, formatCurrency, formatInteger, getAvatarUrl, getCoverUrl, isEmpty } from "@/lib/utils";
 import { useStore } from "@/store";
-import { Ban, Box, ChevronLeft, ChevronRight, ChevronsRight, CircleFadingArrowUp, Sparkles } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { ArrowUpRight, Ban, Box, ChevronLeft, ChevronRight, CircleFadingArrowUp, Sparkles } from "lucide-react";
+import { ReactNode, useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
+import { Button } from "../ui/button";
+import { InputNumber } from "../ui/input-number";
 import styles from './character-drawer-assets.module.css';
+import { fatchTinygrailCharacterData, fetchCharacterBoardMembers, fetchCharacterDetail, fetchCharacterLinks, fetchCharacterPoolAmount, fetchCharacterTemple, fetchCharacterUserPageData, fetchGensokyoCharacterData, fetchUserCharacterData, getUserTemple } from "./character-drawer-content";
+import CharacterDrawerPopover from "./character-drawer-popover";
 
 /**
  * 资产栏
@@ -42,7 +48,7 @@ export default function CharacterDrawerAssets() {
 
   return (
     <div className="flex flex-col gap-y-2">
-      <div className="flex flex-row">
+      <div className="flex flex-row relative">
         <UserTempleCard loading={loading} data={userTemple} />
         <UserAssetsInfo
           loading={loading}
@@ -69,6 +75,9 @@ interface UserTempleCardProps {
  * @param {TempleItem | null} porps.data 我的圣殿数据
  */
 function UserTempleCard({ loading, data }: UserTempleCardProps) {
+  const { setCharacterDrawer } = useStore();
+  const [showLink, setShowLink] = useState(false);
+
   const {
     Assets: assets = 0,
     Sacrifices: sacrifices = 0,
@@ -76,8 +85,75 @@ function UserTempleCard({ loading, data }: UserTempleCardProps) {
     Level: templeLevel = 0,
     Refine: refine = 0,
     StarForces: starForces = 0,
-    Link: link = {},
+    Link: link,
   } = data || {};
+
+  /**
+   * 我的Link
+   * @param link1 
+   * @param link2
+   */
+  const MyLink = ({ link1, link2 }: { link1: TempleItem, link2: TempleItem }) => {
+    let leftLink = link1;
+    let rightLink = link2;
+
+    if (link1?.Sacrifices < link2?.Sacrifices) {
+      leftLink = link2;
+      rightLink = link1;
+    }
+
+    if (link1?.Sacrifices === link2?.Sacrifices) {
+      if (!isNaN(new Date(link1.Create).getTime()) && !isNaN(new Date(link2.Create).getTime())) {
+        if (new Date(link1.Create).getTime() < new Date(link2.Create).getTime()) {
+          leftLink = link2;
+          rightLink = link1;
+        }
+      }
+    }
+
+    return (
+      <div className="relative flex flex-row items-center w-[214px] h-full mt-3 shadow-card">
+        <div className="absolute w-[120px] h-[165px] mr-[10px] -skew-x-10 origin-top-left overflow-hidden">
+          <div
+            className={cn(
+              "relative w-[118px] h-[160px] box-content border-2 border-r-0 rounded-l-md",
+              "bg-cover bg-center bg-no-repeat",
+              "skew-x-10 origin-top-left overflow-hidden",
+              {
+                "border-gray-400": leftLink.Level === 0,
+                "border-green-500": leftLink.Level === 1,
+                "border-purple-500": leftLink.Level === 2,
+                "border-amber-500": leftLink.Level === 3,
+              }
+            )}
+            style={{
+              backgroundImage: `url(${getAvatarUrl(leftLink.Cover, "large")})`,
+            }}
+          >
+          </div>
+        </div>
+        <div className="absolute flex left-[93px] w-[120px] h-[165px] mr-[10px] -skew-x-10 origin-bottom-right overflow-hidden">
+          <div
+            className={cn(
+              "relative w-[118px] h-[160px] box-content border-2 border-l-0 rounded-r-md",
+              "bg-cover bg-center bg-no-repeat",
+              "skew-x-10 origin-bottom-right overflow-hidden",
+              {
+                "border-gray-400": rightLink.Level === 0,
+                "border-green-500": rightLink.Level === 1,
+                "border-purple-500": rightLink.Level === 2,
+                "border-amber-500": rightLink.Level === 3,
+              }
+            )}
+            style={{
+              backgroundImage: `url(${getAvatarUrl(rightLink.Cover || "", "large")})`,
+            }}
+          >
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   const MyTempleCard = () => {
     if (isEmpty(data)) {
@@ -113,18 +189,44 @@ function UserTempleCard({ loading, data }: UserTempleCardProps) {
         }
       </div>
       {!isEmpty(link) && (
-        <div className="flex flex-col items-center justify-center ml-1 pl-1 py-1">
+        <div className="flex flex-col items-center justify-center -mr-2 py-1">
           <div className="h-full w-px bg-slate-300/60 dark:bg-slate-700/60 relative flex items-center justify-center" />
           <div
-            className="w-1 -ml-3 cursor-pointer
-              text-slate-500/80 dark:text-slate-400/80 
+            className="flex cursor-pointer
+              text-xs text-slate-500/80 dark:text-slate-400/80 
               hover:text-slate-600 dark:hover:text-slate-300"
+            onClick={() => setShowLink(true)}
           >
-            <ChevronsRight className="size-4" />
+            <span className="[writing-mode:vertical-lr] origin-center rotate-180">LINK</span>
           </div>
           <div className="h-full w-px bg-slate-300/60 dark:bg-slate-700/60 relative flex items-center justify-center" />
         </div>
       )}
+      <CharacterDrawerPopover
+        open={showLink}
+        onOpenChange={setShowLink}
+        className="flex justify-center p-2 h-52"
+      >
+        <div className="absolute top-2 right-3">
+          <div
+            className="flex items-center justify-center text-xs opacity-80 hover:opacity-100 cursor-pointer"
+            onClick={() => {
+              setShowLink(false)
+              setCharacterDrawer({
+                open: true,
+                characterId: link?.CharacterId || null,
+              })
+            }}
+          >
+            跳转至
+            <span className="text-blue-600">
+              {link?.Name}
+              <ArrowUpRight className="size-4 mb-px inline-block" />
+            </span>
+          </div>
+        </div>
+        {data && link && <MyLink link1={data} link2={link} />}
+      </CharacterDrawerPopover>
     </>
   );
 }
@@ -240,6 +342,8 @@ function Action({ loading, userTemple }: ActionProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(false);
+  const [showPopover, setShowPopover] = useState(false);
+  const [popoverContent, setPopoverContent] = useState<ReactNode>(null);
 
   const {
     Assets: assets = 0,
@@ -248,7 +352,13 @@ function Action({ loading, userTemple }: ActionProps) {
   } = userTemple || {};
 
   const buttons = [
-    <span className="flex flex-row items-center justify-center gap-1">
+    <span
+      className="flex flex-row items-center justify-center gap-1"
+      onClick={() => {
+        setShowPopover(true);
+        setPopoverContent(<AssetRestructureContent onClose={() => setShowPopover(false)} />);
+      }}
+    >
       <Box className="size-3" />
       资产重组
     </span>,
@@ -354,50 +464,469 @@ function Action({ loading, userTemple }: ActionProps) {
   }
 
   return (
-    <div className="w-full relative">
-      {showLeftArrow && (
-        <div
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 size-5 flex items-center justify-center
+    <>
+      <div className="w-full relative">
+        {showLeftArrow && (
+          <div
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 size-5 flex items-center justify-center
             bg-slate-200/90 dark:bg-slate-800/90 rounded-full cursor-pointer shadow-sm
             hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors"
-          onClick={scrollLeft}
-        >
-          <ChevronLeft className="size-3.5 text-slate-600 dark:text-slate-300" />
-        </div>
-      )}
-
-      <div
-        ref={scrollContainerRef}
-        className={cn(
-          "w-full flex flex-nowrap gap-1.5 overflow-x-auto px-1 py-0.5",
-          styles.action
+            onClick={scrollLeft}
+          >
+            <ChevronLeft className="size-3.5 text-slate-600 dark:text-slate-300" />
+          </div>
         )}
-      >
-        {buttons.map((button, index) => (
-          <div
-            key={index}
-            className="inline-flex items-center justify-center 
+
+        <div
+          ref={scrollContainerRef}
+          className={cn(
+            "w-full flex flex-nowrap gap-1.5 overflow-x-auto px-1 py-0.5",
+            styles.mScrollbarNone
+          )}
+        >
+          {buttons.map((button, index) => (
+            <div
+              key={index}
+              className="inline-flex items-center justify-center 
               bg-slate-300/50 dark:bg-slate-700/50 hover:bg-slate-300/80 dark:hover:bg-slate-700/80 
               text-xs rounded-full first:ml-0 py-1 px-2 cursor-pointer
               transition-all duration-200 flex-shrink-0"
-          >
-            {button}
-          </div>
-        ))}
-      </div>
-
-      {showRightArrow && (
-        <div
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 size-5 flex items-center justify-center
+            >
+              {button}
+            </div>
+          ))}
+        </div>
+        {showRightArrow && (
+          <div
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 size-5 flex items-center justify-center
             bg-slate-200/90 dark:bg-slate-800/90 rounded-full cursor-pointer shadow-sm
             hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors"
-          onClick={scrollRight}
-        >
-          <ChevronRight className="size-3.5 text-slate-600 dark:text-slate-300" />
-        </div>
-      )}
-    </div>
+            onClick={scrollRight}
+          >
+            <ChevronRight className="size-3.5 text-slate-600 dark:text-slate-300" />
+          </div>
+        )}
+      </div>
+      <CharacterDrawerPopover
+        open={showPopover}
+        onOpenChange={setShowPopover}
+        className="flex justify-center p-2"
+      >
+        {popoverContent}
+      </CharacterDrawerPopover>
+    </>
   );
+}
+
+/**
+ * 资产重组内容
+ * @param {Object} props
+ * @param {() => void} props.onClose 关闭回调
+ */
+function AssetRestructureContent({ onClose }: { onClose: () => void }) {
+  const { userAssets, characterDrawerData, setCharacterDrawerData, } = useStore();
+  const {
+    userCharacterData,
+    userTemple,
+    currentCharacterUserPage,
+  } = characterDrawerData
+  const {
+    Total: total = 0,
+    Amount: amount = 0,
+  } = userCharacterData || {};
+  const {
+    Assets: assets = 0,
+    Sacrifices: sacrifices = 0,
+  } = userTemple || {};
+  const [activeTab, setActiveTab] = useState<'temple' | 'financing'>('temple');
+  const [convertAmount, setConvertAmount] = useState(sacrifices >= 500 ? 0 : Math.min(100, amount));
+  const [financingAmount, setFinancingAmount] = useState(sacrifices >= 500 ? 0 : Math.min(100, amount));
+
+  useEffect(() => {
+    setCharacterDrawerData({
+      handleOnly: true,
+    })
+
+    return () => {
+      setCharacterDrawerData({
+        handleOnly: false,
+      })
+    }
+  }, [])
+
+  /**
+   * 处理角色献祭
+   * @param {number} amount - 献祭数量
+   * @param {boolean} isFinancing - false为献祭，true为股权融资
+   */
+  const handleSacrifice = async (amount: number, isFinancing: boolean = false) => {
+    if (!characterDrawerData.characterDetail?.CharacterId) return;
+
+    try {
+      const characterId = characterDrawerData.characterDetail.CharacterId;
+      const result = await sacrificeCharacter(characterId, amount, isFinancing);
+
+      if (result.State === 0) {
+        if (isFinancing) {
+          const {
+            Balance: balance = 0,
+          } = result.Value;
+
+          const description =
+            <span>
+              <span className="mr-1">获得</span>
+              <span className="text-green-400 dark:text-green-600 mr-1">₵{formatCurrency(balance, { useWUnit: true })}</span>
+            </span>;
+
+          toast.success('股权融资成功', {
+            duration: Infinity,
+            cancel: {
+              label: '关闭',
+              onClick: () => { },
+            },
+            description,
+          });
+          onClose();
+
+          // 更新幻想乡数据
+          fetchGensokyoCharacterData(
+            characterId,
+            (gensokyoCharacterData) => {
+              setCharacterDrawerData({ gensokyoCharacterData });
+            }
+          )
+        } else {
+          const {
+            Balance: balance = 0,
+            Items: items = [],
+          } = result.Value;
+
+          const description =
+            <span>
+              <span className="mr-1">获得</span>
+              <span className="text-green-400 dark:text-green-600 mr-2">₵{formatCurrency(balance, { useWUnit: true })}</span>
+              {items.length > 0 && (
+                <span>
+                  {items.map((item, index) => (
+                    <span key={index} className="inline-flex items-center mr-2">
+                      <div
+                        className="inline-flex size-3 bg-cover bg-center rounded-full mr-1"
+                        style={{ backgroundImage: `url('${getAvatarUrl(item.Icon)}')` }}
+                      />
+                      {item.Name}×{item.Count}
+                    </span>
+                  ))}
+                </span>
+              )}
+            </span>;
+
+          toast.success('献祭成功', {
+            duration: Infinity,
+            cancel: {
+              label: '关闭',
+              onClick: () => { },
+            },
+            description,
+          });
+          onClose();
+
+          let userCharacterData, characterTemples, characterlinks;
+          // 更新角色数据
+          fetchCharacterDetail(
+            characterId,
+            (characterDetail) => {
+              setCharacterDrawerData({ characterDetail });
+            }
+          );
+
+          // 更新角色圣殿数据
+          characterTemples = await fetchCharacterTemple(
+            characterId,
+            (characterTemples) => {
+              setCharacterDrawerData({ characterTemples });
+            }
+          )
+
+          // 更新角色LINK数据
+          characterlinks = await fetchCharacterLinks(
+            characterId,
+            (characterlinks) => {
+              setCharacterDrawerData({ characterlinks });
+            }
+          )
+
+          // 更新用户圣殿数据
+          if (userCharacterData && characterTemples && characterlinks) {
+            setCharacterDrawerData({
+              userTemple: await getUserTemple(userCharacterData, characterTemples, characterlinks, userAssets?.name),
+            });
+          }
+
+          // 更新英灵殿数据
+          fatchTinygrailCharacterData(
+            characterId,
+            (tinygrailCharacterData) => {
+              setCharacterDrawerData({ tinygrailCharacterData });
+            }
+          );
+        }
+
+        // 更新用户角色数据
+        await fetchUserCharacterData(
+          characterId,
+          userAssets?.name,
+          (userCharacterData) => {
+            setCharacterDrawerData({ userCharacterData });
+          }
+        );
+
+        // 更新奖池数量
+        fetchCharacterPoolAmount(
+          characterId,
+          (characterPoolAmount) => {
+            setCharacterDrawerData({ characterPoolAmount });
+          }
+        );
+
+        // 更新董事会成员
+        fetchCharacterBoardMembers(
+          characterId,
+          (characterBoardMembers) => {
+            setCharacterDrawerData({ characterBoardMembers });
+          }
+        )
+
+        // 更新当前用户分页数据
+        fetchCharacterUserPageData(
+          characterId,
+          currentCharacterUserPage || 1,
+          (currentCharacterUserPageData) => {
+            setCharacterDrawerData({ currentCharacterUserPageData });
+          }
+        )
+      } else {
+        if (isFinancing) {
+          throw new Error(result.Message || '献祭失败');
+        } else {
+          throw new Error(result.Message || '股权融资失败');
+        }
+      }
+    } catch (error) {
+      let errorMessage;
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else {
+        errorMessage = isFinancing ? '献祭失败' : '股权融资失败';
+      }
+      toast.error(errorMessage);
+      console.error(errorMessage);
+    }
+  };
+
+  return (
+    <div className="w-full h-fit flex flex-col p-2 gap-y-2">
+      <div className="flex flex-row gap-2">
+        <Badge
+          variant="secondary"
+          className={cn(
+            "rounded-sm cursor-pointer",
+            "hover:bg-slate-200 dark:hover:bg-slate-700",
+            {
+              "bg-primary/90 hover:bg-primary/90 dark:hover:bg-primary/90 text-primary-foreground": activeTab === 'temple',
+            }
+          )}
+          onClick={() => setActiveTab('temple')}
+        >
+          献祭
+        </Badge>
+        <Badge
+          variant="secondary"
+          className={cn(
+            "rounded-sm cursor-pointer",
+            "hover:bg-slate-200 dark:hover:bg-slate-700",
+            {
+              "bg-primary/90 hover:bg-primary/90 dark:hover:bg-primary/90 text-primary-foreground": activeTab === 'financing',
+            }
+          )}
+          onClick={() => setActiveTab('financing')}
+        >
+          股权融资
+        </Badge>
+      </div>
+      <div className="flex flex-row text-xs">
+        <span className="flex-1">
+          持股
+          <span className="ml-2 text-green-400 dark:text-green-600">
+            {formatInteger(total)}
+          </span>
+        </span>
+        <span className="flex-1">
+          可用活股
+          <span className="ml-2 text-green-400 dark:text-green-600">
+            {formatInteger(amount)}
+          </span>
+        </span>
+      </div>
+      {
+        activeTab === 'temple' && (
+          <div className="flex flex-col gap-y-2">
+            <div className="flex flex-row items-center justify-evenly h-8 gap-x-1">
+              <div className="w-24 text-sm opacity-60">数量</div>
+              <InputNumber
+                placeholder="请输入数量"
+                value={convertAmount}
+                onChange={(value) => {
+                  if (typeof value === 'number') {
+                    setConvertAmount(value);
+                  }
+                }}
+                min={0}
+                className="text-sm"
+              />
+            </div>
+            <div className="flex flex-row items-center justify-end gap-x-2">
+              <Badge
+                variant="outline"
+                className="rounded-full cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700"
+                onClick={() => {
+                  if (sacrifices === 0) {
+                    setConvertAmount(500);
+                    return;
+                  }
+                  if (sacrifices >= 500) {
+                    setConvertAmount(0);
+                    return;
+                  }
+                  if (assets >= sacrifices) {
+                    setConvertAmount(500 - sacrifices);
+                    return;
+                  }
+                  if (assets < sacrifices) {
+                    setConvertAmount(Math.floor((sacrifices - assets) / 2) + (500 - sacrifices));
+                    return;
+                  }
+                }}
+              >
+                光辉圣殿
+              </Badge>
+              <Badge
+                variant="outline"
+                className="rounded-full cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700"
+                onClick={() => {
+                  if (sacrifices === 0) {
+                    setConvertAmount(2500);
+                    return;
+                  }
+                  if (sacrifices >= 2500) {
+                    setConvertAmount(0);
+                    return;
+                  }
+                  if (assets >= sacrifices) {
+                    setConvertAmount(2500 - sacrifices);
+                    return;
+                  }
+                  if (assets < sacrifices) {
+                    setConvertAmount(Math.floor((sacrifices - assets) / 2) + (2500 - sacrifices));
+                    return;
+                  }
+                }}
+              >
+                闪耀圣殿
+              </Badge>
+              <Badge
+                variant="outline"
+                className="rounded-full cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700"
+                onClick={() => {
+                  if (sacrifices === 0) {
+                    setConvertAmount(12500);
+                    return;
+                  }
+                  if (sacrifices >= 12500) {
+                    setConvertAmount(0);
+                    return;
+                  }
+                  if (assets >= sacrifices) {
+                    setConvertAmount(12500 - sacrifices);
+                    return;
+                  }
+                  if (assets < sacrifices) {
+                    setConvertAmount(Math.floor((sacrifices - assets) / 2) + (12500 - sacrifices));
+                    return;
+                  }
+                }}
+              >
+                奇迹圣殿
+              </Badge>
+              {
+                userTemple &&
+                <Badge
+                  variant="outline"
+                  className="rounded-full cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700"
+                  onClick={() => {
+                    setConvertAmount(Math.max(0, Math.floor((sacrifices - assets) / 2)));
+                  }}
+                >
+                  补满
+                </Badge>
+              }
+            </div>
+            {
+              amount < convertAmount &&
+              <div className="flex flex-row items-center gap-x-2">
+                <span className="text-xs text-amber-400 dark:text-amber-600">可用活股数量不足</span>
+              </div>
+            }
+            <div className="flex flex-row items-center gap-x-2">
+              <Button
+                disabled={amount < convertAmount}
+                className="w-full h-8 rounded-full"
+                onClick={() => {
+                  handleSacrifice(convertAmount, false);
+                }}
+              >
+                献祭
+              </Button>
+            </div>
+          </div>
+        )
+      }
+      {
+        activeTab === 'financing' && (
+          <div className="flex flex-col gap-y-2">
+            <div className="flex flex-row items-center justify-evenly h-8 gap-x-1">
+              <div className="w-24 text-sm opacity-60">数量</div>
+              <InputNumber
+                placeholder="请输入数量"
+                value={financingAmount}
+                onChange={(value) => {
+                  if (typeof value === 'number') {
+                    setFinancingAmount(value);
+                  }
+                }}
+                min={0}
+                max={amount}
+                className="text-sm"
+              />
+            </div>
+            <div className="flex flex-row items-center gap-x-2">
+              <span className="text-xs text-amber-400 dark:text-amber-600">将股份出售给幻想乡获取现金，不会补充固定资产</span>
+            </div>
+            <div className="flex flex-row items-center gap-x-2">
+              <Button
+                disabled={amount < financingAmount}
+                className="w-full h-8 rounded-full"
+                onClick={() => {
+                  handleSacrifice(financingAmount, true);
+                }}
+              >
+                融资
+              </Button>
+            </div>
+          </div>
+        )
+      }
+    </div>
+  )
 }
 
 /**

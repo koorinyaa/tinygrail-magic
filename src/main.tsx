@@ -36,8 +36,25 @@ const handleTinygrailButtonClick = (): void => {
   // 清除body元素和css
   document.body.replaceChildren();
   [...document.querySelectorAll('link[type="text/css"]')].forEach(link => link.remove());
+  
+  // 阻止样式修改
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach(mutation => {
+      if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
+        document.body.removeAttribute('style');
+      }
+    });
+  });
+
+  observer.observe(document.body, {
+    attributes: true,
+    attributeFilter: ['style']
+  });
+  
+  // 清除body元素的style属性
+  document.body.removeAttribute('style');
   // 添加className
-  document.body.classList.add('tinygrailMagic');
+  document.body.className = 'tinygrailMagic';
 
   // 设置字体大小
   document.documentElement.style.fontSize = "16px";

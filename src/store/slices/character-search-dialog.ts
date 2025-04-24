@@ -1,6 +1,6 @@
 import { StateCreator } from 'zustand';
 
-type CharacterSearchDialog = {
+export type CharacterSearchDialog = {
   open: boolean;
 }
 export interface CharacterSearchDialogState {

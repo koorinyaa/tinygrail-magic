@@ -1,6 +1,6 @@
 import { StateCreator } from 'zustand';
 
-type UserAssets = {
+export type UserAssets = {
   id: number;
   name: string;
   avatar: string;

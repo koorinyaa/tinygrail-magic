@@ -1,8 +1,6 @@
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Progress } from "@/components/ui/progress";
-import { Skeleton } from "@/components/ui/skeleton";
 import { cn, formatCurrency } from "@/lib/utils";
-import { useState } from "react";
 import { AiFillStar } from "react-icons/ai";
 
 interface TempleCardProps {
@@ -26,7 +24,6 @@ interface TempleCardProps {
  * @param {string} porps.className - 自定义类名
  */
 export function TempleCard({ cover, assets, sacrifices, starForces, templeLevel, refine, className }: TempleCardProps) {
-  const [isCoverLoaded, setIsCoverLoaded] = useState(false);
 
   return (
     <AspectRatio
@@ -37,15 +34,8 @@ export function TempleCard({ cover, assets, sacrifices, starForces, templeLevel,
         src={cover}
         alt="圣殿"
         draggable="false"
-        className={cn(
-          "w-full h-full object-cover object-top",
-          !isCoverLoaded && "hidden"
-        )}
-        onLoad={() => setIsCoverLoaded(true)}
+        className="w-full h-full object-cover object-top"
       />
-      {
-        !isCoverLoaded && <Skeleton className="w-full h-full rounded-sm bg-slate-200 dark:bg-slate-900" />
-      }
       <div
         className={cn(
           "absolute top-0 right-0 size-8 m-1 p-1",

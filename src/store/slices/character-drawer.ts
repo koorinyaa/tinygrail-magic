@@ -1,8 +1,8 @@
-import { CharacterDetail, CharacterUserValue, TempleItem } from '@/api/character';
+import { CharacterDetail, CharacterUserPageValue, CharacterUserValue, TempleItem } from '@/api/character';
 import { TinygrailCharacterValue, UserCharacterValue } from '@/api/user';
 import { StateCreator } from 'zustand';
 
-type CharacterDrawer = {
+export type CharacterDrawer = {
   open: boolean;
   characterId: number | null; 
 }
@@ -16,21 +16,23 @@ type CharacterDrawer = {
  * @param {TempleItem[]} characterTemples 角色圣殿
  * @param {TempleItem[]} characterlinks 角色LINK圣殿
  * @param {TempleItem} userTemple 用户圣殿
- * @param {CharacterUserValue[]} currentCharacterUserPages 当前角色持股用户分页数据
+ * @param {CharacterUserPageValue} currentCharacterUserPageData 当前角色持股用户分页数据
  * @param {CharacterUserValue[]} characterBoardMembers 董事会成员
  * @param {TinygrailCharacterValue} tinygrailCharacterData 英灵殿角色数据
  * @param {UserCharacterValue} gensokyoCharacterData 幻想乡角色数据
  * @param {number} characterPoolAmount 奖池数量
  */
-type CharacterDrawerData = {
+export type CharacterDrawerData = {
   loading?: boolean;
   error?: string | null;
+  handleOnly?: boolean;
   characterDetail?: CharacterDetail | null;
   userCharacterData?: UserCharacterValue | null;
   characterTemples?: TempleItem[];
   characterlinks?: TempleItem[];
   userTemple?: TempleItem | null;
-  currentCharacterUserPages?: CharacterUserValue[];
+  currentCharacterUserPage?: number;
+  currentCharacterUserPageData?: CharacterUserPageValue;
   characterBoardMembers?: CharacterUserValue[];
   tinygrailCharacterData?: TinygrailCharacterValue | null;
   gensokyoCharacterData?: UserCharacterValue | null;
@@ -48,12 +50,14 @@ export interface CharacterDrawerState {
 const initialCharacterDrawerData: CharacterDrawerData = {
   loading: false,
   error: null,
+  handleOnly: false,
   characterDetail: null,
   userCharacterData: null,
   characterTemples: [],
   characterlinks: [],
   userTemple: null,
-  currentCharacterUserPages: [],
+  currentCharacterUserPage: 1,
+  currentCharacterUserPageData: undefined,
   characterBoardMembers: [],
   tinygrailCharacterData: null,
   gensokyoCharacterData: null,

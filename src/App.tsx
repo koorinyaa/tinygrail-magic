@@ -10,11 +10,12 @@ import { Toaster } from "@/components/ui/sonner";
 import './App.css';
 import { CharacterSearchDialog } from "@/components/character-search-dialog";
 import { useStore } from "@/store";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { LoginDialog } from "@/components/login-dialog";
 
 export default function App() {
-  const { theme, setTheme } = useStore()
+  const { theme, setTheme } = useStore();
+  const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // 初始化主题
@@ -23,6 +24,7 @@ export default function App() {
 
   return (
     <div
+      ref={rootRef}
       className="w-screen h-(--vh-screen) overflow-hidden"
     >
       <SidebarProvider>
@@ -32,9 +34,18 @@ export default function App() {
           <MainContent />
         </SidebarInset>
       </SidebarProvider>
-      <Toaster richColors theme={theme} />
-      <CharacterDrawer />
-      <CharacterSearchDialog />
+      <Toaster
+        richColors
+        theme={theme}
+        visibleToasts={5}
+        toastOptions={{
+          style: {
+            pointerEvents: 'auto',
+          }
+        }}
+      />
+      <CharacterDrawer container={rootRef.current} />
+      <CharacterSearchDialog container={rootRef.current} />
       <LoginDialog />
     </div>
   )

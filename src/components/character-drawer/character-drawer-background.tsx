@@ -1,6 +1,5 @@
 import { useScroll } from "@/hooks/use-scroll";
 import { cn, isEmpty } from "@/lib/utils";
-import { useEffect } from "react";
 
 interface CharacterDrawerBackgroundProps {
   backgroundImage: string;

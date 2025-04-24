@@ -13,7 +13,7 @@ import { toast } from "sonner";
 /**
  * 角色搜索弹窗
  */
-export function CharacterSearchDialog() {
+export function CharacterSearchDialog({ container }: { container?: HTMLElement | null }) {
   const { characterSearchDialog, setCharacterSearchDialog, setCharacterDrawer, userAssets } = useStore();
   const [keyword, setKeyword] = useState("");
   const [searchResults, setSearchResults] = useState<CharacterDetail[]>([]);
@@ -33,6 +33,16 @@ export function CharacterSearchDialog() {
   useEffect(() => {
     fetchResults();
   }, [debouncedSearchTerm, userAssets?.name]);
+
+  /**
+   * 处理外部交互兼容问题
+   * @param ev
+   */
+  const handleInteractOutside = (ev: Event) => {
+    // 防止在单击toaster时关闭对话框
+    const isToastItem = (ev.target as Element)?.closest('[data-sonner-toaster]')
+    if (isToastItem) ev.preventDefault()
+  }
 
   const fetchResults = async () => {
     if (isEmpty(userAssets)) return;
@@ -58,7 +68,15 @@ export function CharacterSearchDialog() {
   }
 
   return (
-    <CommandDialog open={characterSearchDialog.open} onOpenChange={setOpen}>
+    <CommandDialog
+      open={characterSearchDialog.open}
+      onOpenChange={setOpen}
+      contentProps={{ 
+        container,
+        onPointerDownOutside: handleInteractOutside,
+        onInteractOutside: handleInteractOutside,
+       }}
+    >
       <CommandInput
         placeholder="输入角色名称或ID"
         value={keyword}
