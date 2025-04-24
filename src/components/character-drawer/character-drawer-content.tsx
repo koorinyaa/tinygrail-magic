@@ -19,7 +19,7 @@ interface CharacterDrawerContentProps {
  * @param {number | null} props.characterId - 角色ID
  */
 export default function CharacterDrawerContent({ characterId }: CharacterDrawerContentProps) {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const [backgroundImage, setBackgroundImage] = useState("");
   const { userAssets, setUserAssets, characterDrawerData, setCharacterDrawerData } = useStore();
   const {
@@ -52,6 +52,8 @@ export default function CharacterDrawerContent({ characterId }: CharacterDrawerC
           }
         );
       });
+      // 滚动到顶部
+    if (contentRef.current) contentRef.current.scrollTop = 0;
     }
   }, [characterId, userAssets?.name]);
 
@@ -137,11 +139,11 @@ export default function CharacterDrawerContent({ characterId }: CharacterDrawerC
 
   return (
     <div
-      ref={scrollContainerRef}
+      ref={contentRef}
       className={cn("w-full pt-2 overflow-y-auto", styles.characterDrawerContent)}
     >
-      <CharacterDrawerBackground backgroundImage={backgroundImage} scrollContainerRef={scrollContainerRef} />
-      <CharacterDrawerHeader scrollContainerRef={scrollContainerRef} />
+      <CharacterDrawerBackground backgroundImage={backgroundImage} scrollContainerRef={contentRef} />
+      <CharacterDrawerHeader scrollContainerRef={contentRef} />
       <CharacterDrawerInfoCard />
       <CharacterDrawerTabs />
     </div>
