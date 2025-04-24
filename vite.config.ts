@@ -12,6 +12,7 @@ export default defineConfig({
       entry: 'src/main.tsx',
       userscript: {
         name: 'Tinygrail Magic',
+        version: '0.0.1',
         author: 'koorinyaa',
         description: '全新的小圣杯界面',
         icon: 'https://tinygrail.com/favicon.ico',
@@ -21,6 +22,9 @@ export default defineConfig({
           'https://bangumi.tv/*',
           'https://chii.in/*',
         ],
+      },
+      build: {
+        metaFileName: true,
       },
     }),
   ],
