@@ -3,7 +3,6 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import { useStore } from "@/store";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { useRef } from "react";
 import CharacterDrawerContent from "./character-drawer-content";
 
 /**
@@ -38,7 +37,6 @@ export function CharacterDrawer({ container }: { container?: HTMLElement | null 
       container={container}
     >
       <DrawerContent
-        ref={contentRef}
         className={cn("bg-background border-none overflow-hidden", { "max-w-96 rounded-l-md": !isMobile })}
         aria-describedby={undefined}
         onOpenAutoFocus={(e) => {

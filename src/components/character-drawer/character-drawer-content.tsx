@@ -53,7 +53,7 @@ export default function CharacterDrawerContent({ characterId }: CharacterDrawerC
         );
       });
       // 滚动到顶部
-    if (contentRef.current) contentRef.current.scrollTop = 0;
+      if (contentRef.current) contentRef.current.scrollTop = 0;
     }
   }, [characterId, userAssets?.name]);
 
