@@ -88,7 +88,7 @@ export function CharacterSearchDialog({ container }: { container?: HTMLElement |
           {searchResults.map((character) => (
             <CommandItem key={character.CharacterId} >
               <div
-                className="flex flex-row gap-2 w-full"
+                className="flex flex-row gap-2 w-full cursor-pointer"
                 onClick={() => {
                   setOpen(false);
                   setCharacterDrawer({ open: true, characterId: character.CharacterId });
