@@ -1,4 +1,4 @@
-import { getCharacterDetail, updateCharacter, uploadCharacterAvatar } from "@/api/character";
+import { updateCharacter, uploadCharacterAvatar } from "@/api/character";
 import { AvatarCropper } from "@/components/avatar-cropper";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -21,12 +21,13 @@ import { AiFillMoon, AiFillStar, AiFillSun, AiOutlineStar } from "react-icons/ai
 import { BsStars } from "react-icons/bs";
 import { TbCaretRightFilled, TbX } from "react-icons/tb";
 import { toast } from "sonner";
+import { fetchCharacterDetail } from "./character-drawer-content";
 
 /**
  * 角色信息
  */
 export default function CharacterDrawerInfoCard() {
-  const { characterDrawer, characterDrawerData, setCharacterDrawerData } = useStore();
+  const { characterDrawerData } = useStore();
   const {
     loading = false,
     characterDetail = null,
@@ -45,37 +46,16 @@ export default function CharacterDrawerInfoCard() {
     StarForces: starForces = 0,
   } = characterDetail || {};
 
-
-  /**
-   * 获取角色详情
-   */
-  const fetchCharacterDetail = async () => {
-    if (!characterDrawer.characterId) return;
-    try {
-      const data = await getCharacterDetail(characterDrawer.characterId);
-      if (data.State === 0) {
-        setCharacterDrawerData({
-          characterDetail: data.Value,
-        });
-      } else {
-        throw new Error(data.Message || '获取角色详情失败');
-      }
-    } catch (err) {
-      const errMsg = err instanceof Error ? err.message : "获取角色详情失败";
-      console.error(errMsg);
-    }
-  };
-
   return (
     <>
       {loading ?
         <CharacterDrawerInfoCardSkeleton /> :
         <div className="mt-20 p-3 bg-background rounded-t-md relative">
           <div className="absolute -top-6 left-4">
-            <CharacterAvatar fetchCharacterDetail={fetchCharacterDetail} />
+            <CharacterAvatar />
           </div>
           <div className="h-12 relative">
-            <Action fetchCharacterDetail={fetchCharacterDetail} />
+            <Action />
           </div>
           <div className="flex flex-row gap-x-8">
             <div className="flex-1 flex flex-col overflow-hidden">
@@ -140,18 +120,16 @@ export default function CharacterDrawerInfoCard() {
 
 
 interface CharacterAvatarProps {
-  fetchCharacterDetail: () => void;
   className?: string;
 }
 /**
  * 角色头像
  * @param {CharacterAvatarProps} props
- * @param {() => void} props.fetchCharacterDetail - 获取角色详情
  * @param {string} props.className 类名
  */
-function CharacterAvatar({ fetchCharacterDetail, className }: CharacterAvatarProps) {
+function CharacterAvatar({ className }: CharacterAvatarProps) {
   const isMobile = useIsMobile(448);
-  const { userAssets, characterDrawerData } = useStore();
+  const { userAssets, characterDrawerData, setCharacterDrawerData } = useStore();
   const cropperRef = useRef<FixedCropperRef>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [uploadedImage, setUploadedImage] = useState<{ type?: string; src: string; } | null>(null);
@@ -265,7 +243,12 @@ function CharacterAvatar({ fetchCharacterDetail, className }: CharacterAvatarPro
           const result = await uploadCharacterAvatar(characterId, processedDataUrl, hash);
           if (result.State === 0) {
             toast.success('更换成功');
-            fetchCharacterDetail();
+            fetchCharacterDetail(
+              characterId,
+              (characterDetail) => {
+                setCharacterDrawerData({ characterDetail });
+              }
+            );
           } else {
             throw new Error(result.Message || '头像更换失败');
           }
@@ -315,7 +298,7 @@ function CharacterAvatar({ fetchCharacterDetail, className }: CharacterAvatarPro
                 <img
                   src={getAvatarUrl(src, 'medium')}
                   alt={name}
-                  className="size-48 object-cover object-top rounded-sm shadow-card pointer-events-none"
+                  className="size-48 object-cover object-top rounded-sm m-shadow-card pointer-events-none"
                 />
               </div>
               <div className="flex flex-col gap-y-2 items-center">
@@ -413,17 +396,14 @@ function Attribute({ fluctuation, crown, bonus, className }: AttributeProps) {
   )
 }
 
-interface ActionProps {
-  fetchCharacterDetail: () => void;
-}
-
 /**
  * 操作按钮
- * @param {ActionProps} props
- * @param {() => void} props.fetchCharacterDetail - 更新角色信息
  */
-function Action({ fetchCharacterDetail }: ActionProps) {
-  const { characterDrawer } = useStore();
+function Action() {
+  const { characterDrawer, characterDrawerData, setCharacterDrawerData } = useStore();
+  const {
+    CharacterId: characterId = 0,
+  } = characterDrawerData.characterDetail || {};
   const [moreActionsOpen, setMoreActionsOpen] = useState(false);
 
   /**
@@ -437,7 +417,13 @@ function Action({ fetchCharacterDetail }: ActionProps) {
         toast.success("同步成功", {
           description: data.Value,
         });
-        fetchCharacterDetail();
+
+        fetchCharacterDetail(
+          characterId,
+          (characterDetail) => {
+            setCharacterDrawerData({ characterDetail });
+          }
+        );
       } else {
         throw new Error(data.Message || '更新角色信息失败');
       }
