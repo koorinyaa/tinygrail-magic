@@ -4,6 +4,9 @@
   border: 0 solid;
   margin: 0;
   padding: 0;
+  width: auto !important;
+  min-width: auto !important;
+  max-width: none !important;
   
   * {
     --tw-outline-style: none;
