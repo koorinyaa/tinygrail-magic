@@ -115,13 +115,13 @@ function UserTempleCard({ loading, data }: UserTempleCardProps) {
     return (
       <div className="relative flex flex-row items-center w-[214px] h-full mt-3 shadow-card">
         <div className="absolute w-[120px] h-[165px] mr-[10px] -skew-x-10 origin-top-left overflow-hidden">
-          <PhotoProvider bannerVisible={false} maskOpacity={0.4}>
+          <PhotoProvider bannerVisible={false} maskOpacity={0.4} className="pointer-events-auto backdrop-blur-xs">
             <PhotoView src={getCoverUrl(leftLink.Cover || "", "large")}>
               <div
                 className={cn(
                   "relative w-[118px] h-[160px] box-content border-2 border-r-0 rounded-l-md",
                   "bg-cover bg-center bg-no-repeat",
-                  "skew-x-10 origin-top-left overflow-hidden",
+                  "skew-x-10 origin-top-left overflow-hidden cursor-pointer",
                   {
                     "border-gray-400": leftLink.Level === 0,
                     "border-green-500": leftLink.Level === 1,
@@ -137,13 +137,13 @@ function UserTempleCard({ loading, data }: UserTempleCardProps) {
           </PhotoProvider>
         </div>
         <div className="absolute flex left-[93px] w-[120px] h-[165px] mr-[10px] -skew-x-10 origin-bottom-right overflow-hidden">
-          <PhotoProvider bannerVisible={false} maskOpacity={0.4}>
+          <PhotoProvider bannerVisible={false} maskOpacity={0.4} className="pointer-events-auto backdrop-blur-xs">
             <PhotoView src={getCoverUrl(rightLink.Cover || "", "large")}>
               <div
                 className={cn(
                   "relative w-[118px] h-[160px] box-content border-2 border-l-0 rounded-r-md",
                   "bg-cover bg-center bg-no-repeat",
-                  "skew-x-10 origin-bottom-right overflow-hidden",
+                  "skew-x-10 origin-bottom-right overflow-hidden cursor-pointer",
                   {
                     "border-gray-400": rightLink.Level === 0,
                     "border-green-500": rightLink.Level === 1,
@@ -544,6 +544,7 @@ function AssetRestructureContent({ onClose }: { onClose: () => void }) {
   const {
     Assets: assets = 0,
     Sacrifices: sacrifices = 0,
+    Level: templeLevel = 0,
   } = userTemple || {};
   const [activeTab, setActiveTab] = useState<'temple' | 'financing'>('temple');
   const [convertAmount, setConvertAmount] = useState(sacrifices >= 500 ? 0 : Math.min(100, amount));
@@ -760,7 +761,7 @@ function AssetRestructureContent({ onClose }: { onClose: () => void }) {
           股权融资
         </Badge>
       </div>
-      <div className="flex flex-row text-xs">
+      <div className="flex flex-row gap-2 text-xs">
         <span className="flex-1">
           持股
           <span className="ml-2 text-green-400 dark:text-green-600">
@@ -774,6 +775,26 @@ function AssetRestructureContent({ onClose }: { onClose: () => void }) {
           </span>
         </span>
       </div>
+      {
+        sacrifices >= 0 &&
+        <div className="text-xs">
+          <span className="flex-1">
+            圣殿
+            <span
+              className={cn(
+                "ml-2",
+                {
+                  "text-green-400 dark:text-green-600": templeLevel > 0,
+                  "text-red-400 dark:text-red-600": templeLevel == 0 && sacrifices >= 500,
+                  "text-amber-400 dark:text-amber-600": templeLevel == 0 && sacrifices < 500,
+                }
+              )}
+            >
+              {formatInteger(assets)} / {formatInteger(sacrifices)}
+            </span>
+          </span>
+        </div>
+      }
       {
         activeTab === 'temple' && (
           <div className="flex flex-col gap-y-2">

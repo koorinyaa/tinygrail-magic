@@ -31,13 +31,13 @@ export function TempleCard({ cover, assets, sacrifices, starForces, templeLevel,
       ratio={3 / 4}
       className={cn("relative border border-slate-200/50 dark:border-slate-700/50", className)}
     >
-      <PhotoProvider bannerVisible={false} maskOpacity={0.4}>
+      <PhotoProvider bannerVisible={false} maskOpacity={0.4} className="pointer-events-auto backdrop-blur-xs">
         <PhotoView src={getCoverUrl(cover, "large")}>
           <img
             src={getCoverUrl(cover, "medium")}
             alt="圣殿"
             draggable="false"
-            className="w-full h-full object-cover object-top"
+            className="w-full h-full object-cover object-top cursor-pointer"
           />
         </PhotoView>
       </PhotoProvider>
