@@ -71,7 +71,7 @@ export function TempleCard({ cover, assets, sacrifices, starForces, templeLevel,
             }
           </div>
           <Progress
-            value={assets / sacrifices * 100}
+            value={(assets / sacrifices) * 100}
             rootColor="bg-white/20"
             indicatorColor={cn({
               "bg-gray-300": templeLevel <= 0,

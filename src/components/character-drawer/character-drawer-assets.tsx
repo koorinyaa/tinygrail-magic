@@ -12,6 +12,7 @@ import { PhotoProvider, PhotoView } from "react-photo-view";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { InputNumber } from "../ui/input-number";
+import { Progress } from "../ui/progress";
 import styles from './character-drawer-assets.module.css';
 import { fatchTinygrailCharacterData, fetchCharacterBoardMembers, fetchCharacterDetail, fetchCharacterLinks, fetchCharacterPoolAmount, fetchCharacterTemple, fetchCharacterUserPageData, fetchGensokyoCharacterData, fetchUserCharacterData, getUserTemple } from "./character-drawer-content";
 import CharacterDrawerPopover from "./character-drawer-popover";
@@ -733,6 +734,50 @@ function AssetRestructureContent({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="w-full h-fit flex flex-col p-2 gap-y-2">
+      {
+        sacrifices > 0 &&
+        <div className="flex flex-row gap-x-2 text-xs" title="圣殿">
+          <div className="flex-1 flex flex-col">
+            <span
+              className={cn(
+                {
+                  "text-gray-500 dark:text-gray-600": templeLevel <= 0,
+                  "text-green-500 dark:text-green-600": templeLevel === 1,
+                  "text-purple-500 dark:text-purple-600": templeLevel === 2,
+                  "text-amber-500 dark:text-amber-600": templeLevel === 3,
+                }
+              )}
+            >
+              {formatInteger(assets)} / {formatInteger(sacrifices)}
+            </span>
+            <Progress
+              value={(assets / sacrifices) * 100}
+              indicatorColor={cn({
+                "bg-gray-500": templeLevel <= 0,
+                "bg-green-500 dark:bg-green-600": templeLevel === 1,
+                "bg-purple-500 dark:bg-purple-600": templeLevel === 2,
+                "bg-amber-500 dark:bg-amber-600": templeLevel === 3,
+              })}
+              className="h-1"
+            />
+          </div>
+        </div>
+      }
+      <div className="flex flex-row gap-2 text-xs">
+        <span className="flex-1">
+          持股
+          <span className="ml-2 text-green-400 dark:text-green-600">
+            {formatInteger(total)}
+          </span>
+        </span>
+        <span className="flex-1">
+          可用活股
+          <span className="ml-2 text-green-400 dark:text-green-600">
+            {formatInteger(amount)}
+          </span>
+        </span>
+      </div>
+
       <div className="flex flex-row gap-2">
         <Badge
           variant="secondary"
@@ -761,40 +806,6 @@ function AssetRestructureContent({ onClose }: { onClose: () => void }) {
           股权融资
         </Badge>
       </div>
-      <div className="flex flex-row gap-2 text-xs">
-        <span className="flex-1">
-          持股
-          <span className="ml-2 text-green-400 dark:text-green-600">
-            {formatInteger(total)}
-          </span>
-        </span>
-        <span className="flex-1">
-          可用活股
-          <span className="ml-2 text-green-400 dark:text-green-600">
-            {formatInteger(amount)}
-          </span>
-        </span>
-      </div>
-      {
-        sacrifices >= 0 &&
-        <div className="text-xs">
-          <span className="flex-1">
-            圣殿
-            <span
-              className={cn(
-                "ml-2",
-                {
-                  "text-green-400 dark:text-green-600": templeLevel > 0,
-                  "text-red-400 dark:text-red-600": templeLevel == 0 && sacrifices >= 500,
-                  "text-amber-400 dark:text-amber-600": templeLevel == 0 && sacrifices < 500,
-                }
-              )}
-            >
-              {formatInteger(assets)} / {formatInteger(sacrifices)}
-            </span>
-          </span>
-        </div>
-      }
       {
         activeTab === 'temple' && (
           <div className="flex flex-col gap-y-2">
