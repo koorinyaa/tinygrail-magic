@@ -43,17 +43,6 @@ const handleTinygrailButtonClick = (): void => {
   // 设置字体大小
   document.documentElement.style.fontSize = "16px";
 
-  // 处理 iOS 工具栏隐藏导致的视口高度变化
-  const setViewportHeight = () => {
-    // 优先使用 visualViewport，降级使用 innerHeight
-    const vh = (window.visualViewport?.height ?? window.innerHeight) * 0.01;
-    document.documentElement.style.setProperty('--vh', `${vh}px`);
-  };
-
-  setViewportHeight();
-  window.visualViewport?.addEventListener('resize', setViewportHeight);
-  window.addEventListener('resize', setViewportHeight);
-
   // 禁止移动端下拉刷新行为
   document.documentElement.style.overscrollBehavior = "none";
 
@@ -92,14 +81,7 @@ if (existingElement) {
 // 挂载ReactDOM
 const createReactDom = (): void => {
   console.info('Initializing tinygrail-magic...')
-  ReactDOM.createRoot(
-    (() => {
-      const app = document.createElement('div');
-      app.className = "overflow-hidden"
-      document.body.append(app);
-      return app;
-    })(),
-  ).render(
+  ReactDOM.createRoot(document.body).render(
     <React.StrictMode>
       <App />
     </React.StrictMode>,

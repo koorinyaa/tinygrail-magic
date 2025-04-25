@@ -35,6 +35,7 @@ export function CharacterDrawer({ container }: { container?: HTMLElement | null 
       onOpenChange={onOpenChange}
       handleOnly={characterDrawerData.handleOnly}
       container={container}
+      repositionInputs={false}
     >
       <DrawerContent
         className={cn("bg-background border-none overflow-hidden", { "max-w-96 rounded-l-md": !isMobile })}

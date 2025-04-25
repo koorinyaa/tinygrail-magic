@@ -25,7 +25,7 @@ export default function App() {
   return (
     <div
       ref={rootRef}
-      className="w-screen h-(--vh-screen) overflow-hidden"
+      className="w-screen h-dvh overflow-hidden"
     >
       <SidebarProvider>
         <AppSidebar />

@@ -35,7 +35,7 @@ export function MainContent({
     <div
       ref={containerRef}
       className={cn(
-        "h-[calc(var(--vh-screen)-48px)] md:h-[calc(var(--vh-screen)-64px)] w-full px-4 sm:px-6 lg:px-8 py-8 overflow-auto",
+        "h-[calc(100dvh-48px)] md:h-[calc(100dvh-64px)] w-full px-4 sm:px-6 lg:px-8 py-8 overflow-auto",
         className
       )}
       {...props}

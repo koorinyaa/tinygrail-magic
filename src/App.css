@@ -56,8 +56,6 @@
   --sidebar-ring: oklch(0.704 0.04 256.788);
   --tremor-ring: 229 231 235;
   --dark-tremor-ring: 31 41 55;
-
-  --vh-screen: calc(var(--vh, 1vh) * 100);
 }
 
 .dark {
