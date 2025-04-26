@@ -1,8 +1,6 @@
-import { AUTHORIZE_URL, getUserAssets } from "@/api/user";
 import { verifyAuth } from "@/lib/auth";
-import { cn, decodeHTMLEntities } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import NotFound from "@/pages/not-found";
-import StarTower from "@/pages/star-tower";
 import TopWeek from "@/pages/top-week";
 import { useStore } from "@/store";
 import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
@@ -18,8 +16,8 @@ export function MainContent({
   const [currentComponent, setCurrentComponent] = useState<JSX.Element>(<div/>);
 
   const PAGE_COMPONENTS = {
-    starTower: StarTower,
     topWeek: TopWeek,
+    starTower: NotFound,
     default: NotFound,
   } as const;
 
@@ -35,7 +33,7 @@ export function MainContent({
     <div
       ref={containerRef}
       className={cn(
-        "!h-[calc(100dvh-48px)] h-[calc(100vh-48px)] md:!h-[calc(100dvh-64px)] md:h-[calc(100vh-64px)] w-full px-4 sm:px-6 lg:px-8 py-8 overflow-auto",
+        "!h-[calc(100dvh-4rem)] h-[calc(100vh-4rem)] md:!h-[calc(100dvh-5rem)] md:h-[calc(100vh-5rem)] w-full px-4 sm:px-6 lg:px-8 py-8 overflow-auto",
         className
       )}
       {...props}

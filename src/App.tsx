@@ -12,14 +12,19 @@ import { CharacterSearchDialog } from "@/components/character-search-dialog";
 import { useStore } from "@/store";
 import { useEffect, useRef } from "react";
 import { LoginDialog } from "@/components/login-dialog";
+import { checkForUpdates } from "@/lib/update-checker";
 
 export default function App() {
-  const { theme, setTheme } = useStore();
+  const { theme, setTheme, setUpdateInfo } = useStore();
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // 初始化主题
-    setTheme(document.documentElement.getAttribute('data-theme') === "dark" ? "dark" : "light")
+    setTheme(document.documentElement.getAttribute('data-theme') === "dark" ? "dark" : "light");
+    // 检查更新
+    checkForUpdates().then((result) => {
+      setUpdateInfo(result);
+    });
   }, [])
 
   return (

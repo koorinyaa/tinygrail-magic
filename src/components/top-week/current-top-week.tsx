@@ -245,7 +245,7 @@ const ContentSection = ({ loading, topWeekData, scoreMultiplier, setIsPhotoSlide
             setCharacterDrawer({ open: true, characterId: characterId });
           }}
           handleAuction={() => {
-            toast.error("暂未开放");
+            toast.warning("开发中");
           }}
         />
       ))}

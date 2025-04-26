@@ -1,13 +1,3 @@
-import {
-  BadgeCent,
-  ChartNoAxesColumn,
-  CircleUserRound,
-  ExternalLink,
-  Images,
-  Settings,
-  Sparkles,
-  Trophy
-} from "lucide-react"
 import { Tinygrail } from "@/components/icons"
 import {
   Sidebar,
@@ -21,13 +11,23 @@ import {
 import { formatCurrency, getAvatarUrl } from "@/lib/utils"
 import { useStore } from "@/store"
 import {
+  BadgeCent,
+  ChartNoAxesColumn,
+  CircleUserRound,
+  ExternalLink,
+  Images,
+  Settings,
+  Sparkles,
+  Trophy
+} from "lucide-react"
+import {
   NavProjects,
-  NavSecondary,
-  NavUser,
+  NavSecondary
 } from "./sidebar-navigation"
+import { NavUpdate } from "./sidebar-navigation/nav-update"
 
 export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { userAssets } = useStore();
+  const { userAssets, updateInfo } = useStore();
   const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
 
   const data = {
@@ -121,9 +121,13 @@ export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sid
         <NavProjects projects={data.navAccount} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={data.user} />
-      </SidebarFooter>
+      {
+        updateInfo?.hasUpdate &&
+        <SidebarFooter className="mb-1">
+          {/* <NavUser user={data.user} /> */}
+          <NavUpdate />
+        </SidebarFooter>
+      }
     </Sidebar>
   )
 }

@@ -5,7 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { useStore } from "@/store";
 import { ComponentProps } from "react";
-import { FaGithub } from "react-icons/fa";
+import { AvatarDropdownMenu } from "@/components/avatar-dropdown-menu/avatar-dropdown-menu";
 
 export function HeaderActions({ className, ...props }: ComponentProps<"div">) {
   const { setCharacterSearchDialog } = useStore();
@@ -17,29 +17,27 @@ export function HeaderActions({ className, ...props }: ComponentProps<"div">) {
 
   return (
     <div
-      className={cn("flex h-4 items-center gap-2 text-sm", className)}
+      className={cn("flex h-8 items-center gap-4 text-sm", className)}
       {...props}
     >
-      <Button
-        variant="ghost"
-        size="icon"
-        className="h-7 w-7 cursor-pointer"
-        onClick={() => { setCharacterSearchDialog({ open: true }) }}
-      >
-        <Search />
-      </Button>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="h-7 w-7 cursor-pointer"
-        onClick={toggleTheme}
-      >
-        {theme === "light" ? <Moon /> : <Sun />}
-      </Button>
-      <Separator orientation="vertical" className="h-4" />
-      <Button variant="ghost" size="icon" className="h-7 w-7 cursor-pointer text-foreground">
+      <div className="flex gap-1">
+        <Button
+          className="size-8 bg-transparent hover:bg-transparent shadow-none text-muted-foreground hover:text-foreground/80 cursor-pointer"
+          onClick={() => { setCharacterSearchDialog({ open: true }) }}
+        >
+          <Search className="size-5" />
+        </Button>
+        <Button
+          className="size-8 bg-transparent hover:bg-transparent shadow-none text-muted-foreground hover:text-foreground/80 cursor-pointer"
+          onClick={toggleTheme}
+        >
+          {theme === "light" ? <Moon className="size-5" /> : <Sun className="size-5" />}
+        </Button>
+      </div>
+      {/* <Button variant="ghost" size="icon" className="h-7 w-7 cursor-pointer text-foreground">
         <FaGithub />
-      </Button>
+      </Button> */}
+      <AvatarDropdownMenu />
     </div>
   );
 }
