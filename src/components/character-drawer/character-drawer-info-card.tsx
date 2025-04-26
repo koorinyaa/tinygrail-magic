@@ -686,7 +686,13 @@ function CharacterDetailButton() {
         </div>
       </DrawerTrigger>
       <DrawerContent
-        className={cn("bg-background border-none overflow-hidden outline-none", { "rounded-l-md": !isMobile })}
+        className={cn(
+          "bg-background border-none overflow-hidden outline-none", 
+          {
+            "max-w-96 rounded-l-md": !isMobile,
+            "!max-h-[90dvh]":isMobile,
+          }
+        )}
         aria-describedby={undefined}
       >
         <VisuallyHidden asChild>
@@ -700,7 +706,7 @@ function CharacterDetailButton() {
         >
           <span className="text-xs text-foreground font-semibold">角色详细数据</span>
         </div>
-        <div className="flex flex-col px-3 gap-y-1 text-xs divide-y divide-slate-300/30 dark:divide-slate-800/70">
+        <div className="flex flex-col px-3 gap-y-1 text-xs divide-y divide-slate-300/30 dark:divide-slate-800/70 overflow-y-auto">
           {data.map((item) => (
             <div key={item.id} className="flex flex-row py-2 gap-x-1">
               <div className="text-left opacity-50">{item.label}</div>
