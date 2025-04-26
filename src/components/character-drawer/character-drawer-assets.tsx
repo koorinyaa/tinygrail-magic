@@ -192,7 +192,7 @@ function UserTempleCard({ loading, data }: UserTempleCardProps) {
     <>
       <div className="w-42 max-w-1/2">
         {loading ?
-          <Skeleton className="w-full h-full aspect-[3/4] rounded-sm bg-slate-200 dark:bg-slate-900" /> :
+          <Skeleton className="w-full h-full aspect-[3/4] rounded-sm bg-slate-200 dark:bg-slate-800" /> :
           <MyTempleCard />
         }
       </div>
@@ -303,7 +303,7 @@ function UserAssetsInfo({ loading, characterDetail, userCharacterData, userTempl
   }
 
   return (
-    <div className="w-full flex-1 ml-2 bg-slate-100/80 dark:bg-slate-900/60 rounded-sm">
+    <div className="w-full flex-1 ml-2 bg-slate-100/80 dark:bg-slate-800/60 rounded-sm">
       <div className="flex flex-col h-full text-xs divide-y divide-slate-300/30 dark:divide-slate-800/70 p-2 first:pt-0 last:pb-0">
         {assetItems.map(({ label, value }, index) => (
           <div key={index} className="flex-1 flex items-center">
@@ -328,7 +328,7 @@ function UserAssetsInfoSkeleton() {
     <div className="w-full flex-1 ml-2">
       <div className="flex flex-col w-full h-full">
         {Array(6).fill(null).map((_, index) => (
-          <Skeleton key={index} className="flex-1 w-full h-full m-1 first:mt-0 last:mb-0 bg-slate-200 dark:bg-slate-900" />
+          <Skeleton key={index} className="flex-1 w-full h-full m-1 first:mt-0 last:mb-0 bg-slate-200 dark:bg-slate-800" />
         ))}
       </div >
     </div >
@@ -979,9 +979,9 @@ function ActionSkeleton() {
         scrollbarWidth: 'none',
       }}
     >
-      <Skeleton className="rounded-full w-16 h-6 bg-slate-200 dark:bg-slate-900" />
-      <Skeleton className="rounded-full w-16 h-6 bg-slate-200 dark:bg-slate-900" />
-      <Skeleton className="rounded-full w-16 h-6 bg-slate-200 dark:bg-slate-900" />
+      <Skeleton className="rounded-full w-16 h-6 bg-slate-200 dark:bg-slate-800" />
+      <Skeleton className="rounded-full w-16 h-6 bg-slate-200 dark:bg-slate-800" />
+      <Skeleton className="rounded-full w-16 h-6 bg-slate-200 dark:bg-slate-800" />
     </div>
   )
 }
@@ -1042,14 +1042,14 @@ function Items({ loading, data }: ItemsProps) {
   }
 
   return (
-    <div className="w-full bg-slate-200/50 dark:bg-slate-900/60 rounded-sm p-2">
+    <div className="w-full bg-slate-200/50 dark:bg-slate-800/60 rounded-sm p-2">
       <div className="text-xs mb-1.5 opacity-70">道具栏</div>
       <div className="flex flex-col gap-1 pb-1">
         {items.map((item, index) => (
           <div
             key={index}
             className="flex flex-row items-center rounded-md p-1.5 cursor-pointer transition-colors 
-              bg-slate-300/50 dark:bg-slate-800/50 hover:bg-slate-300/70 dark:hover:bg-slate-700/70"
+              bg-slate-300/50 dark:bg-slate-700/50 hover:bg-slate-300/70 dark:hover:bg-slate-700/70"
           >
             <div
               className="size-8 bg-cover bg-center rounded-sm mr-2"
@@ -1072,11 +1072,11 @@ function Items({ loading, data }: ItemsProps) {
  */
 function ItemsSkeleton() {
   return (
-    <div className="w-full bg-slate-200/50 dark:bg-slate-900/60 rounded-sm p-2">
-      <Skeleton className="mb-1.5 h-4 w-10 rounded-sm bg-slate-300/50 dark:bg-slate-800/50" />
+    <div className="w-full bg-slate-200/50 dark:bg-slate-800/60 rounded-sm p-2">
+      <Skeleton className="mb-1.5 h-4 w-10 rounded-sm bg-slate-300/50 dark:bg-slate-700/50" />
       <div className="flex flex-col gap-1 pb-1">
         {Array(5).fill(null).map((_, index) => (
-          <Skeleton key={index} className="w-full h-11 bg-slate-300/50 dark:bg-slate-800/50" />
+          <Skeleton key={index} className="w-full h-11 bg-slate-300/50 dark:bg-slate-700/50" />
         ))}
       </div>
     </div>

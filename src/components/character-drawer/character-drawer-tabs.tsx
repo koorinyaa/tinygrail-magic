@@ -12,9 +12,9 @@ export default function CharacterDrawerTabs() {
   } = characterDrawerData;
 
   return (
-    <div className="pb-2 bg-background">
+    <div className="pb-2 bg-card">
       <TabsLine defaultValue="assets">
-        <div className="sticky top-7.5 z-10 bg-background border-b border-slate-300/30 dark:border-slate-700/30">
+        <div className="sticky top-7.5 z-10 bg-card border-b border-slate-300/30 dark:border-slate-700/30">
           <TabsLineList className="h-auto rounded-none bg-transparent p-0">
             <TabsLineTrigger value="assets" disabled={loading}>
               资产

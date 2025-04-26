@@ -39,7 +39,7 @@ export function CharacterDrawer({ container }: { container?: HTMLElement | null 
     >
       <DrawerContent
         className={cn(
-          "bg-background border-none overflow-hidden",
+          "bg-card border-none overflow-hidden",
           {
             "max-w-96 rounded-l-md": !isMobile,
             "!max-h-[90dvh]":isMobile,

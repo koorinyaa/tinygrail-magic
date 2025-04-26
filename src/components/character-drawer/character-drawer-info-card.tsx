@@ -50,7 +50,7 @@ export default function CharacterDrawerInfoCard() {
     <>
       {loading ?
         <CharacterDrawerInfoCardSkeleton /> :
-        <div className="mt-20 p-3 bg-background rounded-t-md relative">
+        <div className="mt-20 p-3 bg-card rounded-t-md relative">
           <div className="absolute -top-6 left-4">
             <CharacterAvatar />
           </div>
@@ -81,8 +81,8 @@ export default function CharacterDrawerInfoCard() {
             <div className="flex flex-col h-full min-w-11 rounded-md overflow-hidden bg-secondary text-secondary-foreground">
               <div
                 className={rank <= 500 ?
-                  "bg-violet-400 text-violet-800 dark:bg-violet-400/20 dark:text-violet-400" :
-                  "bg-slate-300 text-slate-800 dark:bg-slate-700/20 dark:text-slate-400"}
+                  "bg-violet-400 text-violet-800 dark:bg-violet-600/40 dark:text-violet-200" :
+                  "bg-slate-300 text-slate-800 dark:bg-slate-400/20 dark:text-slate-200"}
                 title="通天塔排名"
               >
                 <div className="flex items-center justify-center h-3/4 text-md font-semibold scale-80">
@@ -535,7 +535,7 @@ function CharacterInfo({ className }: CharacterInfoProps) {
     <div className="flex flex-col text-xs gap-y-1.5">
       <div className={cn("flex flex-row items-center gap-x-1", className)}>
         {data.map((item) => (
-          <div key={item.id} className="flex flex-1 flex-col p-2 pt-2.5 bg-slate-100/80 dark:bg-slate-900/60 rounded-sm">
+          <div key={item.id} className="flex flex-1 flex-col p-2 pt-2.5 bg-slate-100/80 dark:bg-slate-800/60 rounded-sm">
             <div className="flex justify-center text-foreground font-semibold">{item.value}</div>
             <div className="flex justify-center opacity-50 scale-80">{item.label}</div>
           </div>
@@ -677,7 +677,7 @@ function CharacterDetailButton() {
     <DrawerNested direction={isMobile ? "bottom" : "right"}>
       <DrawerTrigger asChild>
         <div
-          className="flex items-center justify-center p-1.5 bg-slate-100/80 dark:bg-slate-900/60 rounded-sm cursor-pointer"
+          className="flex items-center justify-center p-1.5 bg-slate-100/80 dark:bg-slate-800/60 rounded-sm cursor-pointer"
         >
           <span className="opacity-50">
             查看详细数据
@@ -687,7 +687,7 @@ function CharacterDetailButton() {
       </DrawerTrigger>
       <DrawerContent
         className={cn(
-          "bg-background border-none overflow-hidden outline-none", 
+          "bg-card border-none overflow-hidden outline-none", 
           {
             "max-w-96 rounded-l-md": !isMobile,
             "!max-h-[90dvh]":isMobile,
@@ -728,9 +728,9 @@ function CharacterDetailButton() {
  */
 function CharacterDrawerInfoCardSkeleton() {
   return (
-    <div className="mt-20 p-3 bg-background rounded-md relative">
+    <div className="mt-20 p-3 bg-card rounded-md relative">
       <div className="absolute -top-6 left-4 z-10">
-        <div className="size-16 rounded-full bg-background">
+        <div className="size-16 rounded-full bg-card">
           <Skeleton className="size-16 rounded-full border-2 border-secondary" />
         </div>
       </div>
