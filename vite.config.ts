@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import { defineConfig } from 'vite';
 import monkey from 'vite-plugin-monkey';
+import { APP_NAME, APP_VERSION, APP_DESCRIPTION, APP_AUTHOR } from './src/config';
 
 export default defineConfig({
   plugins: [
@@ -11,10 +12,10 @@ export default defineConfig({
     monkey({
       entry: 'src/main.tsx',
       userscript: {
-        name: 'Tinygrail Magic',
-        version: '0.0.1',
-        author: 'koorinyaa',
-        description: '全新的小圣杯界面',
+        name: APP_NAME,
+        version: APP_VERSION,
+        author: APP_AUTHOR,
+        description: APP_DESCRIPTION,
         icon: 'https://tinygrail.com/favicon.ico',
         namespace: 'tinygrail-magic',
         match: [
