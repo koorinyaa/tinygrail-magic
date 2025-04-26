@@ -26,7 +26,7 @@ export default function CharacterDrawerHeader({ scrollContainerRef }: CharacterD
   return (
     <div
       className={cn(
-        "absolute top-0 left-0 right-0 h-10 px-4 py-2",
+        "absolute top-0 left-0 right-0 h-10 px-4 py-2 -mt-0.5",
         "flex flex-row gap-1 items-center bg-background z-10",
         "border-b border-slate-300/30 dark:border-slate-700/30",
         {"top-4 pt-0": isMobile}

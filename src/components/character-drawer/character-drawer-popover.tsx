@@ -29,7 +29,7 @@ export default function CharacterDrawerPopover({
   return (
     <>
       <div
-        className="fixed inset-0 bg-black/30 backdrop-blur-md z-40"
+        className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40"
         onClick={() => onOpenChange(false)}
       />
       <motion.div
@@ -39,7 +39,7 @@ export default function CharacterDrawerPopover({
         transition={{ duration: 0.2 }}
         className={cn(
           "fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-[calc(100%-1rem)] max-h-[90%] w-full h-auto",
-          "bg-background rounded-sm overflow-hidden shadow-lg z-50",
+          "bg-popover rounded-sm m-shadow-card overflow-hidden z-50",
           className
         )}
       >

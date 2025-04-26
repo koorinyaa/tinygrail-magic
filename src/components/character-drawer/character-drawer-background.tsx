@@ -19,12 +19,13 @@ export default function CharacterDrawerBackground({ backgroundImage, scrollConta
       <div
         className={cn(
           "absolute top-0 left-0 right-0 h-40 w-full -z-10",
-          "bg-cover bg-center transition-opacity duration-300",
-          {"brightness-80 blur-2xl": !isEmpty(backgroundImage)}
+          "bg-cover bg-center brightness-80 blur-2xl transition-opacity duration-300",
+          {
+            "bg-gray-200 dark:bg-gray-600": isEmpty(backgroundImage),
+          }
         )}
         style={{
           backgroundImage: backgroundImage ? `url(${backgroundImage})` : undefined,
-          backgroundColor: !backgroundImage ? "var(--color-gray-200)" : undefined,
         }}
       />
       <div
