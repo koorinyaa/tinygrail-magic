@@ -16,6 +16,7 @@ import { Progress } from "../ui/progress";
 import styles from './character-drawer-assets.module.css';
 import { fatchTinygrailCharacterData, fetchCharacterBoardMembers, fetchCharacterDetail, fetchCharacterLinks, fetchCharacterPoolAmount, fetchCharacterTemple, fetchCharacterUserPageData, fetchGensokyoCharacterData, fetchUserCharacterData, getUserTemple } from "./character-drawer-content";
 import CharacterDrawerPopover from "./character-drawer-popover";
+import { AiFillStar } from "react-icons/ai";
 
 /**
  * 资产栏
@@ -546,6 +547,7 @@ function AssetRestructureContent({ onClose }: { onClose: () => void }) {
     Assets: assets = 0,
     Sacrifices: sacrifices = 0,
     Level: templeLevel = 0,
+    StarForces: starForces = 0,
   } = userTemple || {};
   const [activeTab, setActiveTab] = useState<'temple' | 'financing'>('temple');
   const [convertAmount, setConvertAmount] = useState(sacrifices >= 500 ? 0 : Math.min(100, amount));
@@ -738,18 +740,27 @@ function AssetRestructureContent({ onClose }: { onClose: () => void }) {
         sacrifices > 0 &&
         <div className="flex flex-row gap-x-2 text-xs" title="圣殿">
           <div className="flex-1 flex flex-col">
-            <span
-              className={cn(
-                {
-                  "text-gray-500 dark:text-gray-600": templeLevel <= 0,
-                  "text-green-500 dark:text-green-600": templeLevel === 1,
-                  "text-purple-500 dark:text-purple-600": templeLevel === 2,
-                  "text-amber-500 dark:text-amber-600": templeLevel === 3,
-                }
-              )}
-            >
-              {formatInteger(assets)} / {formatInteger(sacrifices)}
-            </span>
+            <div className="flex flex-row">
+              <span
+                className={cn(
+                  "flex-1",
+                  {
+                    "text-gray-500 dark:text-gray-600": templeLevel <= 0,
+                    "text-green-500 dark:text-green-600": templeLevel === 1,
+                    "text-purple-500 dark:text-purple-600": templeLevel === 2,
+                    "text-amber-500 dark:text-amber-600": templeLevel === 3,
+                  }
+                )}
+              >
+                {formatInteger(assets)} / {formatInteger(sacrifices)}
+              </span>
+              {
+                starForces >= 10000 &&
+                <div className="w-fit text-amber-300 dark:text-amber-500" title="已冲星">
+                  <AiFillStar className="size-3" />
+                </div>
+              }
+            </div>
             <Progress
               value={(assets / sacrifices) * 100}
               indicatorColor={cn({
@@ -1050,7 +1061,7 @@ function Items({ loading, data }: ItemsProps) {
             key={index}
             className="flex flex-row items-center rounded-md p-1.5 cursor-pointer transition-colors 
               bg-slate-300/50 dark:bg-slate-700/50 hover:bg-slate-300/70 dark:hover:bg-slate-700/70"
-              onClick={() => toast.warning("开发中")}
+            onClick={() => toast.warning("开发中")}
           >
             <div
               className="size-8 bg-cover bg-center rounded-sm mr-2"

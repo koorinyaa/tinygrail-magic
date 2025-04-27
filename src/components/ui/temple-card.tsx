@@ -65,7 +65,7 @@ export function TempleCard({ cover, assets, sacrifices, starForces, templeLevel,
             </div>
             {
               starForces >= 10000 &&
-              <div className="w-fit text-amber-300 dark:text-amber-500">
+              <div className="w-fit text-amber-300 dark:text-amber-500" title="已冲星">
                 <AiFillStar className="size-3" />
               </div>
             }
