@@ -213,7 +213,7 @@ function UserTempleCard({ loading, data }: UserTempleCardProps) {
       <CharacterDrawerPopover
         open={showLink}
         onOpenChange={setShowLink}
-        className="flex justify-center p-2 h-52"
+        className="flex justify-center h-52"
       >
         <div className="absolute top-2 right-3">
           <div
@@ -518,7 +518,7 @@ function Action({ loading, userTemple }: ActionProps) {
       <CharacterDrawerPopover
         open={showPopover}
         onOpenChange={setShowPopover}
-        className="flex justify-center p-2"
+        className="flex justify-center"
       >
         {popoverContent}
       </CharacterDrawerPopover>
@@ -733,7 +733,7 @@ function AssetRestructureContent({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <div className="w-full h-fit flex flex-col p-2 gap-y-2">
+    <div className="w-full h-fit flex flex-col gap-y-2">
       {
         sacrifices > 0 &&
         <div className="flex flex-row gap-x-2 text-xs" title="圣殿">

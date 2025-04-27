@@ -24,7 +24,7 @@ export function AvatarDropdownMenu() {
   
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger className="size-8">
         <Button variant="ghost" className="h-auto p-0 hover:bg-transparent">
           <UserAvatar src={getAvatarUrl(userAssets?.avatar)} />
         </Button>

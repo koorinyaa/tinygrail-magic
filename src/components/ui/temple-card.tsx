@@ -64,7 +64,7 @@ export function TempleCard({ cover, assets, sacrifices, starForces, templeLevel,
               {formatCurrency(assets)} / {formatCurrency(sacrifices)}
             </div>
             {
-              starForces > 10000 &&
+              starForces >= 10000 &&
               <div className="w-fit text-amber-300 dark:text-amber-500">
                 <AiFillStar className="size-3" />
               </div>

@@ -3,15 +3,14 @@ import { cn } from "@/lib/utils";
 import { ComponentProps } from "react";
 import { HeaderActions } from "./header-actions";
 import { HeaderBreadcrumb } from "./header-breadcrumb";
-import { Separator } from "@/components/ui/separator";
 
 export default function Header({ className, ...props }: ComponentProps<"header">) {
   return (
     <header
-      className={cn("flex h-16 shrink-0 items-center px-4 border-b", className)}
+      className={cn("flex h-14 shrink-0 items-center px-4 border-b", className)}
       {...props}
     >
-      <div className="flex items-center gap-4 h-8">
+      <div className="flex items-center gap-2 h-8">
         <SidebarTrigger
           className={cn(
             "-ml-2 cursor-pointer",

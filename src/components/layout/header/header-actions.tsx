@@ -1,11 +1,10 @@
 import { Moon, Search, Sun } from "lucide-react";
 
+import { AvatarDropdownMenu } from "@/components/avatar-dropdown-menu/avatar-dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 import { useStore } from "@/store";
 import { ComponentProps } from "react";
-import { AvatarDropdownMenu } from "@/components/avatar-dropdown-menu/avatar-dropdown-menu";
 
 export function HeaderActions({ className, ...props }: ComponentProps<"div">) {
   const { setCharacterSearchDialog } = useStore();
@@ -20,7 +19,7 @@ export function HeaderActions({ className, ...props }: ComponentProps<"div">) {
       className={cn("flex h-8 items-center gap-2 text-sm", className)}
       {...props}
     >
-      <div className="flex gap-1">
+      <div className="flex items-center gap-1">
         <Button
           className="size-8 bg-transparent hover:bg-transparent shadow-none text-muted-foreground hover:text-foreground/80 cursor-pointer"
           onClick={() => { setCharacterSearchDialog({ open: true }) }}

@@ -17,13 +17,13 @@ interface CharacterDrawerPopoverProps {
  * @param {ReactNode} props.children 子元素
  * @param {string} props.className 类名
 */
-export default function CharacterDrawerPopover({ 
-  open, 
-  onOpenChange, 
+export default function CharacterDrawerPopover({
+  open,
+  onOpenChange,
   children,
-  className = "" 
+  className = ""
 }: CharacterDrawerPopoverProps) {
-  
+
   if (!open) return null;
 
   return (
@@ -38,7 +38,7 @@ export default function CharacterDrawerPopover({
         exit={{ opacity: 0 }}
         transition={{ duration: 0.2 }}
         className={cn(
-          "fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-[calc(100%-1rem)] max-h-[90%] w-full h-auto",
+          "fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-[calc(100%-1rem)] max-h-[90%] p-4 w-full h-auto",
           "bg-popover rounded-sm m-shadow-card overflow-hidden z-50",
           className
         )}
