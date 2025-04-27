@@ -166,7 +166,7 @@ function UserTempleCard({ loading, data }: UserTempleCardProps) {
   const MyTempleCard = () => {
     if (isEmpty(data)) {
       return (
-        <div className="w-full aspect-[3/4] rounded-sm bg-slate-200 dark:bg-slate-900">
+        <div className="w-full aspect-[3/4] rounded-sm bg-slate-200 dark:bg-slate-800">
           <div className="flex flex-row gap-1 items-center justify-center h-full opacity-30">
             <Ban className="size-5" />
             <span className="text-lg">待建设</span>
@@ -371,7 +371,7 @@ function Action({ loading, userTemple }: ActionProps) {
       资产重组
     </span>,
     ...(userTemple ? [
-      <span className="flex flex-row items-center justify-center gap-1">
+      <span className="flex flex-row items-center justify-center gap-1" onClick={() => toast.warning("开发中")}>
         <Sparkles className="size-3" />
         转换星之力
       </span>,
@@ -381,31 +381,31 @@ function Action({ loading, userTemple }: ActionProps) {
       && sacrifices >= 2500
       && assets >= 2500
       ? [
-        <span className="flex flex-row items-center justify-center gap-1">
+        <span className="flex flex-row items-center justify-center gap-1" onClick={() => toast.warning("开发中")}>
           <CircleFadingArrowUp className="size-3" />
           精炼
         </span>
       ] : []),
     ...(userTemple && templeLevel > 0 ? [
-      <span className="flex flex-row items-center justify-center gap-1">
+      <span className="flex flex-row items-center justify-center gap-1" onClick={() => toast.warning("开发中")}>
         <Box className="size-3" />
         修改塔图
       </span>,
-      <span className="flex flex-row items-center justify-center gap-1">
+      <span className="flex flex-row items-center justify-center gap-1" onClick={() => toast.warning("开发中")}>
         <Box className="size-3" />
         重置塔图
       </span>,
-      <span className="flex flex-row items-center justify-center gap-1">
+      <span className="flex flex-row items-center justify-center gap-1" onClick={() => toast.warning("开发中")}>
         <Box className="size-3" />
         LINK
       </span>,
-      <span className="flex flex-row items-center justify-center gap-1">
+      <span className="flex flex-row items-center justify-center gap-1" onClick={() => toast.warning("开发中")}>
         <Box className="size-3" />
         台词
       </span>,
     ] : []),
     ...(userTemple && sacrifices === assets ? [
-      <span className="flex flex-row items-center justify-center gap-1">
+      <span className="flex flex-row items-center justify-center gap-1" onClick={() => toast.warning("开发中")}>
         <Box className="size-3" />
         拆除圣殿
       </span>,
@@ -1050,6 +1050,7 @@ function Items({ loading, data }: ItemsProps) {
             key={index}
             className="flex flex-row items-center rounded-md p-1.5 cursor-pointer transition-colors 
               bg-slate-300/50 dark:bg-slate-700/50 hover:bg-slate-300/70 dark:hover:bg-slate-700/70"
+              onClick={() => toast.warning("开发中")}
           >
             <div
               className="size-8 bg-cover bg-center rounded-sm mr-2"

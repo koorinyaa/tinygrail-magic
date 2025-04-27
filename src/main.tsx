@@ -24,8 +24,6 @@ const initTinygrailButton = (element: HTMLElement): void => {
 
 // 处理tinygrail按钮点击事件
 const handleTinygrailButtonClick = (): void => {
-
-
   // 移动端缩放适配
   document.querySelector('meta[name="viewport"]')?.remove();
   const metaElement = document.createElement('meta')

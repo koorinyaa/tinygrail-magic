@@ -17,7 +17,7 @@ export function HeaderActions({ className, ...props }: ComponentProps<"div">) {
 
   return (
     <div
-      className={cn("flex h-8 items-center gap-4 text-sm", className)}
+      className={cn("flex h-8 items-center gap-2 text-sm", className)}
       {...props}
     >
       <div className="flex gap-1">
