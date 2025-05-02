@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
+import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 
 const TINYGRAIL_CDN_URL = 'https://tinygrail.mange.cn';
@@ -173,14 +174,24 @@ export function getAvatarUrl(
  * @returns {string}
  */
 export function formatDateTime(dateString: string): string {
-  return new Intl.DateTimeFormat('zh-CN', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false
-  }).format(new Date(dateString)).replace(/(\d+)\/(\d+)\/(\d+),?/, '$1年$2月$3日 ');
+  try {
+    const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      return '';
+    }
+    return new Intl.DateTimeFormat('zh-CN', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false
+    }).format(date).replace(/(\d+)\/(\d+)\/(\d+),?/, '$1年$2月$3日 ');
+  } catch (e) {
+    console.error(e);
+    return '';
+  }
 }
 
 /**
@@ -194,11 +205,11 @@ export function dataURLtoBlob(dataUrl: string): Blob {
   const bstr = atob(arr[1]);
   let n = bstr.length;
   const u8arr = new Uint8Array(n);
-  
+
   while (n--) {
     u8arr[n] = bstr.charCodeAt(n);
   }
-  
+
   return new Blob([u8arr], { type: mime });
 }
 
@@ -263,4 +274,13 @@ export function resizeImage(
       reject(new Error('图片加载失败'));
     };
   });
+}
+
+/**
+ * 错误通知
+ * @param {string} message - 错误消息
+ */
+export function notifyError(message: string) {
+  console.error(message);
+  toast.error(message);
 }

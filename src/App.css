@@ -21,6 +21,15 @@
   @apply shadow-[0_0_10px_rgba(0,0,0,0.1)]
 }
 
+.m-scrollbar-none {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+
+  ::-webkit-scrollbar {
+    display: none !important;
+  }
+}
+
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);

@@ -112,7 +112,6 @@ export async function getTopWeek(): Promise<TopWeekResponse> {
   try {
     return await httpService.get<TopWeekResponse>('/chara/topweek');
   } catch (error) {
-    console.error('获取每周萌王数据失败:', (error as Error).message);
     throw error;
   }
 }
@@ -149,7 +148,6 @@ export async function getTopWeekHistory(page: number, pageSize: number = 12): Pr
   try {
     return await httpService.get<TopWeekHistoryResponse>(`/chara/topweek/history/${page}/${pageSize}`);
   } catch (error) {
-    console.error('获取历史萌王数据失败:', (error as Error).message);
     throw error;
   }
 }
@@ -239,7 +237,6 @@ export async function getCharacterDetail(characterId: number): Promise<Character
   try {
     return await httpService.get<CharacterDetailResponse>(`/chara/${characterId}`);
   } catch (error) {
-    console.error('获取角色详情失败:', (error as Error).message);
     throw error;
   }
 }
@@ -251,11 +248,10 @@ export interface TempleResponse extends TinygrailBaseResponse<TempleItem[]> { }
  * 获取角色圣殿数据
  * @param characterId 角色ID
  */
-export async function getCharacterTemple(characterId: number): Promise<TempleResponse> {
+export async function getCharacterTemples(characterId: number): Promise<TempleResponse> {
   try {
     return await httpService.get<TempleResponse>(`/chara/temple/${characterId}`);
   } catch (error) {
-    console.error('获取角色圣殿数据失败:', (error as Error).message);
     throw error;
   }
 }
@@ -271,7 +267,6 @@ export async function getCharacterLinks(characterId: number): Promise<LinksRespo
   try {
     return await httpService.get<LinksResponse>(`chara/links/${characterId}`);
   } catch (error) {
-    console.error('获取角色LINK数据失败:', (error as Error).message);
     throw error;
   }
 }
@@ -287,7 +282,6 @@ export async function searchCharacter(keyword: string): Promise<CharacterSearchR
   try {
     return await httpService.get<CharacterSearchResponse>(`/chara/search/character?keyword=${keyword}`);
   } catch (error) {
-    console.error('搜索角色失败:', (error as Error).message);
     throw error;
   }
 }
@@ -307,7 +301,6 @@ export async function getCharacterPoolAmount(
       `/chara/pool/${characterId}`
     );
   } catch (error) {
-    console.error('获取角色池数据失败:', (error as Error).message);
     throw error;
   }
 }
@@ -449,7 +442,6 @@ export async function getCharacterUsers(
       `/chara/users/${characterId}/${page}/${pageSize}`
     );
   } catch (error) {
-    console.error('获取角色持有者列表失败:', (error as Error).message);
     throw error;
   }
 }
@@ -474,7 +466,6 @@ export async function updateCharacter(
       `/chara/update/${characterId}`
     );
   } catch (error) {
-    console.error('更新角色信息失败:', (error as Error).message);
     throw error;
   }
 }
@@ -517,7 +508,6 @@ export async function uploadCharacterAvatar(
       `https://tinygrail.oss-cn-hangzhou.aliyuncs.com/avatar/${hash}.jpg`,
     );
   } catch (error) {
-    console.error('上传角色头像失败:', (error as Error).message);
     throw error;
   }
 }
@@ -559,7 +549,6 @@ export async function sacrificeCharacter(
       `/chara/sacrifice/${characterId}/${amount}/${isFinancing}`
     );
   } catch (error) {
-    console.error('角色献祭失败:', (error as Error).message);
     throw error;
   }
 }

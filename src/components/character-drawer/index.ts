@@ -1,1 +1,1 @@
-export { CharacterDrawer } from "./character-drawer";
+export { CharacterDrawer } from './character-drawer.tsx';

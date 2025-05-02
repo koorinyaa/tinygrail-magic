@@ -67,7 +67,6 @@ export async function getUserItems(
       `/chara/user/item/0/${page}/${size}`
     );
   } catch (error) {
-    console.error('获取用户道具列表失败:', (error as Error).message);
     throw error;
   }
 }

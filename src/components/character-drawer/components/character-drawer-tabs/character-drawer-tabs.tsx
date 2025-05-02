@@ -1,16 +1,18 @@
-import { TabsLine, TabsLineContent, TabsLineList, TabsLineTrigger } from "@/components/ui/tabs-line";
-import { useStore } from "@/store";
-import CharacterDrawerAssets from "./character-drawer-assets";
+import { UserAssets } from '../user-assets';
+import {
+  TabsLine,
+  TabsLineContent,
+  TabsLineList,
+  TabsLineTrigger,
+} from '@/components/ui/tabs-line';
+import { useStore } from '@/store';
 
 /**
- * 角色详情页的选项卡
+ * 角色抽屉选项卡
  */
-export default function CharacterDrawerTabs() {
-  const { characterDrawerData } = useStore();
-  const {
-    loading = false,
-  } = characterDrawerData;
-
+export function CharacterDrawerTabs() {
+  const { characterDrawer } = useStore();
+  const { loading = false } = characterDrawer;
   return (
     <div className="pb-2 bg-card">
       <TabsLine defaultValue="assets">
@@ -27,16 +29,23 @@ export default function CharacterDrawerTabs() {
             </TabsLineTrigger>
           </TabsLineList>
         </div>
-        <TabsLineContent value="assets" className="flex flex-col gap-y-2 px-2">
-          <CharacterDrawerAssets />
+        <TabsLineContent
+          value="assets"
+          className="flex flex-col gap-y-2 px-2"
+        >
+          <UserAssets />
         </TabsLineContent>
         <TabsLineContent value="tab-2">
-          <p className="p-4 text-center text-xs text-muted-foreground">Content for Tab 2</p>
+          <p className="p-4 text-center text-xs text-muted-foreground">
+            Content for Tab 2
+          </p>
         </TabsLineContent>
         <TabsLineContent value="tab-3">
-          <p className="p-4 text-center text-xs text-muted-foreground">Content for Tab 3</p>
+          <p className="p-4 text-center text-xs text-muted-foreground">
+            Content for Tab 3
+          </p>
         </TabsLineContent>
       </TabsLine>
     </div>
-  )
+  );
 }

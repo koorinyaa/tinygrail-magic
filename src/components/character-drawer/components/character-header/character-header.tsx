@@ -1,38 +1,37 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { useScroll } from "@/hooks/use-scroll";
-import { cn, getAvatarUrl } from "@/lib/utils";
-import { useStore } from "@/store";
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { useScroll } from '@/hooks/use-scroll';
+import { cn, getAvatarUrl } from '@/lib/utils';
+import { useStore } from '@/store';
+import { RefObject } from 'react';
 
-interface CharacterDrawerHeaderProps {
-  scrollContainerRef: React.RefObject<HTMLDivElement>;
-}
 /**
- * 角色抽屉头部
- * @param { CharacterDrawerHeaderProps } props
- * @param { React.RefObject<HTMLDivElement> } props.scrollContainerRef - 滚动容器的 ref
+ * 角色头部
  */
-export default function CharacterDrawerHeader({ scrollContainerRef }: CharacterDrawerHeaderProps) {
+export function CharacterHeader({
+  contentRef,
+}: {
+  contentRef: RefObject<HTMLDivElement>;
+}) {
   const isMobile = useIsMobile(448);
-  const { scrollPosition } = useScroll(scrollContainerRef);
+  const { scrollPosition } = useScroll(contentRef);
   const { characterDrawerData } = useStore();
-
   const {
     CharacterId: characterId = 0,
-    Icon: icon = "",
-    Name: name = "",
+    Icon: icon = '',
+    Name: name = '',
   } = characterDrawerData.characterDetail || {};
 
   return (
     <div
       className={cn(
-        "absolute top-0 left-0 right-0 h-10 px-4 py-2 -mt-0.5",
-        "flex flex-row gap-1 items-center bg-background z-10",
-        "border-b border-slate-300/30 dark:border-slate-700/30",
-        {"top-4 pt-0": isMobile}
+        'absolute top-0 left-0 right-0 h-12 px-4 py-2',
+        'flex flex-row gap-1 items-center bg-card z-10',
+        'border-b border-slate-300/30 dark:border-slate-700/30',
+        { 'top-4 h-10 pt-0.5 -mt-0.5': isMobile }
       )}
       style={{
-        opacity: Math.max(0, Math.min(1, (scrollPosition - 104) / 40))
+        opacity: Math.max(0, Math.min(1, (scrollPosition - 104) / 40)),
       }}
     >
       <div

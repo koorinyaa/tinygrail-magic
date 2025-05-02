@@ -2,28 +2,25 @@ import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { ReactNode } from "react";
 
-interface CharacterDrawerPopoverProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  children: ReactNode;
-  className?: string;
-}
-
-/** 
+/**
  * 角色抽屉弹出层
  * @param {CharacterDrawerPopoverProps} props 属性
  * @param {boolean} props.open 是否打开
  * @param {function} props.onOpenChange 打开状态改变回调
  * @param {ReactNode} props.children 子元素
  * @param {string} props.className 类名
-*/
-export default function CharacterDrawerPopover({
+ */
+export function CharacterDrawerPopover({
   open,
   onOpenChange,
   children,
-  className = ""
-}: CharacterDrawerPopoverProps) {
-
+  className = '',
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  children: ReactNode;
+  className?: string;
+}) {
   if (!open) return null;
 
   return (

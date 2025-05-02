@@ -1,50 +1,41 @@
-import { Drawer, DrawerContent, DrawerTitle } from "@/components/ui/drawer";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { cn } from "@/lib/utils";
-import { useStore } from "@/store";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import CharacterDrawerContent from "./character-drawer-content";
+import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { cn } from '@/lib/utils';
+import { useStore } from '@/store';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
+import { CharacterContent } from './components/character-content';
 
 /**
  * 角色抽屉
+ * @param { HTMLElement | null } container 抽屉容器
  */
-export function CharacterDrawer({ container }: { container?: HTMLElement | null }) {
-  const { characterDrawer, setCharacterDrawer, characterDrawerData, resetCharacterDrawerData } = useStore();
+export function CharacterDrawer({
+  container,
+}: {
+  container?: HTMLElement | null;
+}) {
   const isMobile = useIsMobile(448);
-  const { open, characterId } = characterDrawer;
+  const { characterDrawer, closeCharacterDrawer, resetCharacterDrawerData } =
+    useStore();
+  const { open, handleOnly } = characterDrawer;
 
   const onOpenChange = (open: boolean) => {
-    resetCharacterDrawerData();
-    setCharacterDrawer({ open, characterId: null });
+    if (!open) {
+      resetCharacterDrawerData();
+      closeCharacterDrawer();
+    }
   };
-
-  /**
-   * 处理外部交互兼容问题
-   * @param ev
-   */
-  const handleInteractOutside = (ev: Event) => {
-    // 防止在单击toaster时关闭对话框
-    const isToastItem = (ev.target as Element)?.closest('[data-sonner-toaster]')
-    if (isToastItem) ev.preventDefault()
-  }
 
   return (
     <Drawer
-      direction={isMobile ? "bottom" : "right"}
       open={open}
       onOpenChange={onOpenChange}
-      handleOnly={characterDrawerData.handleOnly}
-      container={container}
+      direction={isMobile ? 'bottom' : 'right'}
+      handleOnly={handleOnly}
       repositionInputs={false}
+      container={container}
     >
       <DrawerContent
-        className={cn(
-          "bg-card border-none overflow-hidden",
-          {
-            "max-w-96 rounded-l-md": !isMobile,
-            "!max-h-[90dvh]":isMobile,
-          }
-        )}
         aria-describedby={undefined}
         onOpenAutoFocus={(e) => {
           e.preventDefault();
@@ -52,18 +43,16 @@ export function CharacterDrawer({ container }: { container?: HTMLElement | null 
         onCloseAutoFocus={(e) => {
           e.preventDefault();
         }}
-        onPointerDownOutside={handleInteractOutside}
-        onInteractOutside={handleInteractOutside}
+        className={cn('bg-card border-none overflow-hidden', {
+          'max-w-96 rounded-l-md': !isMobile,
+          '!max-h-[90dvh]': isMobile,
+        })}
       >
         <VisuallyHidden asChild>
           <DrawerTitle />
         </VisuallyHidden>
-        <CharacterDrawerContent
-          characterId={characterId}
-        />
+        <CharacterContent />
       </DrawerContent>
     </Drawer>
   );
 }
-
-

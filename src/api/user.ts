@@ -41,7 +41,6 @@ export async function getUserAssets(Name?: string) {
       `/chara/user/assets${Name ? `/${Name}` : ''}`
     );
   } catch (error) {
-    console.error('获取用户资产数据失败:', (error as Error).message);
     throw error;
   }
 }
@@ -88,7 +87,6 @@ export async function getUserCharacterData(
       `/chara/user/${characterId}/${userName}/false`
     );
   } catch (error) {
-    console.error('获取用户角色数据失败:', (error as Error).message);
     throw error;
   }
 }
@@ -118,7 +116,6 @@ export async function getTinygrailCharacterData(
       `/chara/user/${characterId}/tinygrail/false`
     );
   } catch (error) {
-    console.error('获取英灵殿角色数据失败:', (error as Error).message);
     throw error;
   }
 }
@@ -161,7 +158,6 @@ export async function getUserTemples(
     const url = `/chara/user/temple/${userName}/${page}/${pageSize}${keyword ? `?keyword=${keyword}` : ''}`;
     return await httpService.get<UserTempleResponse>(url);
   } catch (error) {
-    console.error('获取用户圣殿列表失败:', (error as Error).message);
     throw error;
   }
 }

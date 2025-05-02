@@ -1,16 +1,22 @@
-import { CharacterDetail, CharacterUserPageValue, CharacterUserValue, TempleItem } from '@/api/character';
+import {
+  CharacterDetail,
+  CharacterUserPageValue,
+  CharacterUserValue,
+  TempleItem,
+} from '@/api/character';
 import { TinygrailCharacterValue, UserCharacterValue } from '@/api/user';
 import { StateCreator } from 'zustand';
 
 export type CharacterDrawer = {
-  open: boolean;
-  characterId: number | null; 
-}
+  open?: boolean;
+  characterId?: number | null;
+  loading?: boolean;
+  error?: string | null;
+  handleOnly?: boolean;
+};
 
 /**
- * 角色详情页数据
- * @param {boolean} loading 是否正在加载
- * @param {string} error 错误信息
+ * 角色抽屉数据
  * @param {CharacterDetail} characterDetail 角色详情
  * @param {UserCharacterValue} userCharacterData 用户角色数据
  * @param {TempleItem[]} characterTemples 角色圣殿
@@ -23,9 +29,7 @@ export type CharacterDrawer = {
  * @param {number} characterPoolAmount 奖池数量
  */
 export type CharacterDrawerData = {
-  loading?: boolean;
-  error?: string | null;
-  handleOnly?: boolean;
+  // TODO: 名称统一
   characterDetail?: CharacterDetail | null;
   userCharacterData?: UserCharacterValue | null;
   characterTemples?: TempleItem[];
@@ -37,20 +41,26 @@ export type CharacterDrawerData = {
   tinygrailCharacterData?: TinygrailCharacterValue | null;
   gensokyoCharacterData?: UserCharacterValue | null;
   characterPoolAmount?: number;
-}
+};
 
 export interface CharacterDrawerState {
   characterDrawer: CharacterDrawer;
   setCharacterDrawer: (CharacterDrawer: CharacterDrawer) => void;
+  closeCharacterDrawer: () => void;
   characterDrawerData: CharacterDrawerData;
   setCharacterDrawerData: (CharacterDrawerData: CharacterDrawerData) => void;
   resetCharacterDrawerData: () => void;
-};
+}
 
-const initialCharacterDrawerData: CharacterDrawerData = {
+const initialCharacterDrawer: CharacterDrawer = {
+  open: false,
+  characterId: null,
   loading: false,
   error: null,
   handleOnly: false,
+};
+
+const initialCharacterDrawerData: CharacterDrawerData = {
   characterDetail: null,
   userCharacterData: null,
   characterTemples: [],
@@ -64,21 +74,28 @@ const initialCharacterDrawerData: CharacterDrawerData = {
   characterPoolAmount: 0,
 };
 
-export const createCharacterDrawerSlice: StateCreator<CharacterDrawerState> = (set) => ({
-  characterDrawer: {
-    open: false,
-    characterId: null,
-  },
+export const createCharacterDrawerSlice: StateCreator<CharacterDrawerState> = (
+  set
+) => ({
+  characterDrawer: initialCharacterDrawer,
   setCharacterDrawer: (characterDrawer) => {
-    set({ characterDrawer });
+    set((state) => ({
+      characterDrawer: { ...state.characterDrawer, ...characterDrawer },
+    }));
+  },
+  closeCharacterDrawer: () => {
+    set({ characterDrawer: initialCharacterDrawer });
   },
   characterDrawerData: initialCharacterDrawerData,
   setCharacterDrawerData: (characterDrawerData) => {
     set((state) => ({
-      characterDrawerData: { ...state.characterDrawerData, ...characterDrawerData }
+      characterDrawerData: {
+        ...state.characterDrawerData,
+        ...characterDrawerData,
+      },
     }));
   },
   resetCharacterDrawerData: () => {
     set({ characterDrawerData: initialCharacterDrawerData });
-  }
+  },
 });

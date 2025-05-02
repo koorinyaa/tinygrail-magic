@@ -24,7 +24,6 @@ export async function getOssSignature(
       `/chara/oss/sign/${path}/${hash}/${type}`,
     );
   } catch (error) {
-    console.error('获取OSS签名信息失败:', (error as Error).message);
     throw error;
   }
 }
@@ -54,7 +53,6 @@ export async function uploadToOss(
       }
     });
   } catch (error) {
-    console.error('图片上传失败:', (error as Error).message);
     throw error;
   }
 }
