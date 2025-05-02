@@ -4,22 +4,13 @@ import App from './App';
 import './index.css';
 
 // 初始化入口按钮
-const initTinygrailButton = (element: HTMLElement): void => {
-  const li = element.querySelector<HTMLLIElement>('li:nth-child(1)');
-  if (li) {
-    // 创建tinygrail按钮
-    const tinygrailButtonLink = document.createElement('a');
-    tinygrailButtonLink.href = 'javascript:void(0)'; // 阻止默认跳转行为
-    tinygrailButtonLink.textContent = 'tinygrail';
-    tinygrailButtonLink.id = 'tinygrailMagic';
+const initTinygrailButton = (): void => {
+  // 创建tinygrail按钮
+  const tinygrailButtonLink = document.createElement('div');
+  tinygrailButtonLink.id = 'tinygrailMagicButton';
+  document.body.appendChild(tinygrailButtonLink);
 
-    li.append(document.createTextNode(' | '));
-    li.appendChild(tinygrailButtonLink);
-
-    observer.disconnect();
-
-    tinygrailButtonLink.addEventListener('click', handleTinygrailButtonClick);
-  }
+  tinygrailButtonLink.addEventListener('click', handleTinygrailButtonClick);
 };
 
 // 处理tinygrail按钮点击事件
@@ -55,33 +46,13 @@ const handleTinygrailButtonClick = (): void => {
   createReactDom();
 };
 
-const targetSelector = '#dock .content .clearit';
+// 检查当前页面是否在iframe中
+const isNotInIframe = (): boolean => {
+  return window.self === window.top;
+};
 
-const observer = new MutationObserver(
-  (mutationsList: MutationRecord[], observer: MutationObserver): void => {
-    for (const mutation of mutationsList) {
-      if (mutation.type === 'childList') {
-        for (const node of mutation.addedNodes) {
-          if (
-            node.nodeType === Node.ELEMENT_NODE &&
-            (node as Element).matches(targetSelector)
-          ) {
-            initTinygrailButton(node as HTMLElement);
-            observer.disconnect();
-            return;
-          }
-        }
-      }
-    }
-  }
-);
-
-observer.observe(document.body, { childList: true, subtree: true });
-
-const existingElement = document.querySelector<HTMLElement>(targetSelector);
-if (existingElement) {
-  initTinygrailButton(existingElement);
-  observer.disconnect();
+if (isNotInIframe()) {
+  initTinygrailButton();
 }
 
 // 挂载ReactDOM
