@@ -1,1 +1,1 @@
-import { AvatarDropdownMenu } from './avatar-dropdown-menu';
+export { AvatarDropdownMenu } from './avatar-dropdown-menu';

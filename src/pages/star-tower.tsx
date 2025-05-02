@@ -1,22 +1,29 @@
-import { useEffect } from "react";
-import { HubConnectionBuilder } from "@microsoft/signalr";
+import { HubConnectionBuilder } from '@microsoft/signalr';
+import { useEffect } from 'react';
 
-export default function StarTower() {
+export function StarTower() {
   useEffect(() => {
     const fetchData = async () => {
       try {
         const connection = new HubConnectionBuilder()
-          .withUrl("https://tinygrail.com/actionhub")
+          .withUrl('https://tinygrail.com/actionhub')
           .withAutomaticReconnect({
             nextRetryDelayInMilliseconds: (retryContext) => {
-              const delay = Math.min(retryContext.previousRetryCount * 1000, 5000);
-              console.log(`连接中断，正在第${retryContext.previousRetryCount + 1}次重连 (${delay}ms)`);
+              const delay = Math.min(
+                retryContext.previousRetryCount * 1000,
+                5000
+              );
+              console.log(
+                `连接中断，正在第${
+                  retryContext.previousRetryCount + 1
+                }次重连 (${delay}ms)`
+              );
               return delay;
-            }
+            },
           })
           .build();
 
-        connection.onclose(error => {
+        connection.onclose((error) => {
           if (error) {
             console.log('SignalR连接异常断开:', error);
           } else {
@@ -42,16 +49,19 @@ export default function StarTower() {
             console.log('开始执行SignalR连接清理...');
             try {
               console.log('正在断开SignalR连接...');
-              connection.stop().then(() => {
-                console.log('SignalR连接已成功断开');
-              }).catch((stopError) => {
-                console.error('断开连接时发生异常:', stopError);
-              });
+              connection
+                .stop()
+                .then(() => {
+                  console.log('SignalR连接已成功断开');
+                })
+                .catch((stopError) => {
+                  console.error('断开连接时发生异常:', stopError);
+                });
             } finally {
               console.log('SignalR连接清理流程完成');
             }
           }
-        }
+        };
       } catch (error) {
         console.error('连接异常:', error);
       }
@@ -60,16 +70,17 @@ export default function StarTower() {
     return () => {
       console.log('StarTower组件卸载');
       if (stop) {
-        stop.then((cleanup) => {
-          if (typeof cleanup === 'function') {
-            cleanup();
-          }
-        }).catch((error) => {
-          console.error('清理连接时发生异常:', error);
-        });
+        stop
+          .then((cleanup) => {
+            if (typeof cleanup === 'function') {
+              cleanup();
+            }
+          })
+          .catch((error) => {
+            console.error('清理连接时发生异常:', error);
+          });
       }
-    }
-    
+    };
   }, []);
 
   return (

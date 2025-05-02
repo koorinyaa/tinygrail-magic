@@ -19,8 +19,8 @@ export interface PageState {
 export const createPageSlice: StateCreator<PageState> = (set) => ({
   currentPage: {
     main: {
-      title: "每周萌王",
-      id: "topWeek"
+      title: '每周萌王',
+      id: 'topWeek',
     },
     sub: null,
   },

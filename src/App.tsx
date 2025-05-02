@@ -1,18 +1,15 @@
-import { CharacterDrawer } from "@/components/character-drawer";
-import AppSidebar from "@/components/layout/app-sidebar/app-sidebar";
-import Header from "@/components/layout/header/header";
-import { MainContent } from "@/components/layout/main-content/main-content";
-import {
-  SidebarInset,
-  SidebarProvider
-} from "@/components/ui/sidebar";
-import { Toaster } from "@/components/ui/sonner";
+import { CharacterDrawer } from '@/components/character-drawer';
+import { CharacterSearchDialog } from '@/components/character-search-dialog';
+import { AppSidebar } from '@/components/layout/app-sidebar';
+import { Header } from '@/components/layout/header';
+import { MainContent } from '@/components/layout/main-content';
+import { LoginDialog } from '@/components/login-dialog';
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
+import { Toaster } from '@/components/ui/sonner';
+import { checkForUpdates } from '@/lib/update-checker';
+import { useStore } from '@/store';
+import { useEffect, useRef } from 'react';
 import './App.css';
-import { CharacterSearchDialog } from "@/components/character-search-dialog";
-import { useStore } from "@/store";
-import { useEffect, useRef } from "react";
-import { LoginDialog } from "@/components/login-dialog";
-import { checkForUpdates } from "@/lib/update-checker";
 
 export default function App() {
   const { theme, setTheme, setUpdateInfo } = useStore();
@@ -20,18 +17,19 @@ export default function App() {
 
   useEffect(() => {
     // 初始化主题
-    setTheme(document.documentElement.getAttribute('data-theme') === "dark" ? "dark" : "light");
+    setTheme(
+      document.documentElement.getAttribute('data-theme') === 'dark'
+        ? 'dark'
+        : 'light'
+    );
     // 检查更新
     checkForUpdates().then((result) => {
       setUpdateInfo(result);
     });
-  }, [])
+  }, []);
 
   return (
-    <div
-      ref={rootRef}
-      className="w-screen !h-dvh h-screen overflow-hidden"
-    >
+    <div ref={rootRef} className="w-screen !h-dvh h-screen overflow-hidden">
       <SidebarProvider>
         <AppSidebar />
         <SidebarInset className="overflow-hidden">
@@ -46,12 +44,12 @@ export default function App() {
         toastOptions={{
           style: {
             pointerEvents: 'auto',
-          }
+          },
         }}
       />
       <CharacterDrawer container={rootRef.current} />
       <CharacterSearchDialog container={rootRef.current} />
       <LoginDialog />
     </div>
-  )
+  );
 }

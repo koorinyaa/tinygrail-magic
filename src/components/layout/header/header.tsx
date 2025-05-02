@@ -1,20 +1,23 @@
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { cn } from "@/lib/utils";
-import { ComponentProps } from "react";
-import { HeaderActions } from "./header-actions";
-import { HeaderBreadcrumb } from "./header-breadcrumb";
+import { SidebarTrigger } from '@/components/ui/sidebar';
+import { cn } from '@/lib/utils';
+import { ComponentProps } from 'react';
+import { HeaderActions } from './header-actions';
+import { HeaderBreadcrumb } from './header-breadcrumb';
 
-export default function Header({ className, ...props }: ComponentProps<"header">) {
+export function Header({
+  className,
+  ...props
+}: ComponentProps<'header'>) {
   return (
     <header
-      className={cn("flex h-14 shrink-0 items-center px-4 border-b", className)}
+      className={cn('flex h-14 shrink-0 items-center px-4 border-b', className)}
       {...props}
     >
       <div className="flex items-center gap-2 h-8">
         <SidebarTrigger
           className={cn(
-            "-ml-2 cursor-pointer",
-            "bg-transparent hover:bg-transparent dark:hover:bg-transparent shadow-none text-muted-foreground hover:text-foreground/80"
+            '-ml-2 cursor-pointer',
+            'bg-transparent hover:bg-transparent dark:hover:bg-transparent shadow-none text-muted-foreground hover:text-foreground/80'
           )}
         />
         <HeaderBreadcrumb />
@@ -23,5 +26,5 @@ export default function Header({ className, ...props }: ComponentProps<"header">
         <HeaderActions />
       </div>
     </header>
-  )
+  );
 }

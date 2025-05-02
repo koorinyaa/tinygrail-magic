@@ -1,6 +1,6 @@
-import { clsx, type ClassValue } from "clsx";
-import { toast } from "sonner";
-import { twMerge } from "tailwind-merge";
+import { clsx, type ClassValue } from 'clsx';
+import { toast } from 'sonner';
+import { twMerge } from 'tailwind-merge';
 
 const TINYGRAIL_CDN_URL = 'https://tinygrail.mange.cn';
 
@@ -20,7 +20,9 @@ export function cn(...inputs: ClassValue[]): string {
  */
 export function decodeHTMLEntities(str: string): string {
   const parser = new DOMParser();
-  return parser.parseFromString(str, "text/html").documentElement.textContent || str;
+  return (
+    parser.parseFromString(str, 'text/html').documentElement.textContent || str
+  );
 }
 
 /**
@@ -34,11 +36,9 @@ export function isEmpty<T>(value: T): boolean {
   if (typeof value === 'string' || Array.isArray(value))
     return value.length === 0;
 
-  if (value instanceof Map || value instanceof Set)
-    return value.size === 0;
+  if (value instanceof Map || value instanceof Set) return value.size === 0;
 
-  if (typeof value === 'object')
-    return Object.keys(value).length === 0;
+  if (typeof value === 'object') return Object.keys(value).length === 0;
 
   return false;
 }
@@ -68,11 +68,11 @@ export function formatCurrency(
   const minDigits = 0;
   const useRounding = options?.round && !isInteger;
 
-  let result = convertedValue.toLocaleString("en-US", {
+  let result = convertedValue.toLocaleString('en-US', {
     maximumFractionDigits: maxDigits,
     minimumFractionDigits: minDigits,
     useGrouping: true,
-    ...(useRounding ? { roundingMode: "halfExpand" as const } : {}),
+    ...(useRounding ? { roundingMode: 'halfExpand' as const } : {}),
   });
 
   return shouldConvert ? `${result}w` : result;
@@ -85,7 +85,10 @@ export function formatCurrency(
  * @returns {string}
  */
 export function formatInteger(value: number, useWUnit?: boolean): string {
-  return formatCurrency(value, { maximumFractionDigits: 0, useWUnit: useWUnit });
+  return formatCurrency(value, {
+    maximumFractionDigits: 0,
+    useWUnit: useWUnit,
+  });
 }
 
 /**
@@ -102,18 +105,18 @@ export function getCoverUrl(
     large: {
       pathPattern: '/crt/m/',
       replaceTo: '/l/',
-      cdnSuffix: '!w480'
+      cdnSuffix: '!w480',
     },
     medium: {
       pathPattern: '/crt/g/',
       replaceTo: '/m/',
-      cdnSuffix: '!w240'
+      cdnSuffix: '!w240',
     },
     small: {
       pathPattern: '/crt/g/',
       replaceTo: '/m/',
-      cdnSuffix: '!w150'
-    }
+      cdnSuffix: '!w150',
+    },
   }[size];
 
   if (isEmpty(cover)) {
@@ -147,14 +150,14 @@ export function getAvatarUrl(
 ): string {
   const config = {
     large: {
-      cdnSuffix: '!w480'
+      cdnSuffix: '!w480',
     },
     medium: {
-      cdnSuffix: '!w240'
+      cdnSuffix: '!w240',
     },
     small: {
-      cdnSuffix: '!w120'
-    }
+      cdnSuffix: '!w120',
+    },
   }[size];
 
   if (!avatar) return '//lain.bgm.tv/pic/user/l/icon.jpg';
@@ -186,8 +189,10 @@ export function formatDateTime(dateString: string): string {
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit',
-      hour12: false
-    }).format(date).replace(/(\d+)\/(\d+)\/(\d+),?/, '$1年$2月$3日 ');
+      hour12: false,
+    })
+      .format(date)
+      .replace(/(\d+)\/(\d+)\/(\d+),?/, '$1年$2月$3日 ');
   } catch (e) {
     console.error(e);
     return '';

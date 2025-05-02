@@ -6,10 +6,10 @@ export interface ThemeState {
 }
 
 export const createThemeSlice: StateCreator<ThemeState> = (set) => ({
-  theme: "light",
+  theme: 'light',
   setTheme: (theme) => {
     set({ theme });
-    
+
     // 更新网页主题
     const root = window.document.documentElement;
     root.classList.remove('light', 'dark');
@@ -28,5 +28,5 @@ export const createThemeSlice: StateCreator<ThemeState> = (set) => ({
       themeColorMeta.content = theme === 'dark' ? '#020618' : '#FFFFFF';
       document.head.appendChild(themeColorMeta);
     }
-  }
+  },
 });

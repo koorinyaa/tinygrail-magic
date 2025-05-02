@@ -1,5 +1,5 @@
-import { getUserAssets } from "@/api/user";
-import { decodeHTMLEntities } from "./utils";
+import { getUserAssets } from '@/api/user';
+import { decodeHTMLEntities } from './utils';
 
 /**
  * 登录验证并获取用户资产数据
@@ -7,7 +7,7 @@ import { decodeHTMLEntities } from "./utils";
  */
 export function verifyAuth(setUserAssets: (assets: any) => void) {
   getUserAssets()
-    .then(response => {
+    .then((response) => {
       if (response.State === 0 && response.Value) {
         const {
           Id: id,
@@ -21,7 +21,7 @@ export function verifyAuth(setUserAssets: (assets: any) => void) {
           LastIndex: lastIndex,
           ShowWeekly: showWeekly,
           ShowDaily: showDaily,
-        } = response.Value
+        } = response.Value;
 
         setUserAssets({
           id,
@@ -41,8 +41,9 @@ export function verifyAuth(setUserAssets: (assets: any) => void) {
         throw new Error(response.Message || '登录已过期');
       }
     })
-    .catch(err => {
-      const errMsg = err instanceof Error ? err.message : '获取用户资产数据失败'
+    .catch((err) => {
+      const errMsg =
+        err instanceof Error ? err.message : '获取用户资产数据失败';
       console.error(errMsg);
-    })
+    });
 }

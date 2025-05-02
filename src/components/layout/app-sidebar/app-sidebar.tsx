@@ -1,4 +1,4 @@
-import { Tinygrail } from "@/components/icons"
+import { Tinygrail } from '@/components/icons';
 import {
   Sidebar,
   SidebarContent,
@@ -7,9 +7,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import { formatCurrency, getAvatarUrl } from "@/lib/utils"
-import { useStore } from "@/store"
+} from '@/components/ui/sidebar';
+import { formatCurrency, getAvatarUrl } from '@/lib/utils';
+import { useStore } from '@/store';
 import {
   BadgeCent,
   ChartNoAxesColumn,
@@ -18,84 +18,83 @@ import {
   Images,
   Settings,
   Sparkles,
-  Trophy
-} from "lucide-react"
-import {
-  NavProjects,
-  NavSecondary
-} from "./sidebar-navigation"
-import { NavUpdate } from "./sidebar-navigation/nav-update"
+  Trophy,
+} from 'lucide-react';
+import { NavProjects, NavSecondary, NavUpdate } from './sidebar-navigation';
 
-export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
   const { userAssets, updateInfo } = useStore();
-  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
+  const currentPath =
+    typeof window !== 'undefined' ? window.location.pathname : '';
 
   const data = {
     navPages: {
-      groupName: "Pages",
+      groupName: 'Pages',
       items: [
         {
-          name: "每周萌王",
-          id: "topWeek",
+          name: '每周萌王',
+          id: 'topWeek',
           icon: Trophy,
         },
         {
-          name: "通天塔",
-          id: "starTower",
+          name: '通天塔',
+          id: 'starTower',
           icon: Sparkles,
         },
         {
-          name: "最新圣殿",
-          id: "latestTemples",
+          name: '最新圣殿',
+          id: 'latestTemples',
           icon: Images,
         },
         {
-          name: "市场",
-          id: "market",
+          name: '市场',
+          id: 'market',
           icon: BadgeCent,
         },
         {
-          name: "排行榜",
-          id: "ranking",
+          name: '排行榜',
+          id: 'ranking',
           icon: ChartNoAxesColumn,
         },
       ],
     },
     navAccount: {
-      groupName: "Account",
+      groupName: 'Account',
       items: [
         {
           name: `${'氷Nyaa'}的小圣杯`,
-          id: "account",
+          id: 'account',
           icon: CircleUserRound,
         },
         {
-          name: "设置",
-          id: "settings",
+          name: '设置',
+          id: 'settings',
           icon: Settings,
         },
       ],
     },
     navSecondary: [
       {
-        title: "fuyuake",
-        url: "https://fuyuake.top",
-        target: "_blank",
+        title: 'fuyuake',
+        url: 'https://fuyuake.top',
+        target: '_blank',
         icon: ExternalLink,
       },
       {
-        title: "返回bangumi",
+        title: '返回bangumi',
         url: currentPath,
         icon: ExternalLink,
       },
     ],
     user: {
-      name: userAssets?.name || "",
-      nickname: userAssets?.nickname || "",
+      name: userAssets?.name || '',
+      nickname: userAssets?.nickname || '',
       balance: formatCurrency(userAssets?.balance || 0),
-      avatar: getAvatarUrl(userAssets?.avatar || ""),
+      avatar: getAvatarUrl(userAssets?.avatar || ''),
     },
-  }
+  };
 
   return (
     <Sidebar variant="inset" {...props}>
@@ -109,7 +108,9 @@ export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sid
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">小圣杯</span>
-                  <span className="truncate text-xs">TinyGrail Exchange Plugin</span>
+                  <span className="truncate text-xs">
+                    TinyGrail Exchange Plugin
+                  </span>
                 </div>
               </a>
             </SidebarMenuButton>
@@ -121,13 +122,12 @@ export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sid
         <NavProjects projects={data.navAccount} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
-      {
-        updateInfo?.hasUpdate &&
+      {updateInfo?.hasUpdate && (
         <SidebarFooter className="mb-1">
           {/* <NavUser user={data.user} /> */}
           <NavUpdate />
         </SidebarFooter>
-      }
+      )}
     </Sidebar>
-  )
+  );
 }

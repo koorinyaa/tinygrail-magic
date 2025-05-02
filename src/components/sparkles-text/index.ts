@@ -1,0 +1,1 @@
+export { SparklesText } from './sparkles-text'

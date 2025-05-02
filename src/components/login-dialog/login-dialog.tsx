@@ -1,10 +1,15 @@
-import { AUTHORIZE_URL } from "@/api/user";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { isEmpty } from "@/lib/utils";
-import { verifyAuth } from "@/lib/auth";
-import { useEffect } from "react";
-import { useStore } from "@/store";
+import { AUTHORIZE_URL } from '@/api/user';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { verifyAuth } from '@/lib/auth';
+import { isEmpty } from '@/lib/utils';
+import { useStore } from '@/store';
+import { useEffect } from 'react';
 
 export function LoginDialog() {
   const STORAGE_KEY = 'tinygrail-magic:user-assets';

@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from 'react';
 
-const MOBILE_BREAKPOINT = 768
+const MOBILE_BREAKPOINT = 768;
 
 export function useIsMobile(breakpoint: number = MOBILE_BREAKPOINT) {
-  const getScreenWidth = () => window.visualViewport?.width ?? window.innerWidth;
+  const getScreenWidth = () =>
+    window.visualViewport?.width ?? window.innerWidth;
   const [screenWidth, setScreenWidth] = useState(getScreenWidth());
 
   useEffect(() => {
@@ -17,5 +18,5 @@ export function useIsMobile(breakpoint: number = MOBILE_BREAKPOINT) {
     };
   }, []);
 
-  return screenWidth < breakpoint
+  return screenWidth < breakpoint;
 }

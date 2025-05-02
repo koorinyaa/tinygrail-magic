@@ -11,62 +11,70 @@ const initTinygrailButton = (element: HTMLElement): void => {
     const tinygrailButtonLink = document.createElement('a');
     tinygrailButtonLink.href = 'javascript:void(0)'; // 阻止默认跳转行为
     tinygrailButtonLink.textContent = 'tinygrail';
-    tinygrailButtonLink.id = 'tinygrailMagic'
+    tinygrailButtonLink.id = 'tinygrailMagic';
 
-    li.append(document.createTextNode(" | "))
+    li.append(document.createTextNode(' | '));
     li.appendChild(tinygrailButtonLink);
 
     observer.disconnect();
 
     tinygrailButtonLink.addEventListener('click', handleTinygrailButtonClick);
   }
-}
+};
 
 // 处理tinygrail按钮点击事件
 const handleTinygrailButtonClick = (): void => {
   // 移动端缩放适配
   document.querySelector('meta[name="viewport"]')?.remove();
-  const metaElement = document.createElement('meta')
+  const metaElement = document.createElement('meta');
   metaElement.name = 'viewport';
   metaElement.content = 'width=device-width, initial-scale=1';
   document.head.insertBefore(metaElement, document.head.firstChild);
 
   // 清除body元素和css
   document.body.replaceChildren();
-  [...document.querySelectorAll('link[type="text/css"]')].forEach(link => link.remove());
-  
+  [...document.querySelectorAll('link[type="text/css"]')].forEach((link) =>
+    link.remove()
+  );
+
   // 添加className
   document.body.className = 'tinygrailMagic';
 
   // 设置字体大小
-  document.documentElement.style.fontSize = "16px";
+  document.documentElement.style.fontSize = '16px';
 
   // 禁止移动端下拉刷新行为
-  document.documentElement.style.overscrollBehavior = "none";
+  document.documentElement.style.overscrollBehavior = 'none';
 
   // 修改标题和图标
-  document.title = '「小圣杯」最萌大战'
-  document.head.querySelector<HTMLLinkElement>('link[type="image/x-icon"]')
+  document.title = '「小圣杯」最萌大战';
+  document.head
+    .querySelector<HTMLLinkElement>('link[type="image/x-icon"]')
     ?.setAttribute('href', 'https://tinygrail.com/favicon.ico');
 
-  createReactDom()
-}
+  createReactDom();
+};
 
 const targetSelector = '#dock .content .clearit';
 
-const observer = new MutationObserver((mutationsList: MutationRecord[], observer: MutationObserver): void => {
-  for (const mutation of mutationsList) {
-    if (mutation.type === 'childList') {
-      for (const node of mutation.addedNodes) {
-        if (node.nodeType === Node.ELEMENT_NODE && (node as Element).matches(targetSelector)) {
-          initTinygrailButton(node as HTMLElement);
-          observer.disconnect();
-          return;
+const observer = new MutationObserver(
+  (mutationsList: MutationRecord[], observer: MutationObserver): void => {
+    for (const mutation of mutationsList) {
+      if (mutation.type === 'childList') {
+        for (const node of mutation.addedNodes) {
+          if (
+            node.nodeType === Node.ELEMENT_NODE &&
+            (node as Element).matches(targetSelector)
+          ) {
+            initTinygrailButton(node as HTMLElement);
+            observer.disconnect();
+            return;
+          }
         }
       }
     }
   }
-});
+);
 
 observer.observe(document.body, { childList: true, subtree: true });
 
@@ -78,11 +86,10 @@ if (existingElement) {
 
 // 挂载ReactDOM
 const createReactDom = (): void => {
-  console.info('Initializing tinygrail-magic...')
+  console.info('Initializing tinygrail-magic...');
   ReactDOM.createRoot(document.body).render(
     <React.StrictMode>
       <App />
-    </React.StrictMode>,
+    </React.StrictMode>
   );
-}
-
+};

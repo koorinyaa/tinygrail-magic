@@ -1,4 +1,4 @@
-import { type LucideIcon } from "lucide-react";
+import { type LucideIcon } from 'lucide-react';
 
 import {
   SidebarGroup,
@@ -7,9 +7,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@/components/ui/sidebar";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { useStore } from "@/store";
+} from '@/components/ui/sidebar';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { useStore } from '@/store';
 
 type NavProjectsProps = {
   projects: {
@@ -27,7 +27,7 @@ type item = {
 export function NavProjects({ projects }: NavProjectsProps) {
   const isMobile = useIsMobile();
   const { toggleSidebar } = useSidebar();
-  const { currentPage, setCurrentPage } = useStore()
+  const { currentPage, setCurrentPage } = useStore();
 
   const handleClick = (item: item) => {
     setCurrentPage({

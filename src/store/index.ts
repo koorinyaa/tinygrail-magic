@@ -1,13 +1,18 @@
 import { create } from 'zustand';
-import { ThemeState, createThemeSlice } from './slices/theme';
+import {
+  CharacterDrawerState,
+  createCharacterDrawerSlice,
+} from './slices/character-drawer';
+import {
+  CharacterSearchDialogState,
+  createCharacterSearchDialogSlice,
+} from './slices/character-search-dialog';
 import { PageState, createPageSlice } from './slices/page';
-import { UserAssetsState, createUserAssetsSlice } from './slices/user-assets';
-import { CharacterSearchDialogState, createCharacterSearchDialogSlice } from './slices/character-search-dialog';
-import { CharacterDrawerState, createCharacterDrawerSlice } from './slices/character-drawer';
+import { ThemeState, createThemeSlice } from './slices/theme';
 import { UpdateInfoState, createUpdateInfoSlice } from './slices/update-info';
+import { UserAssetsState, createUserAssetsSlice } from './slices/user-assets';
 
-type StoreState =
-  ThemeState &
+type StoreState = ThemeState &
   PageState &
   UserAssetsState &
   CharacterSearchDialogState &

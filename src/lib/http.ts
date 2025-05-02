@@ -1,4 +1,9 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+import axios, {
+  AxiosError,
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+} from 'axios';
 
 type HttpMethod = 'get' | 'post' | 'put' | 'delete' | 'patch';
 
@@ -8,7 +13,7 @@ type HttpMethod = 'get' | 'post' | 'put' | 'delete' | 'patch';
  * @property {number} State - 状态码，通常为 0 表示成功，非 0 表示失败
  * @property {T} Value - 响应数据
  * @property {string} [Message] - 可选的错误消息，当 State 不为 0 时存在
-*/
+ */
 export interface TinygrailBaseResponse<T> {
   State: number;
   Value: T;
@@ -73,30 +78,50 @@ export class HttpService {
     }
   }
 
-  public get<T = any>(url: string, params?: object, config?: AxiosRequestConfig): Promise<T> {
+  public get<T = any>(
+    url: string,
+    params?: object,
+    config?: AxiosRequestConfig
+  ): Promise<T> {
     return this.request({ method: 'get', url, params, ...config });
   }
 
-  public post<T = any>(url: string, data?: object | string, config?: AxiosRequestConfig): Promise<T> {
+  public post<T = any>(
+    url: string,
+    data?: object | string,
+    config?: AxiosRequestConfig
+  ): Promise<T> {
     return this.request({
       method: 'post',
       url,
       data: JSON.stringify(data),
-      ...config
+      ...config,
     });
   }
 
-  public put<T = any>(url: string, data?: object, config?: AxiosRequestConfig): Promise<T> {
+  public put<T = any>(
+    url: string,
+    data?: object,
+    config?: AxiosRequestConfig
+  ): Promise<T> {
     return this.request({ method: 'put', url, data, ...config });
   }
 
-  public delete<T = any>(url: string, params?: object, config?: AxiosRequestConfig): Promise<T> {
+  public delete<T = any>(
+    url: string,
+    params?: object,
+    config?: AxiosRequestConfig
+  ): Promise<T> {
     return this.request({ method: 'delete', url, params, ...config });
   }
 
   private handleError(error: any): Error {
     if (error.response) {
-      return new Error(`请求失败：${error.response.status} ${error.response.data?.message || ''}`);
+      return new Error(
+        `请求失败：${error.response.status} ${
+          error.response.data?.message || ''
+        }`
+      );
     }
     return new Error('网络连接异常，请检查网络设置');
   }

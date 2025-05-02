@@ -30,5 +30,5 @@ export const createUserAssetsSlice: StateCreator<UserAssetsState> = (set) => ({
     } else {
       localStorage.removeItem(STORAGE_KEY);
     }
-  }
+  },
 });
