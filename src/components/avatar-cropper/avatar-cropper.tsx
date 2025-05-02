@@ -1,4 +1,9 @@
-import { CircleStencil, FixedCropper, FixedCropperRef, ImageRestriction } from 'react-advanced-cropper';
+import {
+  CircleStencil,
+  FixedCropper,
+  FixedCropperRef,
+  ImageRestriction,
+} from 'react-advanced-cropper';
 import 'react-advanced-cropper/dist/style.css';
 
 interface AvatarCropperProps {
@@ -17,7 +22,7 @@ export function AvatarCropper({ src, cropperRef }: AvatarCropperProps) {
       src={src}
       stencilSize={{
         width: 256,
-        height: 256
+        height: 256,
       }}
       stencilProps={{
         handlers: false,
@@ -27,7 +32,7 @@ export function AvatarCropper({ src, cropperRef }: AvatarCropperProps) {
       }}
       stencilComponent={CircleStencil}
       imageRestriction={ImageRestriction.stencil}
-      className='w-full aspect-[3/4] !bg-transparent'
+      className="w-full aspect-[3/4] !bg-transparent"
     />
   );
 }

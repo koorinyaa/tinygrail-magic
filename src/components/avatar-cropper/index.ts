@@ -1,1 +1,1 @@
-export { AvatarCropper } from "./avatar-cropper";
+export { AvatarCropper } from './avatar-cropper';

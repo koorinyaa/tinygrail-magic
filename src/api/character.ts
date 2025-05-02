@@ -1,6 +1,6 @@
-import { httpService, TinygrailBaseResponse } from "@/lib/http";
-import { dataURLtoBlob } from "@/lib/utils";
-import { getOssSignature, uploadToOss } from "./tinygrail-oss";
+import { httpService, TinygrailBaseResponse } from '@/lib/http';
+import { dataURLtoBlob } from '@/lib/utils';
+import { getOssSignature, uploadToOss } from './tinygrail-oss';
 
 /**
  * 圣殿item
@@ -102,8 +102,9 @@ export interface TempleItem {
  * @property {number} Sacrifices - 英灵殿数量
  * @property {number} Type - 拍卖人数
  */
-export interface CurrentTopWeekItem extends TempleItem { }
-export interface TopWeekResponse extends TinygrailBaseResponse<Array<CurrentTopWeekItem>> { }
+export interface CurrentTopWeekItem extends TempleItem {}
+export interface TopWeekResponse
+  extends TinygrailBaseResponse<Array<CurrentTopWeekItem>> {}
 
 /**
  * 获取当前萌王数据
@@ -115,7 +116,6 @@ export async function getTopWeek(): Promise<TopWeekResponse> {
     throw error;
   }
 }
-
 
 /**
  * 历史萌王数据项
@@ -130,28 +130,33 @@ export async function getTopWeek(): Promise<TopWeekResponse> {
  * @property {number} Create - 创建时间
  * @property {number} Level - 排名
  */
-export interface HistoryTopWeekItem extends TempleItem { }
-export interface TopWeekHistoryResponse extends TinygrailBaseResponse<{
-  Items: HistoryTopWeekItem[];
-  CurrentPage: number;
-  TotalPages: number;
-  TotalItems: number;
-  ItemsPerPage: number;
-  Context: any;
-}> { }
+export interface HistoryTopWeekItem extends TempleItem {}
+export interface TopWeekHistoryResponse
+  extends TinygrailBaseResponse<{
+    Items: HistoryTopWeekItem[];
+    CurrentPage: number;
+    TotalPages: number;
+    TotalItems: number;
+    ItemsPerPage: number;
+    Context: any;
+  }> {}
 
 /**
  * 获取历史萌王数据
  */
-export async function getTopWeekHistory(page: number, pageSize: number = 12): Promise<TopWeekHistoryResponse> {
+export async function getTopWeekHistory(
+  page: number,
+  pageSize: number = 12
+): Promise<TopWeekHistoryResponse> {
   page = Math.max(page, 1);
   try {
-    return await httpService.get<TopWeekHistoryResponse>(`/chara/topweek/history/${page}/${pageSize}`);
+    return await httpService.get<TopWeekHistoryResponse>(
+      `/chara/topweek/history/${page}/${pageSize}`
+    );
   } catch (error) {
     throw error;
   }
 }
-
 
 /**
  * 角色详细信息数据项
@@ -227,43 +232,52 @@ export interface CharacterDetail {
   State: number;
   Type: number;
 }
-export interface CharacterDetailResponse extends TinygrailBaseResponse<CharacterDetail> { }
+export interface CharacterDetailResponse
+  extends TinygrailBaseResponse<CharacterDetail> {}
 
 /**
  * 获取角色详细信息
  * @param characterId 角色ID
  */
-export async function getCharacterDetail(characterId: number): Promise<CharacterDetailResponse> {
+export async function getCharacterDetail(
+  characterId: number
+): Promise<CharacterDetailResponse> {
   try {
-    return await httpService.get<CharacterDetailResponse>(`/chara/${characterId}`);
+    return await httpService.get<CharacterDetailResponse>(
+      `/chara/${characterId}`
+    );
   } catch (error) {
     throw error;
   }
 }
 
-
-export interface TempleResponse extends TinygrailBaseResponse<TempleItem[]> { }
+export interface TempleResponse extends TinygrailBaseResponse<TempleItem[]> {}
 
 /**
  * 获取角色圣殿数据
  * @param characterId 角色ID
  */
-export async function getCharacterTemples(characterId: number): Promise<TempleResponse> {
+export async function getCharacterTemples(
+  characterId: number
+): Promise<TempleResponse> {
   try {
-    return await httpService.get<TempleResponse>(`/chara/temple/${characterId}`);
+    return await httpService.get<TempleResponse>(
+      `/chara/temple/${characterId}`
+    );
   } catch (error) {
     throw error;
   }
 }
 
-
-export interface LinksResponse extends TinygrailBaseResponse<TempleItem[]> { }
+export interface LinksResponse extends TinygrailBaseResponse<TempleItem[]> {}
 
 /**
  * 获取角色LINK圣殿数据
  * @param characterId 角色ID
  */
-export async function getCharacterLinks(characterId: number): Promise<LinksResponse> {
+export async function getCharacterLinks(
+  characterId: number
+): Promise<LinksResponse> {
   try {
     return await httpService.get<LinksResponse>(`chara/links/${characterId}`);
   } catch (error) {
@@ -271,22 +285,26 @@ export async function getCharacterLinks(characterId: number): Promise<LinksRespo
   }
 }
 
-
-export interface CharacterSearchResponse extends TinygrailBaseResponse<CharacterDetail[]> { }
+export interface CharacterSearchResponse
+  extends TinygrailBaseResponse<CharacterDetail[]> {}
 
 /**
  * 搜索角色
  * @param {string} [keyword] 搜索关键字
  */
-export async function searchCharacter(keyword: string): Promise<CharacterSearchResponse> {
+export async function searchCharacter(
+  keyword: string
+): Promise<CharacterSearchResponse> {
   try {
-    return await httpService.get<CharacterSearchResponse>(`/chara/search/character?keyword=${keyword}`);
+    return await httpService.get<CharacterSearchResponse>(
+      `/chara/search/character?keyword=${keyword}`
+    );
   } catch (error) {
     throw error;
   }
 }
 
-export interface CharacterPoolResponse extends TinygrailBaseResponse<number> { }
+export interface CharacterPoolResponse extends TinygrailBaseResponse<number> {}
 
 /**
  * 获取角色奖池数据
@@ -421,7 +439,8 @@ export interface CharacterUserPageValue {
   Context: any;
 }
 
-export interface CharacterUserResponse extends TinygrailBaseResponse<CharacterUserPageValue> { }
+export interface CharacterUserResponse
+  extends TinygrailBaseResponse<CharacterUserPageValue> {}
 
 /**
  * 获取角色持有者列表
@@ -451,7 +470,8 @@ export async function getCharacterUsers(
  * @property {number} State - 更新状态
  * @property {string} Value - 更新提示信息
  */
-export interface CharacterUpdateResponse extends TinygrailBaseResponse<string> { }
+export interface CharacterUpdateResponse
+  extends TinygrailBaseResponse<string> {}
 
 /**
  * 更新角色信息
@@ -470,8 +490,7 @@ export async function updateCharacter(
   }
 }
 
-
-export interface AvatarUploadResponse extends TinygrailBaseResponse<number> { }
+export interface AvatarUploadResponse extends TinygrailBaseResponse<number> {}
 /**
  * 上传角色头像
  * @param {number} characterId - 角色ID
@@ -482,7 +501,7 @@ export interface AvatarUploadResponse extends TinygrailBaseResponse<number> { }
 export async function uploadCharacterAvatar(
   characterId: number,
   imageDataUrl: string,
-  hash: string,
+  hash: string
 ): Promise<AvatarUploadResponse> {
   try {
     // 转换为Blob对象
@@ -500,18 +519,23 @@ export async function uploadCharacterAvatar(
     }
 
     // 上传到OSS
-    await uploadToOss('avatar', hash, blob, 'image/jpeg', ossSignatureResponse.Value);
+    await uploadToOss(
+      'avatar',
+      hash,
+      blob,
+      'image/jpeg',
+      ossSignatureResponse.Value
+    );
 
     // 更新角色头像
     return await httpService.post<AvatarUploadResponse>(
       `/chara/avatar/${characterId}`,
-      `https://tinygrail.oss-cn-hangzhou.aliyuncs.com/avatar/${hash}.jpg`,
+      `https://tinygrail.oss-cn-hangzhou.aliyuncs.com/avatar/${hash}.jpg`
     );
   } catch (error) {
     throw error;
   }
 }
-
 
 /**
  * 角色献祭数据
@@ -527,10 +551,11 @@ export interface SacrificeItem {
   Count: number;
 }
 
-export interface SacrificeResponse extends TinygrailBaseResponse<{
-  Balance: number;
-  Items: SacrificeItem[];
-}> { }
+export interface SacrificeResponse
+  extends TinygrailBaseResponse<{
+    Balance: number;
+    Items: SacrificeItem[];
+  }> {}
 
 /**
  * 角色献祭
@@ -552,7 +577,3 @@ export async function sacrificeCharacter(
     throw error;
   }
 }
-
-
-
-

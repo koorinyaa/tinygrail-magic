@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,21 +7,16 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { formatCurrency, getAvatarUrl } from "@/lib/utils";
-import { useStore } from "@/store";
-import {
-  DollarSign,
-  LogOutIcon,
-  Pencil,
-  Ticket
-} from "lucide-react";
-import { toast } from "sonner";
-import { UserAvatar } from "./components/user-avatar";
+} from '@/components/ui/dropdown-menu';
+import { formatCurrency, getAvatarUrl } from '@/lib/utils';
+import { useStore } from '@/store';
+import { DollarSign, LogOutIcon, Pencil, Ticket } from 'lucide-react';
+import { toast } from 'sonner';
+import { UserAvatar } from './components/user-avatar';
 
 export function AvatarDropdownMenu() {
   const { userAssets } = useStore();
-  
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="size-8">
@@ -40,25 +35,25 @@ export function AvatarDropdownMenu() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => toast.warning("开发中")}>
-          <Pencil size={16} className="opacity-60" aria-hidden="true" />
+          <DropdownMenuItem onClick={() => toast.warning('开发中')}>
+            <Pencil size={16} className="opacity-60" aria-hidden="true" />
             <span>签到奖励</span>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => toast.warning("开发中")}>
-          <Ticket size={16} className="opacity-60" aria-hidden="true" />
+          <DropdownMenuItem onClick={() => toast.warning('开发中')}>
+            <Ticket size={16} className="opacity-60" aria-hidden="true" />
             <span>刮刮乐</span>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => toast.warning("开发中")}>
-          <DollarSign size={16} className="opacity-60" aria-hidden="true" />
+          <DropdownMenuItem onClick={() => toast.warning('开发中')}>
+            <DollarSign size={16} className="opacity-60" aria-hidden="true" />
             <span>每周分红</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => toast.warning("开发中")}>
+        <DropdownMenuItem onClick={() => toast.warning('开发中')}>
           <LogOutIcon size={16} className="opacity-60" aria-hidden="true" />
           <span>退出登录</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

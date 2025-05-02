@@ -1,4 +1,4 @@
-import { httpService, TinygrailBaseResponse } from "@/lib/http";
+import { httpService, TinygrailBaseResponse } from '@/lib/http';
 
 /**
  * 用户道具数据

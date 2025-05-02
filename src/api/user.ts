@@ -1,7 +1,8 @@
-import { httpService, TinygrailBaseResponse } from "@/lib/http";
-import { TempleItem } from "./character";
+import { httpService, TinygrailBaseResponse } from '@/lib/http';
+import { TempleItem } from './character';
 
-export const AUTHORIZE_URL = 'https://bgm.tv/oauth/authorize?response_type=code&client_id=bgm2525b0e4c7d93fec&redirect_uri=https%3A%2F%2Ftinygrail.com%2Fapi%2Faccount%2Fcallback'
+export const AUTHORIZE_URL =
+  'https://bgm.tv/oauth/authorize?response_type=code&client_id=bgm2525b0e4c7d93fec&redirect_uri=https%3A%2F%2Ftinygrail.com%2Fapi%2Faccount%2Fcallback';
 
 /**
  * 用户资产数据
@@ -71,7 +72,8 @@ export interface UserCharacterValue {
   Sacrifices: number;
 }
 
-export interface UserCharacterResponse extends TinygrailBaseResponse<UserCharacterValue> {}
+export interface UserCharacterResponse
+  extends TinygrailBaseResponse<UserCharacterValue> {}
 /**
  * 获取用户角色关联数据
  * @param {string} characterId - 角色ID
@@ -101,7 +103,8 @@ export interface TinygrailCharacterValue extends UserCharacterValue {
   AuctionTotal: number;
 }
 
-export interface TinygrailCharacterrResponse extends TinygrailBaseResponse<TinygrailCharacterValue> {}
+export interface TinygrailCharacterrResponse
+  extends TinygrailBaseResponse<TinygrailCharacterValue> {}
 
 /**
  * 获取英灵殿角色数据
@@ -137,7 +140,8 @@ export interface UserTemplePageValue {
   Context: any;
 }
 
-export interface UserTempleResponse extends TinygrailBaseResponse<UserTemplePageValue> {}
+export interface UserTempleResponse
+  extends TinygrailBaseResponse<UserTemplePageValue> {}
 
 /**
  * 获取用户圣殿列表
@@ -155,7 +159,9 @@ export async function getUserTemples(
 ): Promise<UserTempleResponse> {
   page = Math.max(page, 1);
   try {
-    const url = `/chara/user/temple/${userName}/${page}/${pageSize}${keyword ? `?keyword=${keyword}` : ''}`;
+    const url = `/chara/user/temple/${userName}/${page}/${pageSize}${
+      keyword ? `?keyword=${keyword}` : ''
+    }`;
     return await httpService.get<UserTempleResponse>(url);
   } catch (error) {
     throw error;

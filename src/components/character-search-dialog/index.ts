@@ -1,1 +1,1 @@
-export { CharacterSearchDialog } from "./character-search-dialog";
+export { CharacterSearchDialog } from './character-search-dialog';

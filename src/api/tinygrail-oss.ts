@@ -1,4 +1,4 @@
-import { TinygrailBaseResponse, httpService } from "@/lib/http";
+import { TinygrailBaseResponse, httpService } from '@/lib/http';
 
 export interface OssSignatureValue {
   Key: string;
@@ -6,7 +6,8 @@ export interface OssSignatureValue {
   Date: string;
 }
 
-export interface OssSignatureResponse extends TinygrailBaseResponse<OssSignatureValue> { }
+export interface OssSignatureResponse
+  extends TinygrailBaseResponse<OssSignatureValue> {}
 /**
  * 获取OSS签名信息
  * @param {string} path - 存储路径
@@ -21,7 +22,7 @@ export async function getOssSignature(
 ): Promise<OssSignatureResponse> {
   try {
     return await httpService.post<OssSignatureResponse>(
-      `/chara/oss/sign/${path}/${hash}/${type}`,
+      `/chara/oss/sign/${path}/${hash}/${type}`
     );
   } catch (error) {
     throw error;
@@ -45,13 +46,17 @@ export async function uploadToOss(
   signature: OssSignatureValue
 ): Promise<null> {
   try {
-    return await httpService.put(`https://tinygrail.oss-cn-hangzhou.aliyuncs.com/${path}/${hash}.jpg`, blob, {
-      headers: {
-        'Content-Type': contentType,
-        'Authorization': `OSS ${signature.Key}:${signature.Sign}`,
-        'x-oss-date': signature.Date
+    return await httpService.put(
+      `https://tinygrail.oss-cn-hangzhou.aliyuncs.com/${path}/${hash}.jpg`,
+      blob,
+      {
+        headers: {
+          'Content-Type': contentType,
+          Authorization: `OSS ${signature.Key}:${signature.Sign}`,
+          'x-oss-date': signature.Date,
+        },
       }
-    });
+    );
   } catch (error) {
     throw error;
   }

@@ -1,34 +1,50 @@
-import type { CharacterDetail } from "@/api/character";
-import { searchCharacter } from "@/api/character";
-import BadgeLevel from "@/components//ui/badge-level";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { Separator } from "@/components/ui/separator";
-import { useDebounce } from "@/hooks/use-debounce";
-import { formatInteger, getAvatarUrl, isEmpty } from "@/lib/utils";
-import { useStore } from "@/store";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import type { CharacterDetail } from '@/api/character';
+import { searchCharacter } from '@/api/character';
+import BadgeLevel from '@/components//ui/badge-level';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import {
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
+import { Separator } from '@/components/ui/separator';
+import { useDebounce } from '@/hooks/use-debounce';
+import { formatInteger, getAvatarUrl, isEmpty } from '@/lib/utils';
+import { useStore } from '@/store';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 /**
  * 角色搜索弹窗
  */
-export function CharacterSearchDialog({ container }: { container?: HTMLElement | null }) {
-  const { characterSearchDialog, setCharacterSearchDialog, setCharacterDrawer, userAssets } = useStore();
-  const [keyword, setKeyword] = useState("");
+export function CharacterSearchDialog({
+  container,
+}: {
+  container?: HTMLElement | null;
+}) {
+  const {
+    characterSearchDialog,
+    setCharacterSearchDialog,
+    setCharacterDrawer,
+    userAssets,
+  } = useStore();
+  const [keyword, setKeyword] = useState('');
   const [searchResults, setSearchResults] = useState<CharacterDetail[]>([]);
   const debouncedSearchTerm = useDebounce(keyword, 1000);
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault()
-        setOpen(!characterSearchDialog.open)
+      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setOpen(!characterSearchDialog.open);
       }
-    }
-    document.addEventListener("keydown", down)
-    return () => document.removeEventListener("keydown", down)
-  }, [])
+    };
+    document.addEventListener('keydown', down);
+    return () => document.removeEventListener('keydown', down);
+  }, []);
 
   useEffect(() => {
     fetchResults();
@@ -40,9 +56,11 @@ export function CharacterSearchDialog({ container }: { container?: HTMLElement |
    */
   const handleInteractOutside = (ev: Event) => {
     // 防止在单击toaster时关闭对话框
-    const isToastItem = (ev.target as Element)?.closest('[data-sonner-toaster]')
-    if (isToastItem) ev.preventDefault()
-  }
+    const isToastItem = (ev.target as Element)?.closest(
+      '[data-sonner-toaster]'
+    );
+    if (isToastItem) ev.preventDefault();
+  };
 
   const fetchResults = async () => {
     if (isEmpty(userAssets)) return;
@@ -50,32 +68,32 @@ export function CharacterSearchDialog({ container }: { container?: HTMLElement |
       const response = await searchCharacter(debouncedSearchTerm);
       if (response.State !== 0) {
         setSearchResults([]);
-        throw new Error(response.Message || "搜索失败");
+        throw new Error(response.Message || '搜索失败');
       }
       setSearchResults(response.Value);
     } catch (err) {
-      const errMsg = err instanceof Error ? err.message : "搜索失败";
+      const errMsg = err instanceof Error ? err.message : '搜索失败';
       console.error(errMsg);
-      toast.error("搜索失败", {
+      toast.error('搜索失败', {
         description: errMsg,
-      })
+      });
       setSearchResults([]);
     }
   };
 
   const setOpen = (open: boolean) => {
     setCharacterSearchDialog({ open });
-  }
+  };
 
   return (
     <CommandDialog
       open={characterSearchDialog.open}
       onOpenChange={setOpen}
-      contentProps={{ 
+      contentProps={{
         container,
         onPointerDownOutside: handleInteractOutside,
         onInteractOutside: handleInteractOutside,
-       }}
+      }}
     >
       <CommandInput
         placeholder="输入角色名称或ID"
@@ -86,12 +104,15 @@ export function CharacterSearchDialog({ container }: { container?: HTMLElement |
         <CommandEmpty>无结果</CommandEmpty>
         <CommandGroup heading="">
           {searchResults.map((character) => (
-            <CommandItem key={character.CharacterId} >
+            <CommandItem key={character.CharacterId}>
               <div
                 className="flex flex-row gap-2 w-full cursor-pointer"
                 onClick={() => {
                   setOpen(false);
-                  setCharacterDrawer({ open: true, characterId: character.CharacterId });
+                  setCharacterDrawer({
+                    open: true,
+                    characterId: character.CharacterId,
+                  });
                 }}
               >
                 <Avatar className="size-10 rounded-full">
@@ -107,7 +128,10 @@ export function CharacterSearchDialog({ container }: { container?: HTMLElement |
                     <span className="truncate">
                       #{character.CharacterId}「{character.Name}」
                     </span>
-                    <BadgeLevel level={character.Level} zeroCount={character.ZeroCount} />
+                    <BadgeLevel
+                      level={character.Level}
+                      zeroCount={character.ZeroCount}
+                    />
                   </div>
                   <div className="flex items-center gap-x-2 h-4 text-xs opacity-60">
                     <span className="truncate">
@@ -124,6 +148,6 @@ export function CharacterSearchDialog({ container }: { container?: HTMLElement |
           ))}
         </CommandGroup>
       </CommandList>
-    </CommandDialog >
-  )
+    </CommandDialog>
+  );
 }
