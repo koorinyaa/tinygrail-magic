@@ -6,11 +6,13 @@ import {
   ChevronLeft,
   ChevronRight,
   CircleFadingArrowUp,
+  ImageUp,
   Sparkles,
 } from 'lucide-react';
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import { CharacterDrawerPopover } from '../character-drawer-popover';
 import { AssetRestructure } from './assets-restructure';
+import { ChangeTempleImage } from './change-temple-image';
 import { Refine } from './refine';
 
 /**
@@ -57,9 +59,7 @@ export function ActionButtons() {
       icon: <CircleFadingArrowUp className="size-3" />,
       onClick: () => {
         setShowPopover(true);
-        setPopoverContent(
-          <Refine />
-        );
+        setPopoverContent(<Refine />);
       },
       show:
         !isEmpty(userTemple) &&
@@ -69,8 +69,17 @@ export function ActionButtons() {
     },
     {
       text: '修改塔图',
-      icon: <Box className="size-3" />,
-      onClick: () => {},
+      icon: <ImageUp className="size-3" />,
+      onClick: () => {
+        setShowPopover(true);
+        setPopoverContent(
+          <ChangeTempleImage
+            onClose={() => {
+              setShowPopover(false);
+            }}
+          />
+        );
+      },
       show: !isEmpty(userTemple) && templeLevel > 0,
     },
     {

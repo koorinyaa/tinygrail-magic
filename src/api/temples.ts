@@ -1,4 +1,6 @@
+import { getOssSignature, uploadToOss } from '@/api/tinygrail-oss';
 import { httpService, TinygrailBaseResponse } from '@/lib/http';
+import { dataURLtoBlob } from '@/lib/utils';
 
 /**
  * 角色献祭数据
@@ -52,6 +54,54 @@ export async function refine(
   try {
     return await httpService.post<TinygrailBaseResponse<string>>(
       `/magic/refine/${characterId}`
+    );
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * 上传圣殿图片
+ * @param {number} characterId - 角色ID
+ * @param {string} imageDataUrl - 图片数据URL
+ * @param {string} imageType - 图片类型
+ * @param {string} hash - 图片哈希
+ * @returns {Promise<TinygrailBaseResponse<string>>} - 上传结果
+ */
+export async function uploadTempleImage(
+  characterId: number,
+  imageDataUrl: string,
+  imageType: string,
+  hash: string
+): Promise<TinygrailBaseResponse<string>> {
+  try {
+    // 转换为Blob对象
+    const blob = dataURLtoBlob(imageDataUrl);
+
+    // 获取OSS签名
+    const ossSignatureResponse = await getOssSignature(
+      'cover',
+      hash,
+      encodeURIComponent(imageType)
+    );
+
+    if (ossSignatureResponse.State !== 0) {
+      throw new Error(ossSignatureResponse.Message || '获取签名失败');
+    }
+
+    // 上传到OSS
+    await uploadToOss(
+      'cover',
+      hash,
+      blob,
+      imageType,
+      ossSignatureResponse.Value
+    );
+
+    // 更新角色头像
+    return await httpService.post<TinygrailBaseResponse<string>>(
+      `/chara/temple/cover/${characterId}`,
+      `https://tinygrail.oss-cn-hangzhou.aliyuncs.com/cover/${hash}.jpg`
     );
   } catch (error) {
     throw error;

@@ -54,6 +54,9 @@ export function Refine() {
     };
   }, []);
 
+  /**
+   * 精炼
+   */
   const handleRefine = async () => {
     if (!characterDrawer.characterId || !userAssets?.name) return;
 
