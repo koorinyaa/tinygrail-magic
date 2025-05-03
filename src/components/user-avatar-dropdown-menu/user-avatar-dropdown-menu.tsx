@@ -14,7 +14,7 @@ import { DollarSign, LogOutIcon, Pencil, Ticket } from 'lucide-react';
 import { toast } from 'sonner';
 import { UserAvatar } from './components/user-avatar';
 
-export function AvatarDropdownMenu() {
+export function UserAvatarDropdownMenu() {
   const { userAssets } = useStore();
 
   return (
@@ -30,7 +30,7 @@ export function AvatarDropdownMenu() {
             {userAssets?.nickname}
           </span>
           <span className="text-muted-foreground truncate text-xs font-normal">
-            余额：₵{formatCurrency(userAssets?.balance || 0)}
+            余额：₵{formatCurrency(userAssets?.balance || 0, { useWUnit: true })}
           </span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />

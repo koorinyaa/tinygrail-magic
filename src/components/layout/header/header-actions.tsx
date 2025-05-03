@@ -1,6 +1,6 @@
 import { Moon, Search, Sun } from 'lucide-react';
 
-import { AvatarDropdownMenu } from '@/components/avatar-dropdown-menu';
+import { UserAvatarDropdownMenu } from '@/components/user-avatar-dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useStore } from '@/store';
@@ -42,7 +42,7 @@ export function HeaderActions({ className, ...props }: ComponentProps<'div'>) {
       {/* <Button variant="ghost" size="icon" className="h-7 w-7 cursor-pointer text-foreground">
         <FaGithub />
       </Button> */}
-      <AvatarDropdownMenu />
+      <UserAvatarDropdownMenu />
     </div>
   );
 }

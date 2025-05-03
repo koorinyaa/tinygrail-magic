@@ -3,7 +3,13 @@ import { onTemplesChange } from '../../service/user';
 import { InputNumber } from '@/components/input-number';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { cn, formatInteger, notifyError, sleep } from '@/lib/utils';
+import {
+  cn,
+  formatCurrency,
+  formatInteger,
+  notifyError,
+  sleep,
+} from '@/lib/utils';
 import { useStore } from '@/store';
 import { LoaderCircleIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -107,6 +113,9 @@ export function Refine() {
         userTemple: userTempleData,
         characterDetail: characterDetailData,
       });
+
+      // 更新余额
+      verifyAuth(setUserAssets);
     }
   };
 
@@ -156,6 +165,12 @@ export function Refine() {
           精炼等级
           <span className="ml-2 text-green-400 dark:text-green-600">
             {formatInteger(refineLevel)}
+          </span>
+        </span>
+        <span className="flex-1">
+          余额
+          <span className="ml-2 text-green-400 dark:text-green-600">
+            ₵{formatCurrency(userAssets?.balance || 0, { useWUnit: true })}
           </span>
         </span>
       </div>

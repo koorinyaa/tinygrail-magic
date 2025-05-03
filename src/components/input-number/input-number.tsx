@@ -20,7 +20,7 @@ export function InputNumber(
           >
             <MinusIcon size={16} aria-hidden="true" />
           </Button>
-          <Input className="bg-background text-foreground w-full grow px-3 py-2 text-center tabular-nums text-sm" />
+          <Input className="bg-background text-foreground w-full grow px-3 py-2 text-center tabular-nums text-base" />
           <Button
             slot="increment"
             className="border-input bg-background text-muted-foreground/80 hover:bg-accent hover:text-foreground -me-px flex aspect-square h-[inherit] items-center justify-center rounded-e-md border text-sm transition-[color,box-shadow] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer"
