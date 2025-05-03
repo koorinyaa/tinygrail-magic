@@ -7,6 +7,7 @@ import {
   ChevronRight,
   CircleFadingArrowUp,
   ImageUp,
+  RotateCw,
   Sparkles,
 } from 'lucide-react';
 import { ReactNode, useEffect, useRef, useState } from 'react';
@@ -14,6 +15,7 @@ import { CharacterDrawerPopover } from '../character-drawer-popover';
 import { AssetRestructure } from './assets-restructure';
 import { ChangeTempleImage } from './change-temple-image';
 import { Refine } from './refine';
+import { toast } from 'sonner';
 
 /**
  * 操作按钮
@@ -51,7 +53,7 @@ export function ActionButtons() {
     {
       text: '转换星之力',
       icon: <Sparkles className="size-3" />,
-      onClick: () => {},
+      onClick: () => {toast.warning('开发中...')},
       show: !isEmpty(userTemple),
     },
     {
@@ -84,26 +86,26 @@ export function ActionButtons() {
     },
     {
       text: '重置塔图',
-      icon: <Box className="size-3" />,
-      onClick: () => {},
+      icon: <RotateCw className="size-3" />,
+      onClick: () => {toast.warning('开发中...')},
       show: !isEmpty(userTemple) && templeLevel > 0,
     },
     {
       text: 'LINK',
       icon: <Box className="size-3" />,
-      onClick: () => {},
+      onClick: () => {toast.warning('开发中...')},
       show: !isEmpty(userTemple) && templeLevel > 0,
     },
     {
       text: '台词',
       icon: <Box className="size-3" />,
-      onClick: () => {},
+      onClick: () => {toast.warning('开发中...')},
       show: !isEmpty(userTemple) && templeLevel > 0,
     },
     {
       text: '拆除圣殿',
       icon: <Box className="size-3" />,
-      onClick: () => {},
+      onClick: () => {toast.warning('开发中...')},
       show: !isEmpty(userTemple) && sacrifices === assets,
     },
   ];

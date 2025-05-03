@@ -286,14 +286,8 @@ export function resizeImage(
  * @param {string} message - 错误消息
  */
 export function notifyError(message: string) {
-  try {
-    console.error(message);
-    toast.error(message);
-  } catch (err) {
-    const errMsg = err instanceof Error ? err.message : '未知错误';
-    console.error(errMsg);
-    toast.error(errMsg);
-  }
+  console.error(message);
+  toast.error(message);
 }
 
 /**

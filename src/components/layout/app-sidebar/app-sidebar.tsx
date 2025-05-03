@@ -122,7 +122,7 @@ export function AppSidebar({
         <NavProjects projects={data.navAccount} />
         <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
-      {updateInfo?.hasUpdate && (
+      {updateInfo?.hasUpdate || true && (
         <SidebarFooter className="mb-1">
           {/* <NavUser user={data.user} /> */}
           <NavUpdate />
