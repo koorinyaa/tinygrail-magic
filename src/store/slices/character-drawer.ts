@@ -46,6 +46,7 @@ export type CharacterDrawerData = {
 export interface CharacterDrawerState {
   characterDrawer: CharacterDrawer;
   setCharacterDrawer: (CharacterDrawer: CharacterDrawer) => void;
+  openCharacterDrawer: (characterId: number) => void;
   closeCharacterDrawer: () => void;
   characterDrawerData: CharacterDrawerData;
   setCharacterDrawerData: (CharacterDrawerData: CharacterDrawerData) => void;
@@ -81,6 +82,11 @@ export const createCharacterDrawerSlice: StateCreator<CharacterDrawerState> = (
   setCharacterDrawer: (characterDrawer) => {
     set((state) => ({
       characterDrawer: { ...state.characterDrawer, ...characterDrawer },
+    }));
+  },
+  openCharacterDrawer: (characterId) => {
+    set((state) => ({
+      characterDrawer: { ...state.characterDrawer, characterId, open: true },
     }));
   },
   closeCharacterDrawer: () => {

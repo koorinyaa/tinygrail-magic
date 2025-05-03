@@ -12,21 +12,47 @@ import { useEffect, useRef } from 'react';
 import './App.css';
 
 export default function App() {
-  const { theme, setTheme, setUpdateInfo } = useStore();
+  const { theme, setTheme, setUpdateInfo, openCharacterDrawer } = useStore();
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // 初始化主题
+    initTheme();
+    handleCheckUpdate();
+    initPage();
+  }, []);
+
+  /**
+   * 初始化主题
+   */
+  const initTheme = () => {
     setTheme(
       document.documentElement.getAttribute('data-theme') === 'dark'
         ? 'dark'
         : 'light'
     );
-    // 检查更新
+  };
+
+  /**
+   * 检查更新
+   */
+  const handleCheckUpdate = () => {
     checkForUpdates().then((result) => {
       setUpdateInfo(result);
     });
-  }, []);
+  };
+
+  /**
+   * 初始化页面
+   */
+  const initPage = () => {
+    const path = window.location.pathname;
+    if (path.startsWith('/character/')) {
+      const characterId = path.split('/').filter(Boolean).pop();
+      if (!isNaN(Number(characterId))) {
+        openCharacterDrawer(Number(characterId));
+      }
+    }
+  };
 
   return (
     <div ref={rootRef} className="w-screen !h-dvh h-screen overflow-hidden">
