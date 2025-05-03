@@ -1,4 +1,4 @@
-import { sacrificeCharacter } from '@/api/character';
+import { sacrificeCharacter } from '@/api/temples';
 import { InputNumber } from '@/components/input-number';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -368,7 +368,7 @@ export function AssetRestructure({ onClose }: { onClose: () => void }) {
           <InputNumber
             value={convertAmount}
             onChange={(value) => {
-              setConvertAmount(Math.floor(value));
+              setConvertAmount(Math.floor(value) || 0);
             }}
             minValue={0}
           />
@@ -442,7 +442,7 @@ export function AssetRestructure({ onClose }: { onClose: () => void }) {
           <InputNumber
             value={financingAmount}
             onChange={(value) => {
-              setFinancingAmount(Math.floor(value));
+              setFinancingAmount(Math.floor(value) || 0);
             }}
             minValue={0}
             maxValue={amount}

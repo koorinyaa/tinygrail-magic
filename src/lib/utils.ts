@@ -289,3 +289,11 @@ export function notifyError(message: string) {
   console.error(message);
   toast.error(message);
 }
+
+/** 
+ * @param {number} ms - 毫秒数
+ * @returns {Promise<void>}
+ */
+export async function sleep(ms: number): Promise<void> {
+  return new Promise<void>((resolve) => setTimeout(resolve, ms));
+}

@@ -11,6 +11,7 @@ import {
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import { CharacterDrawerPopover } from '../character-drawer-popover';
 import { AssetRestructure } from './assets-restructure';
+import { Refine } from './refine';
 
 /**
  * 操作按钮
@@ -54,7 +55,12 @@ export function ActionButtons() {
     {
       text: '精炼',
       icon: <CircleFadingArrowUp className="size-3" />,
-      onClick: () => {},
+      onClick: () => {
+        setShowPopover(true);
+        setPopoverContent(
+          <Refine />
+        );
+      },
       show:
         !isEmpty(userTemple) &&
         templeLevel > 0 &&
