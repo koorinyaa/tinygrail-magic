@@ -36,7 +36,7 @@ export function CharacterDrawerPopover({
         transition={{ duration: 0.2 }}
         className={cn(
           "fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-[calc(100%-1rem)] max-h-[90%] p-4 w-full h-auto",
-          "bg-popover rounded-sm m-shadow-card overflow-hidden z-50",
+          "bg-popover rounded-sm m-shadow-card overflow-auto z-50",
           className
         )}
       >

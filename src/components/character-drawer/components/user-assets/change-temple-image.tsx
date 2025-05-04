@@ -114,31 +114,33 @@ export function ChangeTempleImage({ onClose }: { onClose: () => void }) {
         }}
         className="rounded-sm cursor-pointer"
       />
-      <Button
-        className="w-full h-8 rounded-full"
-        disabled={loading || !image}
-        onClick={handleUploadTempleImage}
-      >
-        <LoaderCircleIcon
-          className={cn('-ms-1 animate-spin', { hidden: !loading })}
-          size={16}
-          aria-hidden="true"
-        />
-        修改
-      </Button>
-      <Button
-        className="w-full h-8 rounded-full"
-        variant="secondary"
-        disabled={loading}
-        onClick={onClose}
-      >
-        <LoaderCircleIcon
-          className={cn('-ms-1 animate-spin', { hidden: !loading })}
-          size={16}
-          aria-hidden="true"
-        />
-        关闭
-      </Button>
+      <div className='flex flex-row gap-x-2'>
+        <Button
+          className="flex-1 h-8 rounded-full"
+          disabled={loading || !image}
+          onClick={handleUploadTempleImage}
+        >
+          <LoaderCircleIcon
+            className={cn('-ms-1 animate-spin', { hidden: !loading })}
+            size={16}
+            aria-hidden="true"
+          />
+          修改
+        </Button>
+        <Button
+          className="flex-1 h-8 rounded-full"
+          variant="secondary"
+          disabled={loading}
+          onClick={onClose}
+        >
+          <LoaderCircleIcon
+            className={cn('-ms-1 animate-spin', { hidden: !loading })}
+            size={16}
+            aria-hidden="true"
+          />
+          关闭
+        </Button>
+      </div>
     </div>
   );
 }
