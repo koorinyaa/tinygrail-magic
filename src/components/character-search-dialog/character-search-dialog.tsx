@@ -135,7 +135,7 @@ export function CharacterSearchDialog({
                   </div>
                   <div className="flex items-center gap-x-2 h-4 text-xs opacity-60">
                     <span className="truncate">
-                      活股：{formatInteger(character.UserTotal)}
+                      持股：{formatInteger(character.UserTotal)}
                     </span>
                     <Separator orientation="vertical" />
                     <span className="truncate">

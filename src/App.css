@@ -1,12 +1,12 @@
 @layer theme, base, components, utilities;
-@import "tailwindcss/theme.css" layer(theme);
-@import "tailwindcss/utilities.css" layer(utilities);
-@import "tw-animate-css";
+@import 'tw-animate-css';
 @custom-variant dark (&:is(.dark *));
 
 .tinygrailMagic {
   /* 处理tailwind全局样式冲突 */
-  @import "tailwindcss/preflight.css" layer(base);
+  @import 'tailwindcss/preflight.css' layer(base);
+  @import 'tailwindcss/theme.css' layer(theme);
+  @import 'tailwindcss/utilities.css' layer(utilities);
 
   @layer base {
     * {
@@ -15,18 +15,18 @@
 
     @apply bg-background text-foreground;
   }
-}
 
-.m-shadow-card {
-  @apply shadow-[0_0_10px_rgba(0,0,0,0.1)]
-}
+  .m-shadow-card {
+    @apply shadow-[0_0_10px_rgba(0,0,0,0.1)];
+  }
 
-.m-scrollbar-none {
-  scrollbar-width: none !important;
-  -ms-overflow-style: none !important;
+  .m-scrollbar-none {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
 
-  ::-webkit-scrollbar {
-    display: none !important;
+    ::-webkit-scrollbar {
+      display: none !important;
+    }
   }
 }
 

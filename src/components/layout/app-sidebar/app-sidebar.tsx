@@ -22,9 +22,7 @@ import {
 } from 'lucide-react';
 import { NavProjects, NavSecondary, NavUpdate } from './sidebar-navigation';
 
-export function AppSidebar({
-  ...props
-}: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { userAssets, updateInfo } = useStore();
   const currentPath =
     typeof window !== 'undefined' ? window.location.pathname : '';
@@ -101,8 +99,8 @@ export function AppSidebar({
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
-              <a href="#">
+            <SidebarMenuButton size="lg" className="hover:bg-transparent active:bg-transparent" asChild>
+              <div>
                 <div className="text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                   <Tinygrail className="size-full" />
                 </div>
@@ -112,7 +110,7 @@ export function AppSidebar({
                     TinyGrail Exchange Plugin
                   </span>
                 </div>
-              </a>
+              </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
