@@ -1,7 +1,7 @@
 import { uploadTempleImage } from '@/api/temples';
-import { UploadImageBrowse } from '@/components/character-drawer/components/upload-image-browse';
 import { onTemplesChange } from '@/components/character-drawer/service/user';
 import { Button } from '@/components/ui/button';
+import { UploadImageBrowse } from '@/components/upload-image-browse';
 import { FileMetadata } from '@/hooks/use-file-upload';
 import { verifyAuth } from '@/lib/auth';
 import { cn, notifyError } from '@/lib/utils';
@@ -125,6 +125,19 @@ export function ChangeTempleImage({ onClose }: { onClose: () => void }) {
           aria-hidden="true"
         />
         修改
+      </Button>
+      <Button
+        className="w-full h-8 rounded-full"
+        variant="secondary"
+        disabled={loading}
+        onClick={onClose}
+      >
+        <LoaderCircleIcon
+          className={cn('-ms-1 animate-spin', { hidden: !loading })}
+          size={16}
+          aria-hidden="true"
+        />
+        关闭
       </Button>
     </div>
   );
