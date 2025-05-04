@@ -7,8 +7,11 @@ import {
   ChevronRight,
   CircleFadingArrowUp,
   ImageUp,
+  Link,
+  MessageSquareText,
   RotateCw,
   Sparkles,
+  X,
 } from 'lucide-react';
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import { CharacterDrawerPopover } from '../character-drawer-popover';
@@ -92,19 +95,19 @@ export function ActionButtons() {
     },
     {
       text: 'LINK',
-      icon: <Box className="size-3" />,
+      icon: <Link className="size-3" />,
       onClick: () => {toast.warning('开发中...')},
       show: !isEmpty(userTemple) && templeLevel > 0,
     },
     {
       text: '台词',
-      icon: <Box className="size-3" />,
+      icon: <MessageSquareText className="size-3" />,
       onClick: () => {toast.warning('开发中...')},
       show: !isEmpty(userTemple) && templeLevel > 0,
     },
     {
       text: '拆除圣殿',
-      icon: <Box className="size-3" />,
+      icon: <X className="size-3" />,
       onClick: () => {toast.warning('开发中...')},
       show: !isEmpty(userTemple) && sacrifices === assets,
     },

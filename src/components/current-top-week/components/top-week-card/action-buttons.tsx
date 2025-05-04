@@ -1,6 +1,6 @@
 import { CurrentTopWeekItem } from '@/api/character';
 import { cn } from '@/lib/utils';
-import { Image, Maximize2, X } from 'lucide-react';
+import { Image, Plus, SquareArrowOutUpRight } from 'lucide-react';
 
 /**
  * 操作按钮区域组件
@@ -53,7 +53,7 @@ export function ActionButtons({
           handleCharacterDrawer(data.CharacterId);
         }}
       >
-        <Maximize2 className="size-4" />
+        <SquareArrowOutUpRight className="size-4" />
       </div>
       <div
         className={cn(
@@ -68,7 +68,7 @@ export function ActionButtons({
           handleAuction(data.CharacterId);
         }}
       >
-        <X className="size-4 rotate-45" />
+        <Plus className="size-4" />
       </div>
     </div>
   );
