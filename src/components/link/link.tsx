@@ -1,6 +1,6 @@
 import { TempleItem } from '@/api/character';
 import { cn, getAvatarUrl, getCoverUrl } from '@/lib/utils';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { PhotoProvider, PhotoView } from 'react-photo-view';
 
 /**
@@ -8,37 +8,43 @@ import { PhotoProvider, PhotoView } from 'react-photo-view';
  * @param props
  * @param {TempleItem} props.link1
  * @param {TempleItem} props.link2
+ * @param {string} props.link1Name
+ * @param {string} props.link2Name
  */
 export function Link({
   link1,
   link2,
+  link1Name,
+  link2Name,
 }: {
   link1: TempleItem;
   link2: TempleItem;
+  link1Name: string;
+  link2Name: string;
 }) {
-  let leftLink = link1;
-  let rightLink = link2;
+  const [leftLink, setLeftLink] = useState<TempleItem>({...link1, Name: link1Name});
+  const [rightLink, setRightLink] = useState<TempleItem>({...link2, Name: link2Name});
 
   useEffect(() => {
-    if (link1.Sacrifices < link2.Sacrifices) {
-      leftLink = link2;
-      rightLink = link1;
+    if (leftLink.Sacrifices < rightLink.Sacrifices) {
+      setLeftLink(rightLink);
+      setRightLink(leftLink);
     }
 
-    if (link1.Sacrifices === link2.Sacrifices) {
+    if (leftLink.Sacrifices === rightLink.Sacrifices) {
       if (
-        !isNaN(new Date(link1.Create).getTime()) &&
-        !isNaN(new Date(link2.Create).getTime()) &&
-        new Date(link1.Create).getTime() < new Date(link2.Create).getTime()
+        !isNaN(new Date(leftLink.Create).getTime()) &&
+        !isNaN(new Date(rightLink.Create).getTime()) &&
+        new Date(leftLink.Create).getTime() < new Date(rightLink.Create).getTime()
       ) {
-        leftLink = link2;
-        rightLink = link1;
+        setLeftLink(rightLink);
+        setRightLink(leftLink);
       }
     }
   }, [link1, link2]);
 
   return (
-    <div className="relative flex flex-row items-center w-[214px] h-full mt-3 shadow-card">
+    <div className="relative flex flex-row items-center w-[214px] h-[164px] shadow-card">
       <div className="absolute w-[120px] h-[165px] mr-[10px] -skew-x-10 origin-top-left overflow-hidden">
         <PhotoProvider
           bannerVisible={false}
@@ -49,7 +55,7 @@ export function Link({
             <div
               className={cn(
                 'relative w-[118px] h-[160px] box-content border-2 border-r-0 rounded-l-md',
-                'bg-cover bg-center bg-no-repeat',
+                'bg-cover bg-top bg-no-repeat',
                 'skew-x-10 origin-top-left overflow-hidden cursor-pointer',
                 {
                   'border-gray-400': leftLink.Level === 0,
@@ -64,7 +70,13 @@ export function Link({
                   'medium'
                 )})`,
               }}
-            />
+            >
+              <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-b from-[#00000000]/0 to-[#000000cc] text-white">
+                <div className="absolute bottom-0 w-full px-2 pt-4 pb-1.5">
+                  <div className="text-xs w-20 truncate">{leftLink.Name}</div>
+                </div>
+              </div>
+            </div>
           </PhotoView>
         </PhotoProvider>
       </div>
@@ -93,7 +105,13 @@ export function Link({
                   'medium'
                 )})`,
               }}
-            />
+            >
+              <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-b from-[#00000000]/0 to-[#000000cc] text-white">
+                <div className="absolute bottom-0 w-full px-2 pt-4 pb-1.5">
+                  <div className="text-xs text-right w-25 truncate">{rightLink.Name}</div>
+                </div>
+              </div>
+            </div>
           </PhotoView>
         </PhotoProvider>
       </div>

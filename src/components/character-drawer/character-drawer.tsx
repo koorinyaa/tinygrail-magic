@@ -45,7 +45,7 @@ export function CharacterDrawer({
         }}
         className={cn('bg-card border-none overflow-hidden', {
           'max-w-96 rounded-l-md': !isMobile,
-          '!max-h-[90dvh]': isMobile,
+          '!max-h-[90dvh] max-h-[90vh]': isMobile,
         })}
       >
         <VisuallyHidden asChild>

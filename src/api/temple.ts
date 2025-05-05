@@ -1,3 +1,4 @@
+import { TempleItem } from '@/api/character';
 import { getOssSignature, uploadToOss } from '@/api/tinygrail-oss';
 import { httpService, TinygrailBaseResponse } from '@/lib/http';
 import { dataURLtoBlob } from '@/lib/utils';
@@ -102,6 +103,100 @@ export async function uploadTempleImage(
     return await httpService.post<TinygrailBaseResponse<string>>(
       `/chara/temple/cover/${characterId}`,
       `https://tinygrail.oss-cn-hangzhou.aliyuncs.com/cover/${hash}.jpg`
+    );
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * 重置圣殿图片
+ * @param {number} characterId - 角色ID
+ * @param {number} userId - 用户ID
+ * @returns {Promise<TinygrailBaseResponse<TempleItem>>} - 重置结果
+ */
+export async function resetTempleImage(
+  characterId: number,
+  userId: number
+): Promise<TinygrailBaseResponse<TempleItem>> {
+  try {
+    return await httpService.post<TinygrailBaseResponse<TempleItem>>(
+      `chara/temple/cover/reset/${characterId}/${userId}`
+    );
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * 角色链接
+ * @param {number} sourceCharacterId - 源角色ID
+ * @param {number} targetCharacterId - 目标角色ID
+ * @returns {Promise<TinygrailBaseResponse<string>>} - 链接结果
+ */
+export async function templeLink(
+  sourceCharacterId: number,
+  targetCharacterId: number
+): Promise<TinygrailBaseResponse<string>> {
+  try {
+    return await httpService.post<TinygrailBaseResponse<string>>(
+      `chara/link/${sourceCharacterId}/${targetCharacterId}`
+    );
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * 修改台词
+ * @param {number} characterId - 角色ID
+ * @param {string} line - 台词
+ * @returns {Promise<TinygrailBaseResponse<string>>} - 修改结果
+ */
+export async function changeLine(
+  characterId: number,
+  line: string
+): Promise<TinygrailBaseResponse<string>> {
+  try {
+    return await httpService.post<TinygrailBaseResponse<string>>(
+      `chara/temple/line/${characterId}`,
+      line
+    );
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * 拆除圣殿
+ * @param {number} characterId - 角色ID
+ * @returns {Promise<TinygrailBaseResponse<string>>} - 拆除结果
+ */
+export async function destroyTemple(
+  characterId: number
+): Promise<TinygrailBaseResponse<string>> {
+  try {
+    return await httpService.post<TinygrailBaseResponse<string>>(
+      `chara/temple/destroy/${characterId}`
+    );
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * 转换星之力
+ * @param {number} characterId - 角色ID
+ * @param {number} amount - 转换数量
+ * @returns {Promise<TinygrailBaseResponse<string>>} - 转换结果
+ */
+export async function convertStarForces(
+  characterId: number,
+  amount: number
+): Promise<TinygrailBaseResponse<string>> {
+  try {
+    return await httpService.post<TinygrailBaseResponse<string>>(
+      `chara/star/${characterId}/${amount}`
     );
   } catch (error) {
     throw error;

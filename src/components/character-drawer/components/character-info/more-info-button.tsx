@@ -172,7 +172,7 @@ export function MoreInfoButton() {
       <DrawerContent
         className={cn('bg-card border-none overflow-hidden outline-none', {
           'max-w-96 rounded-l-md': !isMobile,
-          '!max-h-[90dvh]': isMobile,
+          '!max-h-[90dvh] max-h-[90vh]': isMobile,
         })}
         aria-describedby={undefined}
       >

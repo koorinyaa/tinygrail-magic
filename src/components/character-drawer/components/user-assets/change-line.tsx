@@ -1,31 +1,32 @@
-import { uploadTempleImage } from '@/api/temple';
-import { onTemplesChange } from '@/components/character-drawer/service/user';
+import { changeLine } from '@/api/temple';
 import { Button } from '@/components/ui/button';
-import { UploadImageBrowse } from '@/components/upload-image-browse';
-import { FileMetadata } from '@/hooks/use-file-upload';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { verifyAuth } from '@/lib/auth';
 import { cn, notifyError } from '@/lib/utils';
 import { useStore } from '@/store';
-import { md5 } from 'js-md5';
 import { LoaderCircleIcon } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { toast } from 'sonner';
+import { onTemplesChange } from '../../service/user';
 
 /**
- * 修改圣殿图片
- * @param props
- * @param {() => void} props.onClose 关闭回调
+ * 光环台词
  */
-export function ChangeTempleImage({ onClose }: { onClose: () => void }) {
+export function ChangeLine({ onClose }: { onClose: () => void }) {
+  const id = useId();
   const {
     userAssets,
     setUserAssets,
     characterDrawer,
     setCharacterDrawer,
+    characterDrawerData,
     setCharacterDrawerData,
   } = useStore();
-  const [image, setImage] = useState<File | FileMetadata>();
   const [loading, setLoading] = useState(false);
+  const [line, setLine] = useState<string>(
+    characterDrawerData.userTemple?.Line || ''
+  );
 
   useEffect(() => {
     setCharacterDrawer({
@@ -40,44 +41,18 @@ export function ChangeTempleImage({ onClose }: { onClose: () => void }) {
   }, []);
 
   /**
-   * 修改圣殿图片
+   * 处理台词修改
    */
-  const handleUploadTempleImage = async () => {
-    if (
-      !userAssets?.name ||
-      !characterDrawer.characterId ||
-      !(image instanceof File)
-    )
-      return;
-
+  const handleLineChange = async () => {
+    if (!userAssets?.id || !characterDrawer.characterId) return;
     setLoading(true);
 
     try {
       // 验证用户登录状态
       verifyAuth(setUserAssets);
-
-      // 将File转换为base64的Promise函数
-      const fileToBase64 = (file: File): Promise<string> => {
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result as string);
-          reader.onerror = (error) => reject(error);
-          reader.readAsDataURL(file);
-        });
-      };
-
-      // 等待base64转换完成
-      const imageBase64 = await fileToBase64(image);
-
-      const hash = md5(imageBase64);
-      const result = await uploadTempleImage(
-        characterDrawer.characterId,
-        imageBase64,
-        image.type,
-        hash
-      );
+      const result = await changeLine(characterDrawer.characterId, line);
       if (result.State === 0) {
-        toast.success(result.Value);
+        toast.success('修改成功');
         onClose();
 
         // 获取圣殿变化相关数据
@@ -97,10 +72,10 @@ export function ChangeTempleImage({ onClose }: { onClose: () => void }) {
           characterDetail: characterDetailData,
         });
       } else {
-        throw new Error(result.Message || '修改圣殿封面失败');
+        toast.error(result.Message || '台词修改失败');
       }
     } catch (err) {
-      const errMsg = err instanceof Error ? err.message : '修改圣殿封面失败';
+      const errMsg = err instanceof Error ? err.message : '台词修改失败';
       notifyError(errMsg);
     } finally {
       setLoading(false);
@@ -108,18 +83,21 @@ export function ChangeTempleImage({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <div className="w-full h-fit flex flex-col gap-y-2">
-      <UploadImageBrowse
-        onImageChange={(image) => {
-          setImage(image);
+    <div className="w-full h-fit flex flex-col gap-y-2 items-center">
+      <Label htmlFor={id}>修改台词</Label>
+      <Textarea
+        id={id}
+        placeholder="请输入台词"
+        value={line}
+        onChange={(e) => {
+          setLine(e.target.value);
         }}
-        className="rounded-sm cursor-pointer"
       />
-      <div className='flex flex-row gap-x-2'>
+      <div className="flex-1 flex flex-row w-full gap-x-2">
         <Button
           className="flex-1 h-8 rounded-full"
-          disabled={loading || !image}
-          onClick={handleUploadTempleImage}
+          disabled={loading}
+          onClick={handleLineChange}
         >
           <LoaderCircleIcon
             className={cn('-ms-1 animate-spin', { hidden: !loading })}
@@ -132,14 +110,16 @@ export function ChangeTempleImage({ onClose }: { onClose: () => void }) {
           className="flex-1 h-8 rounded-full"
           variant="secondary"
           disabled={loading}
-          onClick={onClose}
+          onClick={() => {
+            onClose();
+          }}
         >
           <LoaderCircleIcon
             className={cn('-ms-1 animate-spin', { hidden: !loading })}
             size={16}
             aria-hidden="true"
           />
-          关闭
+          取消
         </Button>
       </div>
     </div>

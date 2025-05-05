@@ -1,4 +1,4 @@
-import { refine } from '@/api/temples';
+import { refine } from '@/api/temple';
 import { onTemplesChange } from '../../service/user';
 import { InputNumber } from '@/components/input-number';
 import { Button } from '@/components/ui/button';

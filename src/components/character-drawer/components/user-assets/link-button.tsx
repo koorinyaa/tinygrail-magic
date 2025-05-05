@@ -1,16 +1,18 @@
 import { Link } from '@/components/link';
-import { CharacterDrawerPopover } from '../character-drawer-popover';
 import { cn, isEmpty } from '@/lib/utils';
 import { useStore } from '@/store';
 import { ArrowUpRight } from 'lucide-react';
 import { useState } from 'react';
+import { CharacterDrawerPopover } from '../character-drawer-popover';
 
 /**
  * LINK按钮
  */
 export function LinkButton() {
-  const { characterDrawer, characterDrawerData, setCharacterDrawer } = useStore();
-  const { Link: link } = characterDrawerData.userTemple || {};
+  const { characterDrawer, characterDrawerData, setCharacterDrawer } =
+    useStore();
+  const { characterDetail, userTemple } = characterDrawerData;
+  const { Link: link } = userTemple || {};
   const [popoverOpen, setPopoverOpen] = useState(false);
   return (
     <>
@@ -35,28 +37,34 @@ export function LinkButton() {
       <CharacterDrawerPopover
         open={popoverOpen}
         onOpenChange={setPopoverOpen}
-        className="flex justify-center h-52"
+        className="flex justify-center h-fit"
       >
-        <div className="absolute top-2 right-3">
-          <div
-            className="flex items-center justify-center text-xs opacity-80 hover:opacity-100 cursor-pointer"
-            onClick={() => {
-              setPopoverOpen(false);
-              setCharacterDrawer({
-                open: true,
-                characterId: link?.CharacterId || null,
-              });
-            }}
-          >
-            跳转至
-            <span className="text-blue-600">
-              {link?.Name}
-              <ArrowUpRight className="size-4 mb-px inline-block" />
-            </span>
-          </div>
-        </div>
+        {/* <div className="absolute top-2 right-3"></div> */}
         {characterDrawerData.userTemple && link && (
-          <Link link1={characterDrawerData.userTemple} link2={link} />
+          <div className="flex flex-col items-center gap-y-1 w-full">
+            <div
+              className="flex-1 flex items-center justify-end w-full -mt-1 text-xs opacity-80 hover:opacity-100 cursor-pointer"
+              onClick={() => {
+                setPopoverOpen(false);
+                setCharacterDrawer({
+                  open: true,
+                  characterId: link?.CharacterId || null,
+                });
+              }}
+            >
+              跳转至
+              <span className="text-blue-600">
+                {link?.Name}
+                <ArrowUpRight className="size-4 mb-px inline-block" />
+              </span>
+            </div>
+            <Link
+              link1={characterDrawerData.userTemple}
+              link2={link}
+              link1Name={characterDetail?.Name || ''}
+              link2Name={link.Name || ''}
+            />
+          </div>
         )}
       </CharacterDrawerPopover>
     </>

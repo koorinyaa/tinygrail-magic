@@ -1,4 +1,4 @@
-import { sacrificeCharacter } from '@/api/temples';
+import { sacrificeCharacter } from '@/api/temple';
 import { InputNumber } from '@/components/input-number';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';

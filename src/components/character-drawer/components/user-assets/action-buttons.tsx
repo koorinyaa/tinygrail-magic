@@ -1,11 +1,17 @@
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn, isEmpty } from '@/lib/utils';
 import { useStore } from '@/store';
 import {
   Box,
-  ChevronLeft,
-  ChevronRight,
   CircleFadingArrowUp,
+  EllipsisVertical,
   ImageUp,
   Link,
   MessageSquareText,
@@ -13,20 +19,21 @@ import {
   Sparkles,
   X,
 } from 'lucide-react';
-import { ReactNode, useEffect, useRef, useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { CharacterDrawerPopover } from '../character-drawer-popover';
 import { AssetRestructure } from './assets-restructure';
+import { ChangeLine } from './change-line';
+import { ChangeLink } from './change-link';
 import { ChangeTempleImage } from './change-temple-image';
+import { ConvertStarForces } from './convert-star-forces';
 import { Refine } from './refine';
-import { toast } from 'sonner';
+import { RemoveTemple } from './remove-temple';
+import { ResetTempleImage } from './reset-temple-image';
 
 /**
  * 操作按钮
  */
 export function ActionButtons() {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [showLeftArrow, setShowLeftArrow] = useState(false);
-  const [showRightArrow, setShowRightArrow] = useState(false);
   const { characterDrawer, characterDrawerData } = useStore();
   const [showPopover, setShowPopover] = useState(false);
   const [popoverContent, setPopoverContent] = useState<ReactNode>(null);
@@ -56,7 +63,16 @@ export function ActionButtons() {
     {
       text: '转换星之力',
       icon: <Sparkles className="size-3" />,
-      onClick: () => {toast.warning('开发中...')},
+      onClick: () => {
+        setShowPopover(true);
+        setPopoverContent(
+          <ConvertStarForces
+            onClose={() => {
+              setShowPopover(false);
+            }}
+          />
+        );
+      },
       show: !isEmpty(userTemple),
     },
     {
@@ -72,6 +88,9 @@ export function ActionButtons() {
         sacrifices >= 2500 &&
         assets >= 2500,
     },
+  ];
+
+  const moreMenuItems = [
     {
       text: '修改塔图',
       icon: <ImageUp className="size-3" />,
@@ -90,82 +109,65 @@ export function ActionButtons() {
     {
       text: '重置塔图',
       icon: <RotateCw className="size-3" />,
-      onClick: () => {toast.warning('开发中...')},
-      show: !isEmpty(userTemple) && templeLevel > 0,
+      onClick: () => {
+        setShowPopover(true);
+        setPopoverContent(
+          <ResetTempleImage
+            onClose={() => {
+              setShowPopover(false);
+            }}
+          />
+        );
+      },
+      show: !isEmpty(userTemple),
     },
     {
       text: 'LINK',
       icon: <Link className="size-3" />,
-      onClick: () => {toast.warning('开发中...')},
+      onClick: () => {
+        setShowPopover(true);
+        setPopoverContent(
+          <ChangeLink
+            onClose={() => {
+              setShowPopover(false);
+            }}
+          />
+        );
+      },
       show: !isEmpty(userTemple) && templeLevel > 0,
     },
     {
       text: '台词',
       icon: <MessageSquareText className="size-3" />,
-      onClick: () => {toast.warning('开发中...')},
+      onClick: () => {
+        setShowPopover(true);
+        setPopoverContent(
+          <ChangeLine
+            onClose={() => {
+              setShowPopover(false);
+            }}
+          />
+        );
+      },
       show: !isEmpty(userTemple) && templeLevel > 0,
     },
     {
       text: '拆除圣殿',
-      icon: <X className="size-3" />,
-      onClick: () => {toast.warning('开发中...')},
+      icon: <X className="size-3 text-destructive" />,
+      onClick: () => {
+        setShowPopover(true);
+        setPopoverContent(
+          <RemoveTemple
+            onClose={() => {
+              setShowPopover(false);
+            }}
+          />
+        );
+      },
+      className: 'text-destructive',
       show: !isEmpty(userTemple) && sacrifices === assets,
     },
   ];
-
-  // 检查是否需要显示滚动箭头
-  const checkScrollPosition = () => {
-    if (scrollContainerRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } =
-        scrollContainerRef.current;
-
-      setShowLeftArrow(scrollLeft > 0);
-      setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 5);
-    }
-  };
-
-  // 滚动到左侧
-  const scrollLeft = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: -100, behavior: 'smooth' });
-    }
-  };
-
-  // 滚动到右侧
-  const scrollRight = () => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: 100, behavior: 'smooth' });
-    }
-  };
-
-  // 监听滚动容器变化
-  useEffect(() => {
-    const scrollContainer = scrollContainerRef.current;
-    if (scrollContainer) {
-      // 初始检查
-      checkScrollPosition();
-
-      // 使用函数引用以确保事件监听器能正确移除
-      const handleScroll = () => checkScrollPosition();
-      scrollContainer.addEventListener('scroll', handleScroll);
-
-      // ResizeObserver 监听容器大小变化
-      const resizeObserver = new ResizeObserver(() => {
-        checkScrollPosition();
-      });
-      resizeObserver.observe(scrollContainer);
-
-      return () => {
-        scrollContainer.removeEventListener('scroll', handleScroll);
-        resizeObserver.disconnect();
-      };
-    }
-  }, [buttons]);
-
-  // 内容变化时重新检查滚动状态
-  useEffect(() => {
-    checkScrollPosition();
-  }, [buttons.length, userTemple]);
 
   if (characterDrawer.loading) {
     return (
@@ -185,25 +187,7 @@ export function ActionButtons() {
   return (
     <>
       <div className="w-full relative">
-        {showLeftArrow && (
-          <div
-            className={cn(
-              'absolute left-0 top-1/2 -translate-y-1/2 z-10',
-              'size-5 flex items-center justify-center',
-              'rounded-full cursor-pointer shadow-sm',
-              'bg-slate-200/90 dark:bg-slate-800/90 hover:bg-slate-300 dark:hover:bg-slate-700',
-              'transition-all duration-300'
-            )}
-            onClick={scrollLeft}
-          >
-            <ChevronLeft className="size-3.5 text-slate-600 dark:text-slate-300" />
-          </div>
-        )}
-
-        <div
-          ref={scrollContainerRef}
-          className="w-full flex flex-nowrap gap-1.5 overflow-x-auto px-1 py-0.5 m-scrollbar-none"
-        >
+        <div className="w-full flex flex-nowrap gap-1.5 overflow-x-auto px-1 py-0.5 m-scrollbar-none">
           {buttons.map((button, index) => {
             if (!button.show) return null;
             return (
@@ -226,21 +210,48 @@ export function ActionButtons() {
               </div>
             );
           })}
+          {moreMenuItems.filter((item) => item.show).length > 0 && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <div
+                  className={cn(
+                    'inline-flex items-center justify-center size-6',
+                    'bg-slate-300/50 dark:bg-slate-700/50 hover:bg-slate-300/80 dark:hover:bg-slate-700/80',
+                    'text-xs rounded-full first:ml-0 p-1 cursor-pointer',
+                    'transition-all duration-300 flex-shrink-0'
+                  )}
+                >
+                  <span
+                    className="flex flex-row items-center justify-center gap-1"
+                    onClick={() => {}}
+                  >
+                    <EllipsisVertical className="size-3" />
+                  </span>
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="max-w-64 min-w-36">
+                <DropdownMenuGroup>
+                  {moreMenuItems.map((item, index) => {
+                    if (!item.show) return null;
+                    return (
+                      <DropdownMenuItem
+                        key={index}
+                        className={cn(
+                          'hover:bg-accent cursor-pointer',
+                          item.className
+                        )}
+                        onClick={item.onClick}
+                      >
+                        {item.icon}
+                        <span>{item.text}</span>
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
         </div>
-        {showRightArrow && (
-          <div
-            className={cn(
-              'absolute right-0 top-1/2 -translate-y-1/2 z-10',
-              'size-5 flex items-center justify-center',
-              'rounded-full cursor-pointer shadow-sm',
-              'bg-slate-200/90 dark:bg-slate-800/90 hover:bg-slate-300 dark:hover:bg-slate-700',
-              'transition-all duration-300'
-            )}
-            onClick={scrollRight}
-          >
-            <ChevronRight className="size-3.5 text-slate-600 dark:text-slate-300" />
-          </div>
-        )}
       </div>
       <CharacterDrawerPopover
         open={showPopover}
