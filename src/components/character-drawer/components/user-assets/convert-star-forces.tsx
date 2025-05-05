@@ -382,7 +382,7 @@ export function ConvertStarForces({ onClose }: { onClose: () => void }) {
             size={16}
             aria-hidden="true"
           />
-          转换
+          {isStar ? '冲星' : '转换'}
         </Button>
         <Button
           className="flex-1 w-full h-8 rounded-full"
