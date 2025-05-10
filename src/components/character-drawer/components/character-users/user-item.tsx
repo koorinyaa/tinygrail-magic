@@ -84,13 +84,22 @@ export function UserItem({
 
   return (
     <div className="flex flex-row gap-x-1.5">
-      <Avatar className="size-10 rounded-full border-2 border-secondary">
-        <AvatarImage
-          className="object-cover object-top pointer-events-none"
-          src={getAvatarUrl(userData.Avatar)}
-        />
-        <AvatarFallback className="rounded-full">U</AvatarFallback>
-      </Avatar>
+      <div className="relative">
+        <Avatar className={cn("size-10 rounded-full border-2 border-secondary", {
+          'border-red-600': userData.State === 666,
+        })}>
+          <AvatarImage
+            className="object-cover object-top pointer-events-none"
+            src={getAvatarUrl(userData.Avatar)}
+          />
+          <AvatarFallback className="rounded-full">U</AvatarFallback>
+        </Avatar>
+        {userData.LastIndex > 0 && (
+          <Badge className="bg-yellow-500 dark:bg-yellow-600 text-white absolute -top-1.5 -left-2.5 size-7 rounded-full border-2 border-white px-1 scale-70">
+            #{userData.LastIndex}
+          </Badge>
+        )}
+      </div>
       <div className="flex flex-col justify-center gap-y-0.5 text-xs overflow-hidden">
         <div className="flex flex-row gap-x-1 truncate">
           <span className="opacity-60">{index === 1 ? '主席' : index}</span>
@@ -102,9 +111,12 @@ export function UserItem({
             'flex items-center justify-center px-1.5 py-0 h-4 rounded-sm',
             {
               'cursor-pointer': userData.Balance <= 0,
-              'bg-purple-400 dark:bg-purple-700 text-purple-800 dark:text-purple-200': index <= 10 && isActive(userData.LastActiveDate),
-              'bg-amber-400 dark:bg-amber-700 text-amber-800 dark:text-amber-200': index === 1 && isActive(userData.LastActiveDate),
-              'bg-green-400 dark:bg-green-700 text-green-800 dark:text-green-200': index > 10 && isActive(userData.LastActiveDate),
+              'bg-purple-400 dark:bg-purple-700 text-purple-800 dark:text-purple-200':
+                index <= 10 && isActive(userData.LastActiveDate),
+              'bg-amber-400 dark:bg-amber-700 text-amber-800 dark:text-amber-200':
+                index === 1 && isActive(userData.LastActiveDate),
+              'bg-green-400 dark:bg-green-700 text-green-800 dark:text-green-200':
+                index > 10 && isActive(userData.LastActiveDate),
             }
           )}
           onClick={() => {

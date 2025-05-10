@@ -15,7 +15,6 @@ export function CharacterUsers() {
   const {
     CurrentPage: currentPage = 1, // 当前页码
     TotalPages: totalPages = 1, // 总页数
-    TotalItems: totalItems = 0, // 总条数
     Items: items = [], // 用户数据列表
   } = characterDrawerData.characterUsersPageData || {};
   // 流通量

@@ -7,9 +7,11 @@ import {
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { useStore } from '@/store';
+import { CharacterTemples } from '../character-temples';
 import { CharacterTrading } from '../character-trading';
 import { CharacterUsers } from '../character-users';
 import { UserAssets } from '../user-assets';
+import { useEffect, useState } from 'react';
 
 /**
  * 角色抽屉选项卡
@@ -18,9 +20,25 @@ export function CharacterDrawerTabs() {
   const isMobile = useIsMobile(448);
   const { characterDrawer } = useStore();
   const { loading = false } = characterDrawer;
+  const [currentTab, setCurrentTab] = useState<
+    'assets' | 'deal' | 'users' | 'temples'
+  >('assets');
+
+  useEffect(() => {
+    if (characterDrawer.open) {
+      setCurrentTab('assets');
+    }
+  }, [characterDrawer.characterId]);
+
   return (
     <div className="pb-2 bg-card">
-      <TabsLine defaultValue="assets">
+      <TabsLine
+        defaultValue="assets"
+        value={currentTab}
+        onValueChange={(value) =>
+          setCurrentTab(value as 'assets' | 'deal' | 'users' | 'temples')
+        }
+      >
         <div
           className={cn(
             'sticky z-10 bg-card border-b border-slate-300/30 dark:border-slate-700/30',
@@ -53,7 +71,7 @@ export function CharacterDrawerTabs() {
               董事会
             </TabsLineTrigger>
             <TabsLineTrigger
-              value="tab-4"
+              value="temples"
               disabled={loading}
               className={loading ? undefined : 'cursor-pointer'}
             >
@@ -70,10 +88,8 @@ export function CharacterDrawerTabs() {
         <TabsLineContent value="users">
           <CharacterUsers />
         </TabsLineContent>
-        <TabsLineContent value="tab-4">
-          <p className="p-4 text-center text-xs text-muted-foreground">
-            Content for Tab 4
-          </p>
+        <TabsLineContent value="temples">
+          <CharacterTemples />
         </TabsLineContent>
       </TabsLine>
     </div>

@@ -32,7 +32,7 @@ export function TempleCard({ data, className }: TempleCardProps) {
     <AspectRatio
       ratio={3 / 4}
       className={cn(
-        'relative border border-slate-200/50 dark:border-slate-700/50',
+        'relative rounded-sm overflow-hidden border border-slate-200/50 dark:border-slate-700/50',
         className
       )}
     >
@@ -55,7 +55,7 @@ export function TempleCard({ data, className }: TempleCardProps) {
           'absolute top-0 right-0 size-8 m-1 p-1',
           'flex items-center justify-center rounded-full scale-80',
           'text-sm font-bold font-mono border-2 border-slate-200/40',
-          'bg-slate-400/20 backdrop-blur-lg',
+          'bg-black/30 backdrop-blur-lg',
           {
             'text-gray-400': templeLevel <= 0,
             'text-green-500 dark:text-green-600': templeLevel === 1,
@@ -69,7 +69,10 @@ export function TempleCard({ data, className }: TempleCardProps) {
       <div
         className={cn(
           'absolute bottom-0 left-0 right-0 h-10',
-          'bg-gradient-to-b from-[#00000000]/0 to-[#000000cc] text-white'
+          'bg-gradient-to-b from-[#00000000]/0 to-[#000000cc] text-white',
+          {
+            'h-full': showLine,
+          }
         )}
         onClick={() => {
           if (isEmpty(line)) return;
@@ -83,7 +86,12 @@ export function TempleCard({ data, className }: TempleCardProps) {
             })}
           >
             <div className="flex flex-row items-center mb-0.5">
-              <div className="flex-1 text-xs font-normal truncate">
+              <div
+                className="flex-1 text-xs font-normal truncate"
+                title={`${formatCurrency(assets)} / ${formatCurrency(
+                  sacrifices
+                )}`}
+              >
                 {formatCurrency(assets)} / {formatCurrency(sacrifices)}
               </div>
               {starForces >= 10000 && (

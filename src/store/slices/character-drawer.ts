@@ -19,8 +19,8 @@ export type CharacterDrawer = {
  * 角色抽屉数据
  * @param {CharacterDetail} characterDetailData 角色详情
  * @param {UserCharacterValue} userCharacterData 用户角色数据
- * @param {TempleItem[]} characterTemplesItems 角色圣殿
- * @param {TempleItem[]} characterLinksItems 角色LINK圣殿
+ * @param {TempleItem[]} characterTempleItems 角色圣殿
+ * @param {TempleItem[]} characterLinkItems 角色LINK圣殿
  * @param {TempleItem} userTempleData 用户圣殿
  * @param {number} currentCharacterUsersPage 当前角色持股用户分页
  * @param {CharacterUserPageValue} characterUsersPageData 角色持股用户分页数据
