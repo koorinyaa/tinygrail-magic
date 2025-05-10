@@ -117,7 +117,11 @@ export function ConvertStarForces({ onClose }: { onClose: () => void }) {
    * 转换星之力
    */
   const handleConvertStarForces = async () => {
-    if (!characterId || !characterDrawerData.userTempleData || !userAssets?.name)
+    if (
+      !characterId ||
+      !characterDrawerData.userTempleData ||
+      !userAssets?.name
+    )
       return;
 
     setLoading(true);
@@ -156,7 +160,11 @@ export function ConvertStarForces({ onClose }: { onClose: () => void }) {
    * 冲星
    */
   const handleFillStar = async () => {
-    if (!characterId || !characterDrawerData.userTempleData || !userAssets?.name)
+    if (
+      !characterId ||
+      !characterDrawerData.userTempleData ||
+      !userAssets?.name
+    )
       return;
 
     if (assets < requiredTempleAmount || amount < requiredStockAmount) {
@@ -338,7 +346,11 @@ export function ConvertStarForces({ onClose }: { onClose: () => void }) {
           <div className="flex flex-row items-center justify-evenly h-8 gap-x-1">
             <div className="w-24 text-sm opacity-60">冲星</div>
             <div className="flex-1 flex justify-end">
-              <Switch checked={isStar} onCheckedChange={isStarOnChange} />
+              <Switch
+                checked={isStar}
+                onCheckedChange={isStarOnChange}
+                className="cursor-pointer"
+              />
             </div>
           </div>
         )}

@@ -358,7 +358,7 @@ export async function auctionCharacter(
   price: number
 ): Promise<TinygrailBaseResponse<string>> {
   try {
-    const url = `/chara/auction/${characterId}/${amount}/${price}`;
+    const url = `/chara/auction/${characterId}/${price}/${amount}`;
     return await httpService.post<TinygrailBaseResponse<string>>(url);
   } catch (error) {
     throw error;

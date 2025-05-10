@@ -201,7 +201,6 @@ export function UserOrder({
         >
           <div className="flex-1 flex flex-col text-xs divide-y divide-slate-200/50 dark:divide-slate-800/60">
             {userTradingData?.Bids.map((bid, index) => {
-              console.log(bid);
               if (bid.Amount <= 0) return;
               return (
                 <div
