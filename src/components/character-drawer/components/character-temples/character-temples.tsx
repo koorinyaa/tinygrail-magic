@@ -91,7 +91,7 @@ export function CharacterTemples() {
                     }}
                     jumpable
                   />
-                  <div className="text-xs opacity-60 hover:opacity-80 w-full cursor-pointer">
+                  <div className="text-xs opacity-60 hover:opacity-80 w-full truncate cursor-pointer">
                     @{decodeHTMLEntities(item.Nickname || '')} +
                     {formatInteger(
                       item.Assets < item.Link.Assets
@@ -121,7 +121,7 @@ export function CharacterTemples() {
             return (
               <div className="flex flex-col gap-y-1">
                 <TempleCard key={item.UserId} data={item} className="w-full" />
-                <div className="text-xs opacity-60 hover:opacity-80 w-full cursor-pointer">
+                <div className="text-xs opacity-60 hover:opacity-80 w-full truncate	cursor-pointer">
                   @{decodeHTMLEntities(item.Nickname || '')}
                 </div>
               </div>

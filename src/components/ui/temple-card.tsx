@@ -52,15 +52,14 @@ export function TempleCard({ data, className }: TempleCardProps) {
       </PhotoProvider>
       <div
         className={cn(
-          'absolute top-0 right-0 size-8 m-1 p-1',
-          'flex items-center justify-center rounded-full scale-80',
-          'text-sm font-bold font-mono border-2 border-slate-200/40',
-          'bg-black/30 backdrop-blur-lg',
+          'absolute -top-1 -right-1 size-8 m-1 p-1',
+          'flex items-center justify-center rounded-full scale-75',
+          'text-sm text-white font-bold font-mono border-2 border-slate-200/40',
           {
-            'text-gray-400': templeLevel <= 0,
-            'text-green-500 dark:text-green-600': templeLevel === 1,
-            'text-purple-500 dark:text-purple-600': templeLevel === 2,
-            'text-amber-500 dark:text-amber-600': templeLevel === 3,
+            'bg-gray-300 text-foreground': templeLevel <= 0,
+            'bg-green-500': templeLevel === 1,
+            'bg-purple-500': templeLevel === 2,
+            'bg-amber-500': templeLevel === 3,
           }
         )}
       >
@@ -92,7 +91,8 @@ export function TempleCard({ data, className }: TempleCardProps) {
                   sacrifices
                 )}`}
               >
-                {formatCurrency(assets)} / {formatCurrency(sacrifices)}
+                <span className="mr-0.5">{formatCurrency(assets)}</span>/
+                <span className="ml-0.5">{formatCurrency(sacrifices)}</span>
               </div>
               {starForces >= 10000 && (
                 <div
