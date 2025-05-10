@@ -33,7 +33,6 @@ export function CharacterTrading() {
   const { Current: currentPrice = 0 } =
     characterDrawerData.characterDetailData || {};
   const [tabsValue, setTabsValue] = useState<'sell' | 'buy'>('sell');
-  const [loading, setLoading] = useState<boolean>(false);
   // 角色深度数据
   const [depthData, setDepthData] = useState<CharacterDepthInfo>();
   // 用户委托数据
@@ -75,7 +74,6 @@ export function CharacterTrading() {
   const initializeData = async () => {
     if (!characterId) return;
 
-    setLoading(true);
     try {
       const [characterDepthData, userTradingData] = await Promise.all([
         fatchCharacterDepthData(characterId),
@@ -88,8 +86,6 @@ export function CharacterTrading() {
       const errorMessage =
         error instanceof Error ? error.message : '初始化交易信息失败';
       notifyError(errorMessage);
-    } finally {
-      setLoading(false);
     }
   };
 

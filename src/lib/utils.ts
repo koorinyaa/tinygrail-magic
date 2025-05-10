@@ -79,7 +79,7 @@ export function formatCurrency(
 }
 
 /**
- * 格式化货整数
+ * 格式化整数
  * @param {number} value - 值
  * @param {boolean} [useWUnit] - 是否使用万单位转换
  * @returns {string}

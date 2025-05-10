@@ -4,11 +4,12 @@ import {
   TabsLineList,
   TabsLineTrigger,
 } from '@/components/ui/tabs-line';
-import { useStore } from '@/store';
-import { CharacterTrading } from '../character-trading';
-import { UserAssets } from '../user-assets';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
+import { useStore } from '@/store';
+import { CharacterTrading } from '../character-trading';
+import { CharacterUsers } from '../character-users';
+import { UserAssets } from '../user-assets';
 
 /**
  * 角色抽屉选项卡
@@ -20,10 +21,15 @@ export function CharacterDrawerTabs() {
   return (
     <div className="pb-2 bg-card">
       <TabsLine defaultValue="assets">
-        <div className={cn("sticky z-10 bg-card border-b border-slate-300/30 dark:border-slate-700/30", {
-          'top-7': isMobile,
-          'top-9': !isMobile
-        })}>
+        <div
+          className={cn(
+            'sticky z-10 bg-card border-b border-slate-300/30 dark:border-slate-700/30',
+            {
+              'top-7': isMobile,
+              'top-9': !isMobile,
+            }
+          )}
+        >
           <TabsLineList className="h-auto rounded-none bg-transparent p-0">
             <TabsLineTrigger
               value="assets"
@@ -40,7 +46,7 @@ export function CharacterDrawerTabs() {
               交易
             </TabsLineTrigger>
             <TabsLineTrigger
-              value="tab-3"
+              value="users"
               disabled={loading}
               className={loading ? undefined : 'cursor-pointer'}
             >
@@ -61,10 +67,8 @@ export function CharacterDrawerTabs() {
         <TabsLineContent value="deal">
           <CharacterTrading />
         </TabsLineContent>
-        <TabsLineContent value="tab-3">
-          <p className="p-4 text-center text-xs text-muted-foreground">
-            Content for Tab 3
-          </p>
+        <TabsLineContent value="users">
+          <CharacterUsers />
         </TabsLineContent>
         <TabsLineContent value="tab-4">
           <p className="p-4 text-center text-xs text-muted-foreground">
