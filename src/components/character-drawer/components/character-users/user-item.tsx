@@ -10,6 +10,7 @@ import {
   notifyError,
 } from '@/lib/utils';
 import { useStore } from '@/store';
+import { LoaderCircleIcon } from 'lucide-react';
 import { useState } from 'react';
 
 /**
@@ -30,12 +31,15 @@ export function UserItem({
 }) {
   const { characterDrawer } = useStore();
   const [userData, setUserData] = useState<CharacterUserValue>({ ...data });
+  const [loading, setLoading] = useState(false);
 
   /**
    * 点击查看用户持股数
    */
   const fatchUserCharacterData = async () => {
     if (!characterDrawer.characterId) return;
+
+    setLoading(true);
     try {
       const resp = await getUserCharacterData(
         characterDrawer.characterId,
@@ -50,8 +54,34 @@ export function UserItem({
       const errorMessage =
         error instanceof Error ? error.message : '获取用户持股数失败';
       notifyError(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
+
+  /**
+   * 判断用户是否活跃
+   */
+  const isActive = (LastActiveDate: string) => {
+    const date = new Date(LastActiveDate);
+
+    // 日期无效
+    if (isNaN(date.getTime())) {
+      return false;
+    }
+    // 封禁状态
+    if (data.State === 666) {
+      return false;
+    }
+
+    const now = new Date();
+    const daysDiff = Math.floor(
+      (now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24)
+    );
+
+    return daysDiff < 5;
+  };
+
   return (
     <div className="flex flex-row gap-x-1.5">
       <Avatar className="size-10 rounded-full border-2 border-secondary">
@@ -68,9 +98,15 @@ export function UserItem({
         </div>
         <Badge
           variant="secondary"
-          className={cn('px-1 py-0 rounded-sm', {
-            'cursor-pointer': userData.Balance <= 0,
-          })}
+          className={cn(
+            'flex items-center justify-center px-1.5 py-0 h-4 rounded-sm',
+            {
+              'cursor-pointer': userData.Balance <= 0,
+              'bg-purple-400 dark:bg-purple-700 text-purple-800 dark:text-purple-200': index <= 10 && isActive(userData.LastActiveDate),
+              'bg-amber-400 dark:bg-amber-700 text-amber-800 dark:text-amber-200': index === 1 && isActive(userData.LastActiveDate),
+              'bg-green-400 dark:bg-green-700 text-green-800 dark:text-green-200': index > 10 && isActive(userData.LastActiveDate),
+            }
+          )}
           onClick={() => {
             if (userData.Balance <= 0) {
               fatchUserCharacterData();
@@ -85,7 +121,20 @@ export function UserItem({
               </span>
             </span>
           ) : (
-            '点击查看'
+            <span className="flex items-center justify-center min-w-12">
+              <LoaderCircleIcon
+                className={cn('-ms-1 animate-spin', { hidden: !loading })}
+                size={12}
+                aria-hidden="true"
+              />
+              <span
+                className={cn({
+                  hidden: loading,
+                })}
+              >
+                点击查看
+              </span>
+            </span>
           )}
         </Badge>
       </div>
