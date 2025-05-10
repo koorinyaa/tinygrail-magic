@@ -537,3 +537,162 @@ export async function uploadCharacterAvatar(
   }
 }
 
+/**
+ * 深度数据项 - 卖单
+ * @property {number} Price - 价格
+ * @property {number} Amount - 数量
+ * @property {number} Type - 类型（0为普通卖单，1为特殊卖单）
+ */
+export interface AskDepthItem {
+  Price: number;
+  Amount: number;
+  Type: number;
+}
+
+/**
+ * 深度数据项 - 买单
+ * @property {number} Price - 价格
+ * @property {number} Amount - 数量
+ * @property {number} Type - 类型（可选，1为特殊买单）
+ */
+export interface BidDepthItem {
+  Price: number;
+  Amount: number;
+  Type?: number;
+}
+
+/**
+ * 深度数据
+ * @property {AskDepthItem[]} Asks - 卖单列表
+ * @property {BidDepthItem[]} Bids - 买单列表
+ */
+export interface CharacterDepthInfo {
+  Asks: AskDepthItem[];
+  Bids: BidDepthItem[];
+}
+
+export interface CharacterDepthResponse
+  extends TinygrailBaseResponse<CharacterDepthInfo> {}
+
+/**
+ * 获取角色深度数据
+ * @param {number} characterId - 角色ID
+ * @returns {Promise<CharacterDepthResponse>} - 角色深度数据
+ */
+export async function getCharacterDepth(
+  characterId: number
+): Promise<CharacterDepthResponse> {
+  try {
+    return await httpService.get<CharacterDepthResponse>(
+      `/chara/depth/${characterId}`
+    );
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * 角色历史交易记录数据项
+ * @property {number} Id - 记录ID
+ * @property {number} CharacterId - 角色ID
+ * @property {string} Time - 交易时间
+ * @property {number} Begin - 开始价格
+ * @property {number} End - 结束价格
+ * @property {number} Low - 最低价格
+ * @property {number} High - 最高价格
+ * @property {number} Amount - 交易数量
+ * @property {number} Price - 交易总金额
+ */
+export interface CharacterChartItem {
+  Id: number;
+  CharacterId: number;
+  Time: string;
+  Begin: number;
+  End: number;
+  Low: number;
+  High: number;
+  Amount: number;
+  Price: number;
+}
+
+export interface CharacterChartsResponse
+  extends TinygrailBaseResponse<CharacterChartItem[]> {}
+
+/**
+ * 获取角色历史交易记录
+ * @param {number} characterId - 角色ID
+ * @param {string} [date] - 查询日期，格式为YYYY-MM-DD
+ * @returns {Promise<CharacterChartsResponse>} - 角色历史交易记录数据
+ */
+export async function getCharacterCharts(
+  characterId: number,
+  date: string = '2019-09-03'
+): Promise<CharacterChartsResponse> {
+  try {
+    return await httpService.get<CharacterChartsResponse>(
+      `/chara/charts/${characterId}/${date}`
+    );
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * 角色拍卖历史项
+ * @property {string | null} Name - 名称
+ * @property {string | null} Icon - 图标
+ * @property {string} Nickname - 用户昵称
+ * @property {string} Username - 用户名
+ * @property {number} Start - 未知
+ * @property {number} Rate - 未知
+ * @property {number} Total - 总计
+ * @property {number} MarketValue - 市场价值
+ * @property {number} Id - ID
+ * @property {number} CharacterId - 角色ID
+ * @property {number} UserId - 用户内部ID
+ * @property {number} Price - 价格
+ * @property {number} Amount - 数量
+ * @property {string} Bid - 出价时间
+ * @property {number} Type - 类型
+ * @property {number} State - 状态（1为成功）
+ */
+export interface CharacterAuctionItem {
+  Name: string | null;
+  Icon: string | null;
+  Nickname: string;
+  Username: string;
+  Start: number;
+  Rate: number;
+  Total: number;
+  MarketValue: number;
+  Id: number;
+  CharacterId: number;
+  UserId: number;
+  Price: number;
+  Amount: number;
+  Bid: string;
+  Type: number;
+  State: number;
+}
+
+export interface CharacterAuctionListResponse
+  extends TinygrailBaseResponse<CharacterAuctionItem[]> {}
+
+/**
+ * 获取角色拍卖历史
+ * @param {number} characterId - 角色ID
+ * @param {number} page - 页码
+ * @returns {Promise<CharacterAuctionListResponse>} - 角色拍卖历史数据
+ */
+export async function getCharacterAuctionList(
+  characterId: number,
+  page: number = 1
+): Promise<CharacterAuctionListResponse> {
+  try {
+    return await httpService.get<CharacterAuctionListResponse>(
+      `/chara/auction/list/${characterId}/${page}`
+    );
+  } catch (error) {
+    throw error;
+  }
+}

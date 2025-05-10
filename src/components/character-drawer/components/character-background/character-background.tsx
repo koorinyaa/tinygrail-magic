@@ -15,14 +15,14 @@ export function CharacterBackground({
 }) {
   const { scrollPosition } = useScroll(contentRef);
   const { characterDrawerData } = useStore();
-  const { characterTemples = [], characterlinks = [] } = characterDrawerData;
+  const { characterTempleItems = [], characterLinkItems = [] } = characterDrawerData;
   const [backgroundImage, setBackgroundImage] = useState('');
 
   /**
    * 监听圣殿数据变化，更新背景图片
    */
   useEffect(() => {
-    const merged = [...characterTemples, ...characterlinks];
+    const merged = [...characterTempleItems, ...characterLinkItems];
     const uniqueMap = new Map(merged.map((item) => [item.Name, item]));
 
     let maxSacrificesTemple = null;
@@ -37,7 +37,7 @@ export function CharacterBackground({
     }
 
     setBackgroundImage(getCoverUrl(maxSacrificesTemple?.Cover || ''));
-  }, [characterTemples, characterlinks]);
+  }, [characterTempleItems, characterLinkItems]);
 
   return (
     <>

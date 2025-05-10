@@ -1,22 +1,21 @@
 import { convertStarForces, sacrificeCharacter } from '@/api/temple';
-import {
-  fatchTinygrailCharacterData,
-  fetchCharacterPoolAmount,
-} from '@/components/character-drawer/service/character';
-import {
-  onActiveStockChange,
-  onTemplesChange,
-} from '@/components/character-drawer/service/user';
 import { InputNumber } from '@/components/input-number';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Switch } from '@/components/ui/switch';
-import { cn, formatInteger, notifyError, sleep } from '@/lib/utils';
+import { verifyAuth } from '@/lib/auth';
+import { cn, formatInteger, isEmpty, notifyError, sleep } from '@/lib/utils';
 import { useStore } from '@/store';
 import { LoaderCircleIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { AiFillStar } from 'react-icons/ai';
 import { toast } from 'sonner';
+import {
+  fatchTinygrailCharacterData,
+  fetchCharacterDetailData,
+  fetchCharacterPoolAmount,
+} from '../../service/character';
+import { onActiveStockChange, onTemplesChange } from '../../service/user';
 
 export function ConvertStarForces({ onClose }: { onClose: () => void }) {
   const {
@@ -32,8 +31,7 @@ export function ConvertStarForces({ onClose }: { onClose: () => void }) {
     Sacrifices: sacrifices = 0,
     Level: templeLevel = 0,
     StarForces: starForces = 0,
-    Refine: refineLevel = 0,
-  } = characterDrawerData.userTemple || {};
+  } = characterDrawerData.userTempleData || {};
   const { Amount: amount = 0 } = characterDrawerData.userCharacterData || {};
   const { characterId } = characterDrawer || {};
   const [loading, setLoading] = useState(false);
@@ -119,32 +117,28 @@ export function ConvertStarForces({ onClose }: { onClose: () => void }) {
    * 转换星之力
    */
   const handleConvertStarForces = async () => {
-    if (!characterId || !characterDrawerData.userTemple || !userAssets?.name)
+    if (!characterId || !characterDrawerData.userTempleData || !userAssets?.name)
       return;
 
     setLoading(true);
     try {
+      // 验证用户登录状态
+      verifyAuth(setUserAssets);
+
       const result = await convertStarForces(characterId, convertCount);
 
       if (result.State === 0) {
         toast.success(result.Value || '星之力转换成功');
         onClose();
 
-        // 获取圣殿变化相关数据
-        const {
-          characterTemplesData,
-          characterLinksData,
-          userTempleData,
-          userCharacterData,
-          characterDetailData,
-        } = await onTemplesChange(characterId, userAssets.name);
+        // 圣殿变化更新相关数据
+        onTemplesChange(characterId, userAssets.name, setCharacterDrawerData);
+
+        // 获取角色详情
+        const characterDetailData = await fetchCharacterDetailData(characterId);
 
         setCharacterDrawerData({
-          characterTemples: characterTemplesData,
-          characterlinks: characterLinksData,
-          userTemple: userTempleData,
-          userCharacterData,
-          characterDetail: characterDetailData,
+          characterDetailData,
         });
       } else {
         throw new Error(result.Message || '星之力转换失败');
@@ -162,7 +156,7 @@ export function ConvertStarForces({ onClose }: { onClose: () => void }) {
    * 冲星
    */
   const handleFillStar = async () => {
-    if (!characterId || !characterDrawerData.userTemple || !userAssets?.name)
+    if (!characterId || !characterDrawerData.userTempleData || !userAssets?.name)
       return;
 
     if (assets < requiredTempleAmount || amount < requiredStockAmount) {
@@ -172,6 +166,9 @@ export function ConvertStarForces({ onClose }: { onClose: () => void }) {
 
     setLoading(true);
     try {
+      // 验证用户登录状态
+      verifyAuth(setUserAssets);
+
       // 先转换固定资产为星之力
       if (requiredTempleAmount > 0) {
         const result = await convertStarForces(
@@ -231,24 +228,19 @@ export function ConvertStarForces({ onClose }: { onClose: () => void }) {
       toast.success('冲星成功');
       onClose();
 
-      // 获取活股变化相关数据
-      const {
-        userCharacterData,
-        characterBoardMembersData,
-        characterUsersPageData,
-      } = await onActiveStockChange(
+      // 活股变化更新相关数据
+      onActiveStockChange(
         characterId,
         userAssets.name,
-        characterDrawerData.currentCharacterUserPage || 1
+        characterDrawerData.currentCharacterUsersPage || 1,
+        setCharacterDrawerData
       );
 
-      // 获取圣殿变化相关数据
-      const {
-        characterTemplesData,
-        characterLinksData,
-        userTempleData,
-        characterDetailData,
-      } = await onTemplesChange(characterId, userAssets.name);
+      // 圣殿变化更新相关数据
+      onTemplesChange(characterId, userAssets.name, setCharacterDrawerData);
+
+      // 获取角色详情
+      const characterDetailData = await fetchCharacterDetailData(characterId);
 
       // 获取英灵殿数据
       const tinygrailCharacterData = await fatchTinygrailCharacterData(
@@ -259,13 +251,7 @@ export function ConvertStarForces({ onClose }: { onClose: () => void }) {
       const characterPoolAmount = await fetchCharacterPoolAmount(characterId);
 
       setCharacterDrawerData({
-        userCharacterData,
-        characterBoardMembers: characterBoardMembersData,
-        currentCharacterUserPageData: characterUsersPageData,
-        characterTemples: characterTemplesData,
-        characterlinks: characterLinksData,
-        userTemple: userTempleData,
-        characterDetail: characterDetailData,
+        characterDetailData,
         tinygrailCharacterData,
         characterPoolAmount,
       });
@@ -344,6 +330,7 @@ export function ConvertStarForces({ onClose }: { onClose: () => void }) {
               }}
               minValue={0}
               maxValue={Math.max(0, assets)}
+              className="flex-1"
             />
           </div>
         )}
@@ -356,11 +343,13 @@ export function ConvertStarForces({ onClose }: { onClose: () => void }) {
           </div>
         )}
       </div>
-      <div className="flex flex-row items-center gap-x-2">
-        <span className="text-xs text-amber-400 dark:text-amber-600">
-          {message}
-        </span>
-      </div>
+      {!isEmpty(message) && (
+        <div className="flex flex-row items-center gap-x-2">
+          <span className="text-xs text-amber-400 dark:text-amber-600">
+            {message}
+          </span>
+        </div>
+      )}
       <div className="flex flex-row items-center gap-x-2">
         <Button
           className="flex-1 w-full h-8 rounded-full"

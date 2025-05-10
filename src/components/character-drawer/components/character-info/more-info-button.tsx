@@ -23,7 +23,7 @@ export function MoreInfoButton() {
   const isMobile = useIsMobile(448);
   const { characterDrawerData } = useStore();
   const {
-    characterDetail,
+    characterDetailData,
     tinygrailCharacterData,
     gensokyoCharacterData,
     characterPoolAmount,
@@ -42,7 +42,7 @@ export function MoreInfoButton() {
     Rate: rate = 0,
     StarForces: starForces = 0,
     ListedDate: listedDate = '',
-  } = characterDetail || {};
+  } = characterDetailData || {};
   const dividend = rank <= 500 ? rate * 0.005 * (601 - rank) : stars * 2;
 
   const data = [

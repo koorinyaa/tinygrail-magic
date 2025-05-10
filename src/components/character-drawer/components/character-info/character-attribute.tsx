@@ -22,7 +22,7 @@ export function CharacterAttribute() {
     Bonus: bonus = 0,
     Fluctuation: fluctuation = 0,
     Stars: stars = 0,
-  } = characterDrawerData.characterDetail || {};
+  } = characterDrawerData.characterDetailData || {};
 
   /**
    * 复制角色ID

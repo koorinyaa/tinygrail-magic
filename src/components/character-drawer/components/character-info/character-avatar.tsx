@@ -19,7 +19,7 @@ export function CharacterAvatar() {
   const isMobile = useIsMobile(448);
   const { characterDrawerData } = useStore();
   const { Icon: src = '', Name: name = '' } =
-    characterDrawerData.characterDetail || {};
+    characterDrawerData.characterDetailData || {};
   const [handleOnly, setHandleOnly] = useState(false);
 
   return (

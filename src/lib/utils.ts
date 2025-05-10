@@ -174,25 +174,72 @@ export function getAvatarUrl(
 /**
  * 格式化日期时间
  * @param {string} dateString - 日期时间字符串
+ * @param {'full' | 'simple'} mode - 格式化模式，full为完整格式(年月日)，simple为简化格式(斜杠分隔)
+ * @param {boolean} showRelative - 是否显示相对时间（例如：5分钟前、2小时前）
  * @returns {string}
  */
-export function formatDateTime(dateString: string): string {
+export function formatDateTime(
+  dateString: string,
+  mode: 'full' | 'simple' = 'full',
+  showRelative: boolean = false
+): string {
   try {
     const date = new Date(dateString);
     if (isNaN(date.getTime())) {
       return '';
     }
-    return new Intl.DateTimeFormat('zh-CN', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false,
-    })
-      .format(date)
-      .replace(/(\d+)\/(\d+)\/(\d+),?/, '$1年$2月$3日 ');
+
+    // 如果启用相对时间显示
+    if (showRelative) {
+      const now = new Date();
+      const diffMs = now.getTime() - date.getTime();
+      const diffSeconds = Math.floor(diffMs / 1000);
+      const diffMinutes = Math.floor(diffMs / (1000 * 60));
+      const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+      // 1分钟内显示秒数
+      if (diffSeconds < 60) {
+        return `${diffSeconds}秒前`;
+      }
+      // 1小时内显示分钟
+      else if (diffMinutes < 60) {
+        return `${diffMinutes}分钟前`;
+      }
+      // 24小时内显示小时
+      else if (diffHours < 24) {
+        return `${diffHours}小时前`;
+      }
+      // 7天内显示天数
+      else if (diffDays < 7) {
+        return `${diffDays}天前`;
+      }
+    }
+
+    if (mode === 'simple') {
+      // 简化模式：使用斜杠分隔日期，例如：2023/01/01 12:34:56
+      return new Intl.DateTimeFormat('zh-CN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+      }).format(date);
+    } else {
+      return new Intl.DateTimeFormat('zh-CN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+      })
+        .format(date)
+        .replace(/(\d+)\/(\d+)\/(\d+),?/, '$1年$2月$3日 ');
+    }
   } catch (e) {
     console.error(e);
     return '';

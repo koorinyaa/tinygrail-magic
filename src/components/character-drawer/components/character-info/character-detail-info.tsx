@@ -15,7 +15,7 @@ export function CharacterDetailInfo() {
     Price: price = 0,
     Total: total = 0,
     Rate: rate = 0,
-  } = characterDrawerData.characterDetail || {};
+  } = characterDrawerData.characterDetailData || {};
   const dividend = rank <= 500 ? rate * 0.005 * (601 - rank) : stars * 2;
 
   const data = [

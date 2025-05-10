@@ -80,22 +80,12 @@ export function ChangeTempleImage({ onClose }: { onClose: () => void }) {
         toast.success(result.Value);
         onClose();
 
-        // 获取圣殿变化相关数据
-        const {
-          characterTemplesData,
-          characterLinksData,
-          userTempleData,
-          userCharacterData,
-          characterDetailData,
-        } = await onTemplesChange(characterDrawer.characterId, userAssets.name);
-
-        setCharacterDrawerData({
-          characterTemples: characterTemplesData,
-          characterlinks: characterLinksData,
-          userTemple: userTempleData,
-          userCharacterData,
-          characterDetail: characterDetailData,
-        });
+        // 圣殿变化更新相关数据
+        onTemplesChange(
+          characterDrawer.characterId,
+          userAssets.name,
+          setCharacterDrawerData
+        );
       } else {
         throw new Error(result.Message || '修改圣殿封面失败');
       }
@@ -115,7 +105,7 @@ export function ChangeTempleImage({ onClose }: { onClose: () => void }) {
         }}
         className="rounded-sm cursor-pointer"
       />
-      <div className='flex flex-row gap-x-2'>
+      <div className="flex flex-row gap-x-2">
         <Button
           className="flex-1 h-8 rounded-full"
           disabled={loading || !image}

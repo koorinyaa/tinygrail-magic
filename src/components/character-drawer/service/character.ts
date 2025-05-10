@@ -1,7 +1,9 @@
 import {
+  CharacterDepthInfo,
   CharacterDetail,
   CharacterUserPageValue,
   CharacterUserValue,
+  getCharacterDepth,
   getCharacterDetail,
   getCharacterLinks,
   getCharacterPoolAmount,
@@ -37,7 +39,7 @@ export const fetchCharacterDetailData = async (
  * @param {number} characterId - 角色ID
  * @returns {Promise<TempleItem[]>} - 圣殿数据
  */
-export const fetchCharacterTemplesData = async (
+export const fetchCharacterTempleItems = async (
   characterId: number
 ): Promise<TempleItem[]> => {
   const data = await getCharacterTemples(characterId);
@@ -53,7 +55,7 @@ export const fetchCharacterTemplesData = async (
  * @param {number} characterId - 角色ID
  * @returns {Promise<TempleItem[]>} - LINK数据
  */
-export const fetchCharacterLinksData = async (
+export const fetchCharacterLinkItems = async (
   characterId: number
 ): Promise<TempleItem[]> => {
   const data = await getCharacterLinks(characterId);
@@ -117,7 +119,7 @@ export const fetchCharacterPoolAmount = async (
  * @param {number} characterId - 角色ID
  * @returns {Promise<CharacterUserValue[]>} - 角色董事会成员
  */
-export const fetchCharacterBoardMembersData = async (
+export const fetchCharacterBoardMemberItems = async (
   characterId: number
 ): Promise<CharacterUserValue[]> => {
   const data = await getCharacterUsers(characterId, 1, 10);
@@ -145,5 +147,21 @@ export const fetchCharacterUsersPageData = async (
     return data.Value;
   } else {
     throw new Error(data.Message || '获取角色持股用户分页数据失败');
+  }
+};
+
+/**
+ * 获取角色深度数据
+ * @param {number} characterId - 角色ID
+ * @returns {Promise<CharacterDepthInfo>} - 角色深度
+ */
+export const fatchCharacterDepthData = async (
+  characterId: number
+): Promise<CharacterDepthInfo> => {
+  const data = await getCharacterDepth(characterId);
+  if (data.State === 0) {
+    return data.Value;
+  } else {
+    throw new Error(data.Message || '获取角色深度数据失败');
   }
 };

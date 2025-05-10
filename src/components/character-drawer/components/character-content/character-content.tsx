@@ -5,9 +5,9 @@ import { useEffect, useRef } from 'react';
 import {
   fatchTinygrailCharacterData,
   fetchCharacterDetailData,
-  fetchCharacterLinksData,
+  fetchCharacterLinkItems,
   fetchCharacterPoolAmount,
-  fetchCharacterTemplesData,
+  fetchCharacterTempleItems,
   fetchCharacterUsersPageData,
   fetchGensokyoCharacterData,
 } from '../../service/character';
@@ -50,33 +50,33 @@ export function CharacterContent() {
 
       const [
         characterDetailData,
-        charactertemplesData,
-        characterlinksData,
+        characterTempleItems,
+        characterLinkItems,
         characterUsersPageData,
         userCharacterData,
       ] = await Promise.all([
         fetchCharacterDetailData(characterId),
-        fetchCharacterTemplesData(characterId),
-        fetchCharacterLinksData(characterId),
+        fetchCharacterTempleItems(characterId),
+        fetchCharacterLinkItems(characterId),
         fetchCharacterUsersPageData(characterId, 1),
         fetchUserCharacterData(characterId, userName),
       ]);
 
       const userTempleData = await getUserTempleData(
         userCharacterData,
-        charactertemplesData,
-        characterlinksData,
+        characterTempleItems,
+        characterLinkItems,
         userName
       );
 
       setCharacterDrawerData({
-        characterDetail: characterDetailData,
-        characterTemples: charactertemplesData,
-        characterlinks: characterlinksData,
-        currentCharacterUserPageData: characterUsersPageData,
-        characterBoardMembers: characterUsersPageData.Items.slice(0, 10),
+        characterDetailData,
+        characterTempleItems,
+        characterLinkItems,
+        characterUsersPageData,
+        characterBoardMemberItems: characterUsersPageData.Items.slice(0, 10),
         userCharacterData,
-        userTemple: userTempleData,
+        userTempleData,
       });
 
       initializeSecondaryData();

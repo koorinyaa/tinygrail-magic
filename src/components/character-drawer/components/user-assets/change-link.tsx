@@ -29,7 +29,7 @@ export function ChangeLink({ onClose }: { onClose: () => void }) {
     setCharacterDrawerData,
   } = useStore();
   const [loading, setLoading] = useState(false);
-  const { characterDetail, userTemple } = characterDrawerData;
+  const { characterDetailData, userTempleData } = characterDrawerData;
   const [keyword, setKeyword] = useState('');
   const debouncedSearchTerm = useDebounce(keyword, 1000);
   // 当前页数
@@ -105,22 +105,12 @@ export function ChangeLink({ onClose }: { onClose: () => void }) {
         toast.success(result.Message || 'LINK成功');
         onClose();
 
-        // 获取圣殿变化相关数据
-        const {
-          characterTemplesData,
-          characterLinksData,
-          userTempleData,
-          userCharacterData,
-          characterDetailData,
-        } = await onTemplesChange(characterDrawer.characterId, userAssets.name);
-
-        setCharacterDrawerData({
-          characterTemples: characterTemplesData,
-          characterlinks: characterLinksData,
-          userTemple: userTempleData,
-          userCharacterData,
-          characterDetail: characterDetailData,
-        });
+        // 圣殿变化更新相关数据
+        onTemplesChange(
+          characterDrawer.characterId,
+          userAssets.name,
+          setCharacterDrawerData
+        );
       } else {
         toast.warning(result.Message || 'LINK失败');
       }
@@ -182,7 +172,8 @@ export function ChangeLink({ onClose }: { onClose: () => void }) {
                       }}
                       onClick={() => {
                         if (
-                          temple.CharacterId === characterDetail?.CharacterId
+                          temple.CharacterId ===
+                          characterDetailData?.CharacterId
                         ) {
                           toast.warning('不能LINK自己');
                           return;
@@ -225,13 +216,18 @@ export function ChangeLink({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="w-full h-fit flex flex-col gap-y-4 items-center">
-      {userTemple && (
+      {userTempleData && (
         <>
           <Link
-            link1={userTemple}
-            link2={selectedTemple}
-            link1Name={characterDetail?.Name || ''}
-            link2Name={selectedTemple.Name || ''}
+            link1={{
+              ...userTempleData,
+              CharacterName: characterDetailData?.Name || '',
+              CharacterId: characterDetailData?.CharacterId || 0,
+            }}
+            link2={{
+              ...selectedTemple,
+              CharacterName: selectedTemple?.Name || '',
+            }}
           />
           <div className="flex-1 flex flex-row w-full gap-x-2">
             <Button
@@ -259,7 +255,7 @@ export function ChangeLink({ onClose }: { onClose: () => void }) {
                 size={16}
                 aria-hidden="true"
               />
-              取消
+              重新选择
             </Button>
           </div>
         </>

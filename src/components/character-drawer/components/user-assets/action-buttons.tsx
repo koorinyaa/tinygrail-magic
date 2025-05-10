@@ -11,13 +11,13 @@ import { useStore } from '@/store';
 import {
   Box,
   CircleFadingArrowUp,
-  EllipsisVertical,
+  Ellipsis,
   ImageUp,
   Link,
   MessageSquareText,
   RotateCw,
   Sparkles,
-  X,
+  X
 } from 'lucide-react';
 import { ReactNode, useState } from 'react';
 import { CharacterDrawerPopover } from '../character-drawer-popover';
@@ -37,12 +37,12 @@ export function ActionButtons() {
   const { characterDrawer, characterDrawerData } = useStore();
   const [showPopover, setShowPopover] = useState(false);
   const [popoverContent, setPopoverContent] = useState<ReactNode>(null);
-  const { userTemple } = characterDrawerData;
+  const { userTempleData } = characterDrawerData;
   const {
     Assets: assets = 0,
     Sacrifices: sacrifices = 0,
     Level: templeLevel = 0,
-  } = userTemple || {};
+  } = userTempleData || {};
 
   const buttons = [
     {
@@ -73,7 +73,7 @@ export function ActionButtons() {
           />
         );
       },
-      show: !isEmpty(userTemple),
+      show: !isEmpty(userTempleData),
     },
     {
       text: '精炼',
@@ -83,7 +83,7 @@ export function ActionButtons() {
         setPopoverContent(<Refine />);
       },
       show:
-        !isEmpty(userTemple) &&
+        !isEmpty(userTempleData) &&
         templeLevel > 0 &&
         sacrifices >= 2500 &&
         assets >= 2500,
@@ -92,7 +92,7 @@ export function ActionButtons() {
 
   const moreMenuItems = [
     {
-      text: '修改塔图',
+      text: '修改圣殿图片',
       icon: <ImageUp className="size-3" />,
       onClick: () => {
         setShowPopover(true);
@@ -104,10 +104,10 @@ export function ActionButtons() {
           />
         );
       },
-      show: !isEmpty(userTemple) && templeLevel > 0,
+      show: !isEmpty(userTempleData) && templeLevel > 0,
     },
     {
-      text: '重置塔图',
+      text: '重置圣殿图片',
       icon: <RotateCw className="size-3" />,
       onClick: () => {
         setShowPopover(true);
@@ -119,7 +119,7 @@ export function ActionButtons() {
           />
         );
       },
-      show: !isEmpty(userTemple),
+      show: !isEmpty(userTempleData),
     },
     {
       text: 'LINK',
@@ -134,7 +134,7 @@ export function ActionButtons() {
           />
         );
       },
-      show: !isEmpty(userTemple) && templeLevel > 0,
+      show: !isEmpty(userTempleData) && templeLevel > 0,
     },
     {
       text: '台词',
@@ -149,7 +149,7 @@ export function ActionButtons() {
           />
         );
       },
-      show: !isEmpty(userTemple) && templeLevel > 0,
+      show: !isEmpty(userTempleData) && templeLevel > 0,
     },
     {
       text: '拆除圣殿',
@@ -165,7 +165,7 @@ export function ActionButtons() {
         );
       },
       className: 'text-destructive',
-      show: !isEmpty(userTemple) && sacrifices === assets,
+      show: !isEmpty(userTempleData) && sacrifices === assets,
     },
   ];
 
@@ -225,7 +225,7 @@ export function ActionButtons() {
                     className="flex flex-row items-center justify-center gap-1"
                     onClick={() => {}}
                   >
-                    <EllipsisVertical className="size-3" />
+                    <Ellipsis className="size-3" />
                   </span>
                 </div>
               </DropdownMenuTrigger>

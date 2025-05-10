@@ -11,8 +11,8 @@ import { CharacterDrawerPopover } from '../character-drawer-popover';
 export function LinkButton() {
   const { characterDrawer, characterDrawerData, setCharacterDrawer } =
     useStore();
-  const { characterDetail, userTemple } = characterDrawerData;
-  const { Link: link } = userTemple || {};
+  const { characterDetailData, userTempleData } = characterDrawerData;
+  const { Link: link } = userTempleData || {};
   const [popoverOpen, setPopoverOpen] = useState(false);
   return (
     <>
@@ -39,8 +39,7 @@ export function LinkButton() {
         onOpenChange={setPopoverOpen}
         className="flex justify-center h-fit"
       >
-        {/* <div className="absolute top-2 right-3"></div> */}
-        {characterDrawerData.userTemple && link && (
+        {characterDrawerData.userTempleData && link && (
           <div className="flex flex-col items-center gap-y-1 w-full">
             <div
               className="flex-1 flex items-center justify-end w-full -mt-1 text-xs opacity-80 hover:opacity-100 cursor-pointer"
@@ -59,10 +58,12 @@ export function LinkButton() {
               </span>
             </div>
             <Link
-              link1={characterDrawerData.userTemple}
-              link2={link}
-              link1Name={characterDetail?.Name || ''}
-              link2Name={link.Name || ''}
+              link1={{
+                ...characterDrawerData.userTempleData,
+                CharacterName: characterDetailData?.Name || '',
+                CharacterId: characterDetailData?.CharacterId || 0,
+              }}
+              link2={{ ...link, CharacterName: link.Name || '' }}
             />
           </div>
         )}

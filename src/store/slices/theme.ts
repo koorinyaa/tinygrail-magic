@@ -16,17 +16,5 @@ export const createThemeSlice: StateCreator<ThemeState> = (set) => ({
     root.classList.add(theme);
     document.documentElement.setAttribute('data-theme', theme);
     document.cookie = `chii_theme=${theme}; path=/; max-age=31536000`;
-
-    // 更新网页主题色
-    const meta = document.getElementById('theme-color-meta') as HTMLMetaElement;
-    if (meta) {
-      meta.content = theme === 'dark' ? '#020618' : '#FFFFFF';
-    } else {
-      const themeColorMeta = document.createElement('meta');
-      themeColorMeta.name = 'theme-color';
-      themeColorMeta.id = 'theme-color-meta';
-      themeColorMeta.content = theme === 'dark' ? '#020618' : '#FFFFFF';
-      document.head.appendChild(themeColorMeta);
-    }
   },
 });

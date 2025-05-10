@@ -19,7 +19,7 @@ export function MoreAction() {
   const { characterDrawer, characterDrawerData, setCharacterDrawerData } =
     useStore();
   const { CharacterId: characterId = 0 } =
-    characterDrawerData.characterDetail || {};
+    characterDrawerData.characterDetailData || {};
   const [dropdownMenuOpen, setDropdownMenuOpen] = useState<boolean>(false);
 
   /**
@@ -34,7 +34,7 @@ export function MoreAction() {
         });
         fetchCharacterDetailData(characterId).then((characterDetailData) => {
           setCharacterDrawerData({
-            characterDetail: characterDetailData,
+            characterDetailData,
           });
         });
       } else {

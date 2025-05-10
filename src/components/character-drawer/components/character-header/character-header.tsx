@@ -20,7 +20,7 @@ export function CharacterHeader({
     CharacterId: characterId = 0,
     Icon: icon = '',
     Name: name = '',
-  } = characterDrawerData.characterDetail || {};
+  } = characterDrawerData.characterDetailData || {};
 
   return (
     <div

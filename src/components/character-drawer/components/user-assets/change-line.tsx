@@ -25,7 +25,7 @@ export function ChangeLine({ onClose }: { onClose: () => void }) {
   } = useStore();
   const [loading, setLoading] = useState(false);
   const [line, setLine] = useState<string>(
-    characterDrawerData.userTemple?.Line || ''
+    characterDrawerData.userTempleData?.Line || ''
   );
 
   useEffect(() => {
@@ -55,22 +55,12 @@ export function ChangeLine({ onClose }: { onClose: () => void }) {
         toast.success('修改成功');
         onClose();
 
-        // 获取圣殿变化相关数据
-        const {
-          characterTemplesData,
-          characterLinksData,
-          userTempleData,
-          userCharacterData,
-          characterDetailData,
-        } = await onTemplesChange(characterDrawer.characterId, userAssets.name);
-
-        setCharacterDrawerData({
-          characterTemples: characterTemplesData,
-          characterlinks: characterLinksData,
-          userTemple: userTempleData,
-          userCharacterData,
-          characterDetail: characterDetailData,
-        });
+        // 圣殿变化更新相关数据
+        onTemplesChange(
+          characterDrawer.characterId,
+          userAssets.name,
+          setCharacterDrawerData
+        );
       } else {
         toast.error(result.Message || '台词修改失败');
       }

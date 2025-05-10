@@ -1,29 +1,28 @@
 import { TempleItem } from '@/api/character';
 import { cn, getAvatarUrl, getCoverUrl } from '@/lib/utils';
+import { useStore } from '@/store';
 import { useEffect, useState } from 'react';
 import { PhotoProvider, PhotoView } from 'react-photo-view';
 
 /**
  * LINK
  * @param props
- * @param {TempleItem} props.link1
- * @param {TempleItem} props.link2
- * @param {string} props.link1Name
- * @param {string} props.link2Name
+ * @param {TempleItem} props.link1 - link1数据
+ * @param {TempleItem} props.link2 - link2数据
+ * @param {boolean} props.[jumpable] - 是否可跳转
  */
 export function Link({
   link1,
   link2,
-  link1Name,
-  link2Name,
+  jumpable = false,
 }: {
   link1: TempleItem;
   link2: TempleItem;
-  link1Name: string;
-  link2Name: string;
+  jumpable?: boolean;
 }) {
-  const [leftLink, setLeftLink] = useState<TempleItem>({...link1, Name: link1Name});
-  const [rightLink, setRightLink] = useState<TempleItem>({...link2, Name: link2Name});
+  const { openCharacterDrawer } = useStore();
+  const [leftLink, setLeftLink] = useState<TempleItem>(link1);
+  const [rightLink, setRightLink] = useState<TempleItem>(link2);
 
   useEffect(() => {
     if (leftLink.Sacrifices < rightLink.Sacrifices) {
@@ -35,7 +34,8 @@ export function Link({
       if (
         !isNaN(new Date(leftLink.Create).getTime()) &&
         !isNaN(new Date(rightLink.Create).getTime()) &&
-        new Date(leftLink.Create).getTime() < new Date(rightLink.Create).getTime()
+        new Date(leftLink.Create).getTime() <
+          new Date(rightLink.Create).getTime()
       ) {
         setLeftLink(rightLink);
         setRightLink(leftLink);
@@ -71,9 +71,19 @@ export function Link({
                 )})`,
               }}
             >
-              <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-b from-[#00000000]/0 to-[#000000cc] text-white">
+              <div
+                className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-b from-[#00000000]/0 to-[#000000cc] text-white"
+                onClick={(e) => {
+                  if (jumpable) {
+                    e.stopPropagation();
+                    openCharacterDrawer(leftLink.CharacterId);
+                  }
+                }}
+              >
                 <div className="absolute bottom-0 w-full px-2 pt-4 pb-1.5">
-                  <div className="text-xs w-20 truncate">{leftLink.Name}</div>
+                  <div className="text-xs w-20 truncate">
+                    {leftLink.CharacterName}
+                  </div>
                 </div>
               </div>
             </div>
@@ -106,9 +116,19 @@ export function Link({
                 )})`,
               }}
             >
-              <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-b from-[#00000000]/0 to-[#000000cc] text-white">
+              <div
+                className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-b from-[#00000000]/0 to-[#000000cc] text-white"
+                onClick={(e) => {
+                  if (jumpable) {
+                    e.stopPropagation();
+                    openCharacterDrawer(rightLink.CharacterId);
+                  }
+                }}
+              >
                 <div className="absolute bottom-0 w-full px-2 pt-4 pb-1.5">
-                  <div className="text-xs text-right w-25 truncate">{rightLink.Name}</div>
+                  <div className="text-xs text-right w-25 truncate">
+                    {rightLink.CharacterName}
+                  </div>
                 </div>
               </div>
             </div>

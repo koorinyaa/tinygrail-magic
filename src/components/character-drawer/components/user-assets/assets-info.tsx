@@ -8,9 +8,9 @@ import { useStore } from '@/store';
 export function AssetsInfo() {
   const { characterDrawer, characterDrawerData } = useStore();
   const {
-    characterDetail = null,
+    characterDetailData = null,
     userCharacterData = null,
-    userTemple = null,
+    userTempleData = null,
   } = characterDrawerData;
 
   const {
@@ -18,14 +18,14 @@ export function AssetsInfo() {
     Rate: rate = 0,
     Level: characterLevel = 0,
     Stars: stars = 0,
-  } = characterDetail || {};
+  } = characterDetailData || {};
 
   const {
     Assets: assets = 0,
     Refine: refine = 0,
     Level: templeLevel = 0,
     StarForces: starForces = 0,
-  } = userTemple || {};
+  } = userTempleData || {};
 
   const { Total: total = 0, Amount: amount = 0 } = userCharacterData || {};
 

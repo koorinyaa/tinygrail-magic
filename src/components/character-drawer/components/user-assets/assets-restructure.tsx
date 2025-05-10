@@ -16,10 +16,13 @@ import { AiFillStar } from 'react-icons/ai';
 import { toast } from 'sonner';
 import {
   fatchTinygrailCharacterData,
+  fetchCharacterDetailData,
   fetchCharacterPoolAmount,
   fetchGensokyoCharacterData,
 } from '../../service/character';
 import { onActiveStockChange, onTemplesChange } from '../../service/user';
+import { verifyAuth } from '@/lib/auth';
+import { LoaderCircleIcon } from 'lucide-react';
 
 /**
  * 资产重组
@@ -29,6 +32,7 @@ import { onActiveStockChange, onTemplesChange } from '../../service/user';
 export function AssetRestructure({ onClose }: { onClose: () => void }) {
   const {
     userAssets,
+    setUserAssets,
     setCharacterDrawer,
     characterDrawerData,
     setCharacterDrawerData,
@@ -36,8 +40,8 @@ export function AssetRestructure({ onClose }: { onClose: () => void }) {
   const { name = '' } = userAssets || {};
   const {
     userCharacterData,
-    userTemple,
-    currentCharacterUserPage = 0,
+    userTempleData,
+    currentCharacterUsersPage = 0,
   } = characterDrawerData;
   const { Total: total = 0, Amount: amount = 0 } = userCharacterData || {};
   const {
@@ -45,7 +49,8 @@ export function AssetRestructure({ onClose }: { onClose: () => void }) {
     Sacrifices: sacrifices = 0,
     Level: templeLevel = 0,
     StarForces: starForces = 0,
-  } = userTemple || {};
+  } = userTempleData || {};
+  const [loading, setLoading] = useState(false);
   // 当前选中的标签页
   const [activeTab, setActiveTab] = useState<'temple' | 'financing'>('temple');
   // 献祭数量
@@ -74,10 +79,13 @@ export function AssetRestructure({ onClose }: { onClose: () => void }) {
    * @param amount 数量
    */
   const handleSacrifice = async (amount: number) => {
+    setLoading(true);
     try {
-      const characterId = characterDrawerData.characterDetail?.CharacterId;
+      const characterId = characterDrawerData.characterDetailData?.CharacterId;
       if (!characterId) return;
 
+      // 验证用户登录状态
+      verifyAuth(setUserAssets);
       const result = await sacrificeCharacter(characterId, amount, false);
 
       if (result.State === 0) {
@@ -116,24 +124,19 @@ export function AssetRestructure({ onClose }: { onClose: () => void }) {
         });
         onClose();
 
-        // 获取活股变化相关数据
-        const {
-          userCharacterData,
-          characterBoardMembersData,
-          characterUsersPageData,
-        } = await onActiveStockChange(
+        // 活股变化更新相关数据
+        onActiveStockChange(
           characterId,
           name,
-          currentCharacterUserPage
+          currentCharacterUsersPage,
+          setCharacterDrawerData
         );
 
-        // 获取圣殿变化相关数据
-        const {
-          characterTemplesData,
-          characterLinksData,
-          userTempleData,
-          characterDetailData,
-        } = await onTemplesChange(characterId, name);
+        // 圣殿变化更新相关数据
+        onTemplesChange(characterId, name, setCharacterDrawerData);
+
+        // 获取角色详情
+        const characterDetailData = await fetchCharacterDetailData(characterId);
 
         // 获取英灵殿数据
         const tinygrailCharacterData = await fatchTinygrailCharacterData(
@@ -143,13 +146,7 @@ export function AssetRestructure({ onClose }: { onClose: () => void }) {
         const characterPoolAmount = await fetchCharacterPoolAmount(characterId);
 
         setCharacterDrawerData({
-          userCharacterData,
-          characterBoardMembers: characterBoardMembersData,
-          currentCharacterUserPageData: characterUsersPageData,
-          characterTemples: characterTemplesData,
-          characterlinks: characterLinksData,
-          userTemple: userTempleData,
-          characterDetail: characterDetailData,
+          characterDetailData,
           tinygrailCharacterData,
           characterPoolAmount,
         });
@@ -159,6 +156,8 @@ export function AssetRestructure({ onClose }: { onClose: () => void }) {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : '献祭失败';
       notifyError(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -167,10 +166,13 @@ export function AssetRestructure({ onClose }: { onClose: () => void }) {
    * @param amount 数量
    */
   const handleFinancing = async (amount: number) => {
+    setLoading(true);
     try {
-      const characterId = characterDrawerData.characterDetail?.CharacterId;
+      const characterId = characterDrawerData.characterDetailData?.CharacterId;
       if (!characterId) return;
 
+      // 验证用户登录状态
+      verifyAuth(setUserAssets);
       const result = await sacrificeCharacter(characterId, amount, true);
 
       if (result.State === 0) {
@@ -194,15 +196,12 @@ export function AssetRestructure({ onClose }: { onClose: () => void }) {
         });
         onClose();
 
-        // 获取活股变化相关数据
-        const {
-          userCharacterData,
-          characterBoardMembersData,
-          characterUsersPageData,
-        } = await onActiveStockChange(
+        // 活股变化更新相关数据
+        onActiveStockChange(
           characterId,
           name,
-          currentCharacterUserPage
+          currentCharacterUsersPage,
+          setCharacterDrawerData
         );
 
         // 获取幻想乡数据
@@ -214,8 +213,6 @@ export function AssetRestructure({ onClose }: { onClose: () => void }) {
 
         setCharacterDrawerData({
           userCharacterData,
-          characterBoardMembers: characterBoardMembersData,
-          currentCharacterUserPageData: characterUsersPageData,
           gensokyoCharacterData,
           characterPoolAmount,
         });
@@ -226,6 +223,8 @@ export function AssetRestructure({ onClose }: { onClose: () => void }) {
       const errorMessage =
         error instanceof Error ? error.message : '股权融资失败';
       notifyError(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -363,7 +362,7 @@ export function AssetRestructure({ onClose }: { onClose: () => void }) {
           hidden: activeTab !== 'temple',
         })}
       >
-        <div className="flex flex-row items-center justify-evenly h-8 gap-x-1">
+        <div className="flex flex-row items-center h-8 gap-x-1">
           <div className="w-24 text-sm opacity-60">数量</div>
           <InputNumber
             value={convertAmount}
@@ -371,6 +370,7 @@ export function AssetRestructure({ onClose }: { onClose: () => void }) {
               setConvertAmount(Math.floor(value) || 0);
             }}
             minValue={0}
+            className="flex-1"
           />
         </div>
         <div className="flex flex-row items-center justify-end gap-x-2">
@@ -401,7 +401,7 @@ export function AssetRestructure({ onClose }: { onClose: () => void }) {
           >
             奇迹圣殿
           </Badge>
-          {userTemple && (
+          {userTempleData && (
             <Badge
               variant="outline"
               className="rounded-full cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700"
@@ -422,12 +422,17 @@ export function AssetRestructure({ onClose }: { onClose: () => void }) {
         )}
         <div className="flex flex-row items-center gap-x-2">
           <Button
-            disabled={amount < convertAmount}
+            disabled={amount < convertAmount || loading}
             className="w-full h-8 rounded-full"
             onClick={() => {
               handleSacrifice(convertAmount);
             }}
           >
+            <LoaderCircleIcon
+              className={cn('-ms-1 animate-spin', { hidden: !loading })}
+              size={16}
+              aria-hidden="true"
+            />
             献祭
           </Button>
         </div>
@@ -446,6 +451,7 @@ export function AssetRestructure({ onClose }: { onClose: () => void }) {
             }}
             minValue={0}
             maxValue={amount}
+            className="flex-1"
           />
         </div>
         <div className="flex flex-row items-center gap-x-2">
@@ -455,12 +461,17 @@ export function AssetRestructure({ onClose }: { onClose: () => void }) {
         </div>
         <div className="flex flex-row items-center gap-x-2">
           <Button
-            disabled={amount < financingAmount}
+            disabled={amount < financingAmount || loading}
             className="w-full h-8 rounded-full"
             onClick={() => {
               handleFinancing(financingAmount);
             }}
           >
+            <LoaderCircleIcon
+              className={cn('-ms-1 animate-spin', { hidden: !loading })}
+              size={16}
+              aria-hidden="true"
+            />
             融资
           </Button>
         </div>

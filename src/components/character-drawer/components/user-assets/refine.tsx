@@ -1,8 +1,8 @@
 import { refine } from '@/api/temple';
-import { onTemplesChange } from '../../service/user';
 import { InputNumber } from '@/components/input-number';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { verifyAuth } from '@/lib/auth';
 import {
   cn,
   formatCurrency,
@@ -15,7 +15,7 @@ import { LoaderCircleIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { AiFillStar } from 'react-icons/ai';
 import { toast } from 'sonner';
-import { verifyAuth } from '@/lib/auth';
+import { onTemplesChange } from '../../service/user';
 
 /**
  * 精炼
@@ -37,7 +37,7 @@ export function Refine() {
     Level: templeLevel = 0,
     StarForces: starForces = 0,
     Refine: refineLevel = 0,
-  } = characterDrawerData.userTemple || {};
+  } = characterDrawerData.userTempleData || {};
   //精炼次数
   const [refineCount, setRefineCount] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -102,20 +102,12 @@ export function Refine() {
     } finally {
       setLoading(false);
 
-      // 获取圣殿变化相关数据
-      const {
-        characterTemplesData,
-        characterLinksData,
-        userTempleData,
-        characterDetailData,
-      } = await onTemplesChange(characterDrawer.characterId, userAssets.name);
-
-      setCharacterDrawerData({
-        characterTemples: characterTemplesData,
-        characterlinks: characterLinksData,
-        userTemple: userTempleData,
-        characterDetail: characterDetailData,
-      });
+      // 圣殿变化更新相关数据
+      onTemplesChange(
+        characterDrawer.characterId,
+        userAssets.name,
+        setCharacterDrawerData
+      );
 
       // 更新余额
       verifyAuth(setUserAssets);
@@ -187,6 +179,7 @@ export function Refine() {
             }}
             minValue={0}
             maxValue={Math.max(0, assets - 2500 + 1)}
+            className="flex-1"
           />
         </div>
       </div>

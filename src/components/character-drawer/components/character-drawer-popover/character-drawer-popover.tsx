@@ -1,6 +1,6 @@
-import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
-import { ReactNode } from "react";
+import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
+import { ReactNode } from 'react';
 
 /**
  * 角色抽屉弹出层
@@ -35,13 +35,13 @@ export function CharacterDrawerPopover({
         exit={{ opacity: 0 }}
         transition={{ duration: 0.2 }}
         className={cn(
-          "fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-[calc(100%-1rem)] max-h-[90%] p-4 w-full h-auto",
-          "bg-popover rounded-sm m-shadow-card overflow-auto z-50",
+          'fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-w-[calc(100%-1rem)] max-h-[90%] w-full h-auto',
+          'bg-popover rounded-sm m-shadow-card overflow-hidden z-50',
           className
         )}
       >
-        {children}
+        <div className="w-full p-4 overflow-auto">{children}</div>
       </motion.div>
     </>
-  )
+  );
 }

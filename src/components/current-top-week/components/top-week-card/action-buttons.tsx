@@ -22,8 +22,8 @@ export function ActionButtons({
   handleAuction: (characterId: number) => void;
 }) {
   return (
-    <div className="absolute top-2 right-2 flex flex-row gap-x-1 text-white z-10">
-      {data.Cover && (
+    <div className="absolute top-2 right-2 flex flex-col gap-y-1 text-white z-10">
+      <div className="flex flex-row gap-x-1">
         <div
           className={cn(
             'flex items-center justify-center',
@@ -31,44 +31,48 @@ export function ActionButtons({
             'opacity-80 hover:opacity-100',
             'bg-gray-800/50 backdrop-blur-xs'
           )}
-          title="查看大图"
+          title="参与拍卖"
           onClick={(e) => {
             e.stopPropagation();
-            handleCoverPreview();
+            handleAuction(data.CharacterId);
           }}
         >
-          <Image className="size-4" />
+          <Plus className="size-4" />
         </div>
-      )}
-      <div
-        className={cn(
-          'flex items-center justify-center',
-          'size-6 rounded-full cursor-pointer',
-          'opacity-80 hover:opacity-100',
-          'bg-gray-800/50 backdrop-blur-xs'
-        )}
-        title="打开角色面板"
-        onClick={(e) => {
-          e.stopPropagation();
-          handleCharacterDrawer(data.CharacterId);
-        }}
-      >
-        <SquareArrowOutUpRight className="size-4" />
+        <div
+          className={cn(
+            'flex items-center justify-center',
+            'size-6 rounded-full cursor-pointer',
+            'opacity-80 hover:opacity-100',
+            'bg-gray-800/50 backdrop-blur-xs'
+          )}
+          title="打开角色面板"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleCharacterDrawer(data.CharacterId);
+          }}
+        >
+          <SquareArrowOutUpRight className="size-4" />
+        </div>
       </div>
-      <div
-        className={cn(
-          'flex items-center justify-center',
-          'size-6 rounded-full cursor-pointer',
-          'opacity-80 hover:opacity-100',
-          'bg-gray-800/50 backdrop-blur-xs'
+      <div className="flex flex-row justify-end gap-x-1">
+        {data.Cover && (
+          <div
+            className={cn(
+              'flex items-center justify-center',
+              'size-6 rounded-full cursor-pointer',
+              'opacity-80 hover:opacity-100',
+              'bg-gray-800/50 backdrop-blur-xs'
+            )}
+            title="查看大图"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleCoverPreview();
+            }}
+          >
+            <Image className="size-4" />
+          </div>
         )}
-        title="参与拍卖"
-        onClick={(e) => {
-          e.stopPropagation();
-          handleAuction(data.CharacterId);
-        }}
-      >
-        <Plus className="size-4" />
       </div>
     </div>
   );

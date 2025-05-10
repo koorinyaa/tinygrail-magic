@@ -16,6 +16,8 @@
     @apply bg-background text-foreground;
   }
 
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+
   .m-shadow-card {
     @apply shadow-[0_0_10px_rgba(0,0,0,0.1)];
   }

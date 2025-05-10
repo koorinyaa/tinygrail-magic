@@ -1,22 +1,20 @@
-import {
-  CharacterDetail,
-  CharacterUserPageValue,
-  CharacterUserValue,
-  TempleItem,
-} from '@/api/character';
+import { TempleItem } from '@/api/character';
 import {
   getUserCharacterData,
   getUserTemples,
+  getUserTrading,
   UserCharacterValue,
+  UserTradingValue,
 } from '@/api/user';
-import {
-  fetchCharacterBoardMembersData,
-  fetchCharacterDetailData,
-  fetchCharacterLinksData,
-  fetchCharacterTemplesData,
-  fetchCharacterUsersPageData,
-} from './character';
 import { isEmpty } from '@/lib/utils';
+import { CharacterDrawerData } from '@/store/slices/character-drawer';
+import {
+  fetchCharacterBoardMemberItems,
+  fetchCharacterDetailData,
+  fetchCharacterLinkItems,
+  fetchCharacterTempleItems,
+  fetchCharacterUsersPageData
+} from './character';
 
 /**
  * 获取用户角色数据
@@ -85,85 +83,83 @@ export const getUserTempleData = async (
 };
 
 /**
- * 活股变化
+ * 活股发生变化
  * @param {number} characterId - 角色ID
  * @param {string} userName - 用户名
  * @param {number} currentPage - 当前页数
- * @returns {Promise<{
- *   userCharacterData: UserCharacterValue;
- *   characterBoardMembersData: CharacterUserValue[];
- *   characterUsersPageData: CharacterUserPageValue;
- * }>} - 返回数据（用户角色数据、董事会成员、当前分页角色成员）
+ * @param {(CharacterDrawerData: CharacterDrawerData) => void} setCharacterDrawerData - 设置角色抽屉数据
  */
 export const onActiveStockChange = async (
   characterId: number,
   userName: string,
-  currentPage: number
-): Promise<{
-  userCharacterData: UserCharacterValue;
-  characterBoardMembersData: CharacterUserValue[];
-  characterUsersPageData: CharacterUserPageValue;
-}> => {
-  const [userCharacterData, characterBoardMembersData, characterUsersPageData] =
+  currentPage: number,
+  setCharacterDrawerData: (CharacterDrawerData: CharacterDrawerData) => void
+) => {
+  const [userCharacterData, characterBoardMemberItems, characterUsersPageData] =
     await Promise.all([
       fetchUserCharacterData(characterId, userName),
-      fetchCharacterBoardMembersData(characterId),
+      fetchCharacterBoardMemberItems(characterId),
       fetchCharacterUsersPageData(characterId, currentPage),
     ]);
 
-  return {
+  setCharacterDrawerData({
     userCharacterData,
-    characterBoardMembersData,
+    characterBoardMemberItems,
     characterUsersPageData,
-  };
+  });
 };
 
 /**
- * 圣殿变化
+ * 圣殿发生变化
  * @param {number} characterId - 角色ID
  * @param {string} userName - 用户名
- * @returns {Promise<{
- *   characterTemplesData: TempleItem[];
- *   characterLinksData: TempleItem[];
- *   userTempleData: TempleItem | null;
- *   characterDetailData: CharacterDetail;
- *   userCharacterData: UserCharacterValue;
- * }>} - 返回数据（圣殿数据、LINK数据、用户圣殿数据、角色详情数据、用户角色数据）
+ * @param {(CharacterDrawerData: CharacterDrawerData) => void} setCharacterDrawerData - 设置角色抽屉数据
  */
 export const onTemplesChange = async (
   characterId: number,
-  userName: string
-): Promise<{
-  characterTemplesData: TempleItem[];
-  characterLinksData: TempleItem[];
-  userTempleData: TempleItem | null;
-  characterDetailData: CharacterDetail;
-  userCharacterData: UserCharacterValue;
-}> => {
+  userName: string,
+  setCharacterDrawerData: (CharacterDrawerData: CharacterDrawerData) => void
+) => {
   const [
-    characterTemplesData,
-    characterLinksData,
+    characterTempleItems,
+    characterLinkItems,
     characterDetailData,
     userCharacterData,
   ] = await Promise.all([
-    fetchCharacterTemplesData(characterId),
-    fetchCharacterLinksData(characterId),
+    fetchCharacterTempleItems(characterId),
+    fetchCharacterLinkItems(characterId),
     fetchCharacterDetailData(characterId),
     fetchUserCharacterData(characterId, userName),
   ]);
 
   const userTempleData = await getUserTempleData(
     userCharacterData,
-    characterTemplesData,
-    characterLinksData,
+    characterTempleItems,
+    characterLinkItems,
     userName
   );
 
-  return {
-    characterTemplesData,
-    characterLinksData,
+  setCharacterDrawerData({
+    userCharacterData,
+    characterTempleItems,
+    characterLinkItems,
     userTempleData,
     characterDetailData,
-    userCharacterData,
-  };
+  });
+};
+
+/**
+ * 获取用户委托数据
+ * @param {number} characterId - 角色ID
+ * @returns {Promise<UserTradingValue>} - 角色深度
+ */
+export const fatchUserTradingData = async (
+  characterId: number
+): Promise<UserTradingValue> => {
+  const data = await getUserTrading(characterId);
+  if (data.State === 0) {
+    return data.Value;
+  } else {
+    throw new Error(data.Message || '获取用户委托数据失败');
+  }
 };

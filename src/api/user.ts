@@ -167,3 +167,270 @@ export async function getUserTemples(
     throw error;
   }
 }
+
+/**
+ * 历史委托
+ * @property {string | null} Seller - 卖家信息
+ * @property {string | null} SellerName - 卖家名称
+ * @property {string | null} Buyer - 买家信息
+ * @property {string | null} BuyerName - 买家名称
+ * @property {string | null} Name - 名称
+ * @property {number} Id - 交易ID
+ * @property {string} TradeTime - 交易时间
+ * @property {number} SellerId - 卖家ID
+ * @property {number} BuyerId - 买家ID
+ * @property {string} SellerIp - 卖家IP
+ * @property {string} BuyerIp - 买家IP
+ * @property {number} CharacterId - 角色ID
+ * @property {number} Price - 价格
+ * @property {number} Amount - 数量
+ * @property {number} Type - 交易类型
+ */
+export interface TradeHistoryItem {
+  Seller: string | null;
+  SellerName: string | null;
+  Buyer: string | null;
+  BuyerName: string | null;
+  Name: string | null;
+  Id: number;
+  TradeTime: string;
+  SellerId: number;
+  BuyerId: number;
+  SellerIp: string;
+  BuyerIp: string;
+  CharacterId: number;
+  Price: number;
+  Amount: number;
+  Type: number;
+}
+
+/**
+ * 当前委托
+ * @property {number} Id - 订单ID
+ * @property {number} UserId - 用户ID
+ * @property {number} CharacterId - 角色ID
+ * @property {number} Price - 价格
+ * @property {number} Amount - 数量
+ * @property {string} Begin - 开始时间
+ * @property {string} End - 结束时间
+ * @property {number} State - 状态
+ * @property {number} Type - 类型
+ */
+export interface TradeOrderItem {
+  Id: number;
+  UserId: number;
+  CharacterId: number;
+  Price: number;
+  Amount: number;
+  Begin: string;
+  End: string;
+  State: number;
+  Type: number;
+}
+
+/**
+ * 用户交易数据
+ * @property {number} Id - 用户内部ID
+ * @property {number} Balance - 用户余额
+ * @property {number} Amount - 可用活股数量
+ * @property {number} Sacrifices - 固定资产上限
+ * @property {TradeOrderItem[]} Asks - 卖单列表
+ * @property {TradeOrderItem[]} Bids - 买单列表
+ * @property {TradeHistoryItem[]} AskHistory - 卖出历史
+ * @property {TradeHistoryItem[]} BidHistory - 买入历史
+ */
+export interface UserTradingValue {
+  Id: number;
+  Balance: number;
+  Amount: number;
+  Sacrifices: number;
+  Asks: TradeOrderItem[];
+  Bids: TradeOrderItem[];
+  AskHistory: TradeHistoryItem[];
+  BidHistory: TradeHistoryItem[];
+}
+
+export interface UserTradingResponse extends TinygrailBaseResponse<UserTradingValue> {}
+
+/**
+ * 获取用户角色交易数据
+ * @param {number} characterId - 角色ID
+ * @returns {Promise<UserTradingResponse>} - 用户角色交易数据
+ */
+export async function getUserTrading(
+  characterId: number
+): Promise<UserTradingResponse> {
+  try {
+    return await httpService.get<UserTradingResponse>(
+      `/chara/user/${characterId}`
+    );
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * 买入角色
+ * @param {number} characterId - 角色ID
+ * @param {number} price - 买入价格
+ * @param {number} amount - 买入数量
+ * @param {boolean} [isIce] - 是否冰山委托，可选参数
+ * @returns {Promise<TinygrailBaseResponse<string>>} - 买入结果
+ */
+export async function bidCharacter(
+  characterId: number,
+  price: number,
+  amount: number,
+  isIce?: boolean
+): Promise<TinygrailBaseResponse<string>> {
+  try {
+    const url = `/chara/bid/${characterId}/${price}/${amount}${isIce ? '/true' : ''}`;
+    return await httpService.post<TinygrailBaseResponse<string>>(url);
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * 卖出角色
+ * @param {number} characterId - 角色ID
+ * @param {number} price - 卖出价格
+ * @param {number} amount - 卖出数量
+ * @param {boolean} [isIce] - 是否冰山委托，可选参数
+ * @returns {Promise<TinygrailBaseResponse<string>>} - 卖出结果
+ */
+export async function askCharacter(
+  characterId: number,
+  price: number,
+  amount: number,
+  isIce?: boolean
+): Promise<TinygrailBaseResponse<string>> {
+  try {
+    const url = `/chara/ask/${characterId}/${price}/${amount}${isIce ? '/true' : ''}`;
+    return await httpService.post<TinygrailBaseResponse<string>>(url);
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * 取消买入委托
+ * @param {number} orderId - 订单ID
+ * @returns {Promise<TinygrailBaseResponse<string>>} - 取消结果
+ */
+export async function cancelBidOrder(
+  orderId: number
+): Promise<TinygrailBaseResponse<string>> {
+  try {
+    const url = `/chara/bid/cancel/${orderId}`;
+    return await httpService.post<TinygrailBaseResponse<string>>(url);
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * 取消卖出委托
+ * @param {number} orderId - 订单ID
+ * @returns {Promise<TinygrailBaseResponse<string>>} - 取消结果
+ */
+export async function cancelAskOrder(
+  orderId: number
+): Promise<TinygrailBaseResponse<string>> {
+  try {
+    const url = `/chara/ask/cancel/${orderId}`;
+    return await httpService.post<TinygrailBaseResponse<string>>(url);
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * 参与角色竞拍
+ * @param {number} characterId - 角色ID
+ * @param {number} amount - 竞拍数量
+ * @param {number} price - 竞拍价格
+ * @returns {Promise<TinygrailBaseResponse<string>>} - 竞拍结果
+ */
+export async function auctionCharacter(
+  characterId: number,
+  amount: number,
+  price: number
+): Promise<TinygrailBaseResponse<string>> {
+  try {
+    const url = `/chara/auction/${characterId}/${amount}/${price}`;
+    return await httpService.post<TinygrailBaseResponse<string>>(url);
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * 取消角色竞拍
+ * @param {number} auctionId - 拍卖ID
+ * @returns {Promise<TinygrailBaseResponse<string>>} - 取消竞拍结果
+ */
+export async function cancelAuctionCharacter(
+  auctionId: number
+): Promise<TinygrailBaseResponse<string>> {
+  try {
+    const url = `/chara/auction/cancel/${auctionId}`;
+    return await httpService.post<TinygrailBaseResponse<string>>(url);
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * 拍卖项信息
+ * @property {string | null} Name - 名称
+ * @property {string | null} Icon - 图标
+ * @property {string | null} Nickname - 昵称
+ * @property {string | null} Username - 用户名
+ * @property {number} Start - 未知
+ * @property {number} Rate - 未知
+ * @property {number} Total - 总数
+ * @property {number} MarketValue - 市场价值
+ * @property {number} Id - 拍卖ID
+ * @property {number} CharacterId - 角色ID
+ * @property {number} UserId - 用户内部ID
+ * @property {number} Price - 价格
+ * @property {number} Amount - 数量
+ * @property {string} Bid - 竞拍时间
+ * @property {number} Type - 类型（和数量一个值）
+ * @property {number} State - 状态
+ */
+export interface AuctionItem {
+  Name: string | null;
+  Icon: string | null;
+  Nickname: string | null;
+  Username: string | null;
+  Start: number;
+  Rate: number;
+  Total: number;
+  MarketValue: number;
+  Id: number;
+  CharacterId: number;
+  UserId: number;
+  Price: number;
+  Amount: number;
+  Bid: string;
+  Type: number;
+  State: number;
+}
+
+/**
+ * 获取拍卖列表
+ * @param {number[]} auctionIds - 拍卖ID数组
+ * @returns {Promise<TinygrailBaseResponse<AuctionItem[]>>} - 拍卖列表数据
+ */
+export async function getAuctionList(
+  auctionIds: number[]
+): Promise<TinygrailBaseResponse<AuctionItem[]>> {
+  try {
+    const url = `/chara/auction/list`;
+    return await httpService.post<TinygrailBaseResponse<AuctionItem[]>>(url, auctionIds);
+  } catch (error) {
+    throw error;
+  }
+}

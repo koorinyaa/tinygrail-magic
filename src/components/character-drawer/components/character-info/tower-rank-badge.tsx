@@ -6,7 +6,7 @@ import { BsStars } from 'react-icons/bs';
 export function TowerRankBadge() {
   const { characterDrawerData } = useStore();
   const { Rank: rank = 0, StarForces: starForces = 0 } =
-    characterDrawerData.characterDetail || {};
+    characterDrawerData.characterDetailData || {};
 
   return (
     <div className="flex flex-col h-full min-w-11 rounded-md overflow-hidden bg-secondary text-secondary-foreground">

@@ -43,7 +43,7 @@ export function ModifyAvatar({
     CharacterId: characterId = 0,
     Icon: src = '',
     Name: name = '',
-  } = characterDrawerData.characterDetail || {};
+  } = characterDrawerData.characterDetailData || {};
 
   useEffect(() => {
     setHandleOnly?.(!isEmpty(uploadedImage?.url));
@@ -65,24 +65,24 @@ export function ModifyAvatar({
    * 判断当前用户是否有修改头像权限
    */
   const canEditAvatar = (): boolean => {
-    const { characterBoardMembers = [] } = characterDrawerData;
+    const { characterBoardMemberItems = [] } = characterDrawerData;
 
     // 641给自己的vip通道
     if (userAssets?.id === 702) return true;
 
-    if (characterBoardMembers.length <= 0) return false;
+    if (characterBoardMemberItems.length <= 0) return false;
 
     if (
-      !characterBoardMembers.some(
+      !characterBoardMemberItems.some(
         (boardMember) => boardMember.Name === userAssets?.name
       )
     )
       return false;
 
     // 筛选可编辑头像的董事会成员
-    const editableBoardMembers = isActive(characterBoardMembers[0])
-      ? [characterBoardMembers[0]]
-      : characterBoardMembers.filter((boardMember) => isActive(boardMember));
+    const editableBoardMembers = isActive(characterBoardMemberItems[0])
+      ? [characterBoardMemberItems[0]]
+      : characterBoardMemberItems.filter((boardMember) => isActive(boardMember));
 
     // 判断当前用户是否在可编辑列表中
     return editableBoardMembers.some(
@@ -118,7 +118,7 @@ export function ModifyAvatar({
             fetchCharacterDetailData(characterId).then(
               (characterDetailData) => {
                 setCharacterDrawerData({
-                  characterDetail: characterDetailData,
+                  characterDetailData,
                 });
               }
             );

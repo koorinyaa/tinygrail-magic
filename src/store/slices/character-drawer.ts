@@ -17,27 +17,27 @@ export type CharacterDrawer = {
 
 /**
  * 角色抽屉数据
- * @param {CharacterDetail} characterDetail 角色详情
+ * @param {CharacterDetail} characterDetailData 角色详情
  * @param {UserCharacterValue} userCharacterData 用户角色数据
- * @param {TempleItem[]} characterTemples 角色圣殿
- * @param {TempleItem[]} characterlinks 角色LINK圣殿
- * @param {TempleItem} userTemple 用户圣殿
- * @param {CharacterUserPageValue} currentCharacterUserPageData 当前角色持股用户分页数据
- * @param {CharacterUserValue[]} characterBoardMembers 董事会成员
+ * @param {TempleItem[]} characterTemplesItems 角色圣殿
+ * @param {TempleItem[]} characterLinksItems 角色LINK圣殿
+ * @param {TempleItem} userTempleData 用户圣殿
+ * @param {number} currentCharacterUsersPage 当前角色持股用户分页
+ * @param {CharacterUserPageValue} characterUsersPageData 角色持股用户分页数据
+ * @param {CharacterUserValue[]} characterBoardMembersItems 董事会成员
  * @param {TinygrailCharacterValue} tinygrailCharacterData 英灵殿角色数据
  * @param {UserCharacterValue} gensokyoCharacterData 幻想乡角色数据
  * @param {number} characterPoolAmount 奖池数量
  */
 export type CharacterDrawerData = {
-  // TODO: 名称统一
-  characterDetail?: CharacterDetail | null;
+  characterDetailData?: CharacterDetail | null;
   userCharacterData?: UserCharacterValue | null;
-  characterTemples?: TempleItem[];
-  characterlinks?: TempleItem[];
-  userTemple?: TempleItem | null;
-  currentCharacterUserPage?: number;
-  currentCharacterUserPageData?: CharacterUserPageValue;
-  characterBoardMembers?: CharacterUserValue[];
+  characterTempleItems?: TempleItem[];
+  characterLinkItems?: TempleItem[];
+  userTempleData?: TempleItem | null;
+  currentCharacterUsersPage?: number;
+  characterUsersPageData?: CharacterUserPageValue;
+  characterBoardMemberItems?: CharacterUserValue[];
   tinygrailCharacterData?: TinygrailCharacterValue | null;
   gensokyoCharacterData?: UserCharacterValue | null;
   characterPoolAmount?: number;
@@ -62,14 +62,14 @@ const initialCharacterDrawer: CharacterDrawer = {
 };
 
 const initialCharacterDrawerData: CharacterDrawerData = {
-  characterDetail: null,
+  characterDetailData: null,
   userCharacterData: null,
-  characterTemples: [],
-  characterlinks: [],
-  userTemple: null,
-  currentCharacterUserPage: 1,
-  currentCharacterUserPageData: undefined,
-  characterBoardMembers: [],
+  characterTempleItems: [],
+  characterLinkItems: [],
+  userTempleData: null,
+  currentCharacterUsersPage: 1,
+  characterUsersPageData: undefined,
+  characterBoardMemberItems: [],
   tinygrailCharacterData: null,
   gensokyoCharacterData: null,
   characterPoolAmount: 0,

@@ -1,5 +1,4 @@
 import { destroyTemple } from '@/api/temple';
-import { onTemplesChange } from '@/components/character-drawer/service/user';
 import { Button } from '@/components/ui/button';
 import { verifyAuth } from '@/lib/auth';
 import { cn, notifyError } from '@/lib/utils';
@@ -7,6 +6,8 @@ import { useStore } from '@/store';
 import { LoaderCircleIcon } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { fetchCharacterDetailData } from '../../service/character';
+import { onTemplesChange } from '../../service/user';
 
 export function RemoveTemple({ onClose }: { onClose: () => void }) {
   const { userAssets, setUserAssets, characterDrawer, setCharacterDrawerData } =
@@ -30,21 +31,20 @@ export function RemoveTemple({ onClose }: { onClose: () => void }) {
         toast.success('拆除成功');
         onClose();
 
-        // 获取圣殿变化相关数据
-        const {
-          characterTemplesData,
-          characterLinksData,
-          userTempleData,
-          userCharacterData,
-          characterDetailData,
-        } = await onTemplesChange(characterDrawer.characterId, userAssets.name);
+        // 圣殿变化更新相关数据
+        onTemplesChange(
+          characterDrawer.characterId,
+          userAssets.name,
+          setCharacterDrawerData
+        );
+
+        // 获取角色详情
+        const characterDetailData = await fetchCharacterDetailData(
+          characterDrawer.characterId
+        );
 
         setCharacterDrawerData({
-          characterTemples: characterTemplesData,
-          characterlinks: characterLinksData,
-          userTemple: userTempleData,
-          userCharacterData,
-          characterDetail: characterDetailData,
+          characterDetailData,
         });
       } else {
         toast.warning(result.Message || '拆除失败');

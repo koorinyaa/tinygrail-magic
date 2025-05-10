@@ -9,12 +9,8 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 export function ResetTempleImage({ onClose }: { onClose: () => void }) {
-  const {
-    userAssets,
-    setUserAssets,
-    characterDrawer,
-    setCharacterDrawerData,
-  } = useStore();
+  const { userAssets, setUserAssets, characterDrawer, setCharacterDrawerData } =
+    useStore();
   const [loading, setLoading] = useState(false);
 
   /**
@@ -36,24 +32,14 @@ export function ResetTempleImage({ onClose }: { onClose: () => void }) {
       if (result.State === 0) {
         toast.success('重置圣殿封面完成');
 
-        // 获取圣殿变化相关数据
-        const {
-          characterTemplesData,
-          characterLinksData,
-          userTempleData,
-          userCharacterData,
-          characterDetailData,
-        } = await onTemplesChange(characterDrawer.characterId, userAssets.name);
-
-        setCharacterDrawerData({
-          characterTemples: characterTemplesData,
-          characterlinks: characterLinksData,
-          userTemple: userTempleData,
-          userCharacterData,
-          characterDetail: characterDetailData,
-        });
+        // 圣殿变化更新相关数据
+        onTemplesChange(
+          characterDrawer.characterId,
+          userAssets.name,
+          setCharacterDrawerData
+        );
       } else {
-        toast.warning(result.Message || '重置圣殿封面失败')
+        toast.warning(result.Message || '重置圣殿封面失败');
       }
     } catch (err) {
       const errMsg = err instanceof Error ? err.message : '重置圣殿封面失败';
