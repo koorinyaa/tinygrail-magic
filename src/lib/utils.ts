@@ -86,7 +86,7 @@ export function formatCurrency(
  */
 export function formatInteger(value: number, useWUnit?: boolean): string {
   return formatCurrency(value, {
-    maximumFractionDigits: 0,
+    maximumFractionDigits: 2,
     useWUnit: useWUnit,
   });
 }
@@ -338,6 +338,7 @@ export function notifyError(message: string) {
 }
 
 /**
+ * 休眠
  * @param {number} ms - 毫秒数
  * @returns {Promise<void>}
  */

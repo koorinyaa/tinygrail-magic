@@ -271,12 +271,12 @@ export function CharacterTemples() {
               onCheckedChange={(checked) => {
                 setTempleShowMode(checked ? 'image' : 'temple');
               }}
-              className="peer data-[state=checked]:bg-input/50 data-[state=unchecked]:bg-input/50 absolute inset-0 cursor-pointer h-[inherit] w-auto rounded-[3px] [&_span]:h-full [&_span]:w-1/2 [&_span]:rounded-[3px] [&_span]:transition-transform [&_span]:duration-300 [&_span]:ease-[cubic-bezier(0.16,1,0.3,1)] [&_span]:data-[state=checked]:translate-x-full [&_span]:data-[state=checked]:rtl:-translate-x-full"
+              className="peer data-[state=checked]:bg-input/50 data-[state=unchecked]:bg-input/50 absolute inset-0 cursor-pointer h-4 w-auto rounded-[3px] [&_span]:h-full [&_span]:w-1/2 [&_span]:rounded-[3px] [&_span]:transition-transform [&_span]:duration-300 [&_span]:ease-[cubic-bezier(0.16,1,0.3,1)] [&_span]:data-[state=checked]:translate-x-full [&_span]:data-[state=checked]:rtl:-translate-x-full"
             />
-            <span className="peer-data-[state=checked]:text-muted-foreground/70 pointer-events-none relative ms-px flex min-w-4 items-center justify-center text-center">
+            <span className="peer-data-[state=checked]:text-muted-foreground/70 pointer-events-none relative ms-px flex min-w-5 items-center justify-center text-center">
               <Grid2x2 aria-hidden="true" className="size-3" />
             </span>
-            <span className="peer-data-[state=unchecked]:text-muted-foreground/70 pointer-events-none relative me-px flex min-w-4 items-center justify-center text-center">
+            <span className="peer-data-[state=unchecked]:text-muted-foreground/70 pointer-events-none relative me-px flex min-w-5 items-center justify-center text-center">
               <Image aria-hidden="true" className="size-3" />
             </span>
           </div>

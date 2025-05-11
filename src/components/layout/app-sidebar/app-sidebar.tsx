@@ -42,11 +42,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           icon: Sparkles,
         },
         {
-          name: '最新圣殿',
-          id: 'latestTemples',
-          icon: Images,
-        },
-        {
           name: '市场',
           id: 'market',
           icon: BadgeCent,
@@ -55,6 +50,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           name: '排行榜',
           id: 'ranking',
           icon: ChartNoAxesColumn,
+        },
+        {
+          name: '最新圣殿',
+          id: 'latestTemples',
+          icon: Images,
         },
       ],
     },

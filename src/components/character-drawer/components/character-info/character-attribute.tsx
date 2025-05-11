@@ -5,7 +5,7 @@ import { useStore } from '@/store';
 import { Copy, Crown } from 'lucide-react';
 import { TbX } from 'react-icons/tb';
 import { toast } from 'sonner';
-import { StarLevel } from './star-level';
+import { StarLevel } from '@/components/star-level';
 import { TowerRankBadge } from './tower-rank-badge';
 
 /**

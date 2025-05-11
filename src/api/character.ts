@@ -696,3 +696,99 @@ export async function getCharacterAuctionList(
     throw error;
   }
 }
+
+
+/**
+ * 获取通天塔角色数据
+ * @param {number} page - 页码
+ * @param {number} [pageSize] - 每页数量
+ * @returns {Promise<TinygrailBaseResponse<CharacterDetail[]>>} - 通天塔角色数据
+ */
+export async function getBabel(
+  page: number,
+  pageSize: number = 100
+): Promise<TinygrailBaseResponse<CharacterDetail[]>> {
+  page = Math.max(page, 1);
+  try {
+    return await httpService.get<TinygrailBaseResponse<CharacterDetail[]>>(`/chara/babel/${page}/${pageSize}`);
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * 通天塔日志数据项
+ * @property {string} Icon - 角色头像
+ * @property {number} Id - 日志ID
+ * @property {number} CharacterId - 角色ID
+ * @property {string} CharacterName - 角色名称
+ * @property {number} UserId - 用户内部ID
+ * @property {string} UserName - 用户名
+ * @property {string} Nickname - 用户昵称
+ * @property {number} Amount - 数量
+ * @property {number} FromCharacterId - 来源角色ID
+ * @property {number} Stars - 星级
+ * @property {number} StarForces - 星之力
+ * @property {number} Rank - 排名
+ * @property {number} OldRank - 旧排名
+ * @property {number} Loss - 损失
+ * @property {string} LogTime - 日志时间
+ * @property {number} Type - 类型
+ */
+export interface StarLogItem {
+  Icon: string;
+  Id: number;
+  CharacterId: number;
+  CharacterName: string;
+  UserId: number;
+  UserName: string;
+  Nickname: string;
+  Amount: number;
+  FromCharacterId: number;
+  Stars: number;
+  StarForces: number;
+  Rank: number;
+  OldRank: number;
+  Loss: number;
+  LogTime: string;
+  Type: number;
+}0
+
+/**
+ * 通天塔日志分页数据
+ * @property {number} CurrentPage - 当前页码
+ * @property {number} TotalPages - 总页数
+ * @property {number} TotalItems - 数据总数
+ * @property {number} ItemsPerPage - 每页数量
+ * @property {StarLogItem[]} Items - 日志列表
+ * @property {any} Context - 上下文信息
+ */
+export interface StarLogPageValue {
+  CurrentPage: number;
+  TotalPages: number;
+  TotalItems: number;
+  ItemsPerPage: number;
+  Items: StarLogItem[];
+  Context: any;
+}
+
+export interface StarLogResponse extends TinygrailBaseResponse<StarLogPageValue> {}
+
+/**
+ * 获取通天塔日志
+ * @param page 页码
+ * @param pageSize 每页数量
+ */
+export async function getStarLog(
+  page: number,
+  pageSize: number = 12
+): Promise<StarLogResponse> {
+  page = Math.max(page, 1);
+  try {
+    return await httpService.get<StarLogResponse>(
+      `/chara/star/log/${page}/${pageSize}`
+    );
+  } catch (error) {
+    throw error;
+  }
+}
