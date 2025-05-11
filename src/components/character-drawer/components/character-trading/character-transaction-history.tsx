@@ -254,7 +254,7 @@ export function CharacterTransactionHistory() {
                     {formatInteger(item.Amount)}
                   </TableCell>
                   <TableCell className="p-1">
-                    {formatCurrency(item.Price)}
+                    {formatCurrency(item.Price, {useWUnit: true})}
                   </TableCell>
                   <TableCell className="p-1 text-right">
                     {renderDateTime(item.Time)}

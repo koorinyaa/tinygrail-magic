@@ -231,7 +231,8 @@ export function UserOrder({
                 >
                   <div className="flex-1" title="买入委托：金额 / 数量 / 合计">
                     {formatCurrency(bid.Price)} / {formatInteger(bid.Amount)} /
-                    -{formatCurrency(bid.Amount * bid.Price)}
+                    -
+                    {formatCurrency(bid.Amount * bid.Price, { useWUnit: true })}
                     {bid.Type === 1 ? ' [i]' : ''}
                   </div>
                 </div>
@@ -367,7 +368,9 @@ export function UserOrder({
                   </TableCell>
                   <TableCell className="flex p-1">
                     {historyOrderType === 'ask' ? '+' : '-'}
-                    {formatCurrency(item.Price * item.Amount)}
+                    {formatCurrency(item.Price * item.Amount, {
+                      useWUnit: true,
+                    })}
                   </TableCell>
                   <TableCell className="p-1 text-right">
                     {formatDateTime(item.TradeTime, 'simple')}
