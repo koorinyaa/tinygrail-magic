@@ -51,6 +51,12 @@ export function MoreAction() {
       label: '同步角色名称',
       onClick: updateCharacterInfo,
     },
+    {
+      label: 'FUYUAKE',
+      onClick: () => {
+        window.open(`https://fuyuake.top/xsb/chara/${characterId}`);
+      },
+    },
   ];
 
   return (

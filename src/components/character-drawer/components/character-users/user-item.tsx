@@ -97,7 +97,7 @@ export function UserItem({
           <AvatarFallback className="rounded-full">U</AvatarFallback>
         </Avatar>
         {userData.LastIndex > 0 && (
-          <Badge className="bg-yellow-500 dark:bg-yellow-600 text-white absolute -top-1.5 -left-2.5 size-7 rounded-full border-2 border-white px-1 scale-70">
+          <Badge className="bg-yellow-500 dark:bg-yellow-600 text-white absolute -top-1.5 -left-2.5 size-7 rounded-full border-2 border-card px-1 scale-70">
             #{userData.LastIndex}
           </Badge>
         )}
@@ -106,7 +106,6 @@ export function UserItem({
         <div className="flex flex-row gap-x-1">
           <span className="opacity-60 text-nowrap">{index === 1 ? '主席' : index}</span>
           <span className="truncate">
-            {decodeHTMLEntities(userData.Nickname)}
             {decodeHTMLEntities(userData.Nickname)}
           </span>
         </div>
