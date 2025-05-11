@@ -144,9 +144,13 @@ export function CharacterBuyForm({
           />
         </div>
       </div>
-      <div className="flex flex-row items-center justify-evenly h-9 gap-x-1">
+      <div className="flex flex-row items-center justify-evenly w-full h-9 gap-x-1">
         <div className="w-10 text-sm opacity-60">金额</div>
-        <div className="flex-1 w-full text-sm">
+        <div
+          className={cn('flex-1 w-full text-sm truncate', {
+            'text-red-400 dark:text-red-600': buyFormData.price * buyFormData.amount > balance,
+          })}
+        >
           ₵{formatCurrency(buyFormData.price * buyFormData.amount)}
         </div>
       </div>

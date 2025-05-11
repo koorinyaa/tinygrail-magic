@@ -92,7 +92,7 @@ export function CharacterTrading() {
   return (
     <div className="flex flex-col gap-y-2 px-2 bg-card">
       <div className="flex flex-row gap-x-2">
-        <div className="flex-1 w-full px-1">
+        <div className="flex-1 w-full px-1 overflow-hidden">
           <Tabs
             value={tabsValue}
             onValueChange={(value) => {

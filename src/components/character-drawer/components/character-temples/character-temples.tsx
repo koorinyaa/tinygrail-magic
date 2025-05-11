@@ -1,8 +1,9 @@
 import { Link } from '@/components/link';
 import { PaginationWrapper } from '@/components/ui/pagination-wrapper';
 import { TempleCard } from '@/components/ui/temple-card';
-import { decodeHTMLEntities, formatInteger } from '@/lib/utils';
+import { cn, decodeHTMLEntities, formatInteger, isEmpty } from '@/lib/utils';
 import { useStore } from '@/store';
+import { ImageOff } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 
 export function CharacterTemples() {
@@ -70,7 +71,25 @@ export function CharacterTemples() {
     <div className="flex flex-col gap-y-2 px-2 bg-card">
       <div className="w-full bg-slate-200/50 dark:bg-slate-800/60 rounded-sm p-2">
         <div className="text-xs mb-1.5 opacity-70">LINK</div>
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(214px,1fr))] gap-2 w-full">
+        <div
+          className={cn(
+            'flex-1 flex flex-col items-center justify-center gap-y-1 py-8 opacity-60',
+            {
+              hidden: !isEmpty(currentLinkPageItems),
+            }
+          )}
+        >
+          <ImageOff className="size-12" />
+          <span className="text-sm">暂无LINK</span>
+        </div>
+        <div
+          className={cn(
+            'grid grid-cols-[repeat(auto-fill,minmax(214px,1fr))] gap-2 w-full',
+            {
+              hidden: isEmpty(currentLinkPageItems),
+            }
+          )}
+        >
           {currentLinkPageItems.map((item) => {
             if (!item || !item.Link) return null;
             return (
@@ -110,13 +129,33 @@ export function CharacterTemples() {
             totalPages={linkTotalPages}
             onPageChange={handleLinkPageChange}
             size="sm"
-            className="h-6.5 mt-2"
+            className={cn('h-6.5 mt-2', {
+              hidden: linkTotalPages <= 1 || isEmpty(currentLinkPageItems),
+            })}
           />
         )}
       </div>
       <div className="w-full bg-slate-200/50 dark:bg-slate-800/60 rounded-sm p-2">
         <div className="text-xs mb-1.5 opacity-70">圣殿</div>
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] gap-2 w-full">
+        <div
+          className={cn(
+            'flex-1 flex flex-col items-center justify-center gap-y-1 py-8 opacity-60',
+            {
+              hidden: !isEmpty(currentTemplePageItems),
+            }
+          )}
+        >
+          <ImageOff className="size-12" />
+          <span className="text-sm">暂无圣殿</span>
+        </div>
+        <div
+          className={cn(
+            'grid grid-cols-[repeat(auto-fill,minmax(100px,1fr))] gap-2 w-full',
+            {
+              hidden: isEmpty(currentTemplePageItems),
+            }
+          )}
+        >
           {currentTemplePageItems.map((item) => {
             return (
               <div className="flex flex-col gap-y-1">
@@ -133,7 +172,9 @@ export function CharacterTemples() {
           totalPages={templeTotalPages}
           onPageChange={handleTemplePageChange}
           size="sm"
-          className="h-6.5 mt-2"
+          className={cn('h-6.5 mt-2', {
+            hidden: templeTotalPages <= 1 || isEmpty(currentTemplePageItems),
+          })}
         />
       </div>
     </div>

@@ -78,7 +78,7 @@ export function TempleCard({ data, className }: TempleCardProps) {
           setShowLine(!showLine);
         }}
       >
-        <div className="absolute bottom-0 w-full px-2 pt-4 pb-1.5">
+        <div className="absolute bottom-0 w-full px-1 pt-4 pb-1.5">
           <div
             className={cn({
               hidden: showLine,

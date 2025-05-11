@@ -85,9 +85,11 @@ export function UserItem({
   return (
     <div className="flex flex-row gap-x-1.5">
       <div className="relative">
-        <Avatar className={cn("size-10 rounded-full border-2 border-secondary", {
-          'border-red-600': userData.State === 666,
-        })}>
+        <Avatar
+          className={cn('size-10 rounded-full border-2 border-secondary', {
+            'border-red-600': userData.State === 666,
+          })}
+        >
           <AvatarImage
             className="object-cover object-top pointer-events-none"
             src={getAvatarUrl(userData.Avatar)}
@@ -101,9 +103,12 @@ export function UserItem({
         )}
       </div>
       <div className="flex flex-col justify-center gap-y-0.5 text-xs overflow-hidden">
-        <div className="flex flex-row gap-x-1 truncate">
-          <span className="opacity-60">{index === 1 ? '主席' : index}</span>
-          {decodeHTMLEntities(userData.Nickname)}
+        <div className="flex flex-row gap-x-1">
+          <span className="opacity-60 text-nowrap">{index === 1 ? '主席' : index}</span>
+          <span className="truncate">
+            {decodeHTMLEntities(userData.Nickname)}
+            {decodeHTMLEntities(userData.Nickname)}
+          </span>
         </div>
         <Badge
           variant="secondary"

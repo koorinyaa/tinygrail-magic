@@ -273,7 +273,9 @@ export function AuctionParticipation({ onClose }: { onClose: () => void }) {
       </div>
       <div className="flex flex-row items-center h-8 gap-x-1">
         <div className="w-24 text-sm opacity-60">金额</div>
-        <div className="flex-1 w-full text-sm">
+        <div className={cn("flex-1 w-full text-sm truncate", {
+          'text-red-400 dark:text-red-600': price * amount > balance,
+        })}>
           ₵{formatCurrency(price * amount)}
         </div>
       </div>

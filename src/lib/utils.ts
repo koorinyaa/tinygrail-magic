@@ -104,17 +104,17 @@ export function getCoverUrl(
   const config = {
     large: {
       pathPattern: '/crt/m/',
-      replaceTo: '/l/',
+      replaceTo: '/crt/l/',
       cdnSuffix: '!w480',
     },
     medium: {
       pathPattern: '/crt/g/',
-      replaceTo: '/m/',
+      replaceTo: '/crt/g/',
       cdnSuffix: '!w240',
     },
     small: {
       pathPattern: '/crt/g/',
-      replaceTo: '/m/',
+      replaceTo: '/crt/m/',
       cdnSuffix: '!w150',
     },
   }[size];
