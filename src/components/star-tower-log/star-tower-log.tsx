@@ -7,7 +7,6 @@ import { Skeleton } from '@/components/ui/skeleton';
 import {
   cn,
   decodeHTMLEntities,
-  formatDateTime,
   formatInteger,
   getAvatarUrl,
   notifyError,
@@ -143,54 +142,70 @@ export function StarTowerLog() {
     switch (log.Type) {
       case 0:
         return (
-          <span className="text-pink-500 truncate">
-            星之力 @{decodeHTMLEntities(log.Nickname)} +
-            {formatInteger(log.Amount)}
+          <span className="inline-flex flex-row items-center text-pink-500 truncate">
+            <div>星之力</div>
+            <div className="max-w-22 mx-1 truncate">
+              @{decodeHTMLEntities(log.Nickname)}
+            </div>
+            <div>+{formatInteger(log.Amount)}</div>
           </span>
         );
       case 2:
         return (
-          <span className="text-pink-500 truncate">
-            鲤鱼之眼 @{decodeHTMLEntities(log.Nickname)} -
-            {formatInteger(log.Amount)}
-          </span>
+          <div className="inline-flex flex-row items-center text-pink-500 truncate">
+            <div>鲤鱼之眼</div>
+            <div className="max-w-22 mx-1 truncate">
+              @{decodeHTMLEntities(log.Nickname)}
+            </div>
+            <div>-{formatInteger(log.Amount)}</div>
+          </div>
         );
       case 3:
         return (
-          <span className="text-pink-500 truncate">
-            精炼成功 @{decodeHTMLEntities(log.Nickname)} +
-            {formatInteger(log.Amount)}
-          </span>
+          <div className="inline-flex flex-row items-center text-pink-500 truncate">
+            <div>精炼成功</div>
+            <div className="max-w-22 mx-1 truncate">
+              @{decodeHTMLEntities(log.Nickname)}
+            </div>
+            <div>+{formatInteger(log.Amount)}</div>
+          </div>
         );
       case 4:
         return (
-          <span className="text-sky-500 truncate">
-            精炼失败 @{decodeHTMLEntities(log.Nickname)} +
-            {formatInteger(log.Amount)}
-          </span>
+          <div className="inline-flex flex-row items-center text-sky-500 truncate">
+            <div>精炼失败</div>
+            <div className="max-w-22 mx-1 truncate">
+              @{decodeHTMLEntities(log.Nickname)}
+            </div>
+            <div>+{formatInteger(log.Amount)}</div>
+          </div>
         );
       default:
         return (
-          <span className="text-sky-500 truncate">
-            受到攻击 -{formatInteger(log.Amount)}
-          </span>
+          <div className="inline-flex flex-row items-center text-sky-500 truncate">
+            <div>受到攻击</div>
+            <div>-{formatInteger(log.Amount)}</div>
+          </div>
         );
     }
   };
 
   return (
-    <div className="xl:w-80 xl:min-w-80 w-full mt-6 xl:mt-0">
+    <div className="xl:w-90 xl:min-w-90 w-full mt-6 xl:mt-0">
       <Card className="p-0 gap-0">
-        <CardHeader className="pt-6 pb-2">
+        <CardHeader className="px-4 md:px-6 pt-6 pb-2">
           <CardTitle>通天塔日志</CardTitle>
         </CardHeader>
-        <CardContent className="px-6 pb-4">
+        <CardContent className="px-4 md:px-6 pb-4">
           <div className="flex flex-col gap-y-1 divide-y divide-slate-100 dark:divide-slate-800/70">
             {loading ? (
               <>
                 {Array.from({ length: 12 }).map((_, index) => (
                   <>
-                    <div key={index} className="flex flex-row items-center gap-1.5 py-1">
+                    <div
+                      key={index}
+                      className="flex flex-row items-center gap-1.5 py-1"
+                    >
                       <Skeleton className="size-10 rounded-full" />
                       <div className="flex-1 flex flex-col justify-center gap-y-0.5">
                         <Skeleton className="w-20 h-4 rounded-sm" />
@@ -255,8 +270,24 @@ export function StarTowerLog() {
                         {getLogMessage(log)}
                       </div>
                     </div>
-                    <div className="flex items-center text-xs opacity-60">
-                      {formatDateTime(log.LogTime, 'simple', true)}
+                    <div className="flex flex-col items-end text-xs opacity-60">
+                      <div>
+                        {new Date(log.LogTime)
+                          .toLocaleDateString('zh-CN', {
+                            year: 'numeric',
+                            month: '2-digit',
+                            day: '2-digit',
+                          })
+                          .replace(/\//g, '-')}
+                      </div>
+                      <div>
+                        {new Date(log.LogTime).toLocaleTimeString('zh-CN', {
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          second: '2-digit',
+                          hour12: false,
+                        })}
+                      </div>
                     </div>
                   </div>
                 ))}

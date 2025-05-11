@@ -67,8 +67,8 @@ export function StarTowerList() {
   return (
     <div className="w-full">
       <Card className="p-0 gap-0">
-        <CardHeader className="px-3 md:px-6 pt-6 pb-4 flex flex-row flex-wrap items-center justify-between">
-          <div className="text-xl font-bold w-22">通天塔(β)</div>
+        <CardHeader className="px-4 md:px-6 pt-4 md:pt-6 pb-4 flex flex-row flex-wrap items-center justify-between">
+          <div className="font-bold w-22">通天塔(β)</div>
           <PaginationWrapper
             currentPage={page}
             totalPages={Math.max(1, Math.ceil(500 / pageSize))}
