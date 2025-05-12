@@ -217,7 +217,13 @@ export function formatDateTime(
     }
 
     if (mode === 'simple') {
-      // 简化模式：使用斜杠分隔日期，例如：2023/01/01 12:34:56
+      if (showRelative) {
+        return new Intl.DateTimeFormat('zh-CN', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        }).format(date);
+      }
       return new Intl.DateTimeFormat('zh-CN', {
         year: 'numeric',
         month: '2-digit',
@@ -228,6 +234,15 @@ export function formatDateTime(
         hour12: false,
       }).format(date);
     } else {
+      if (showRelative) {
+        return new Intl.DateTimeFormat('zh-CN', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        })
+          .format(date)
+          .replace(/(\d+)\/(\d+)\/(\d+),?/, '$1年$2月$3日 ');
+      }
       return new Intl.DateTimeFormat('zh-CN', {
         year: 'numeric',
         month: '2-digit',

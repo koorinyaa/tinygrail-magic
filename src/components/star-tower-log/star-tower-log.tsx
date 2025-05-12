@@ -7,6 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import {
   cn,
   decodeHTMLEntities,
+  formatDateTime,
   formatInteger,
   getAvatarUrl,
   notifyError,
@@ -84,10 +85,12 @@ export function StarTowerLog() {
       });
 
       connection.on('ReceiveStarLog', (log: StarLogItem) => {
-        setStarLogItems((prevItems) => {
-          const newItems = [log, ...prevItems].slice(0, 12);
-          return newItems;
-        });
+        if (page === 1) {
+          setStarLogItems((prevItems) => {
+            const newItems = [log, ...prevItems].slice(0, 12);
+            return newItems;
+          });
+        }
       });
 
       // connection.on('ReceiveCharacterInitial', (data: any) => {
@@ -271,23 +274,7 @@ export function StarTowerLog() {
                       </div>
                     </div>
                     <div className="flex flex-col items-end text-xs opacity-60">
-                      <div>
-                        {new Date(log.LogTime)
-                          .toLocaleDateString('zh-CN', {
-                            year: 'numeric',
-                            month: '2-digit',
-                            day: '2-digit',
-                          })
-                          .replace(/\//g, '-')}
-                      </div>
-                      <div>
-                        {new Date(log.LogTime).toLocaleTimeString('zh-CN', {
-                          hour: '2-digit',
-                          minute: '2-digit',
-                          second: '2-digit',
-                          hour12: false,
-                        })}
-                      </div>
+                      {formatDateTime(log.LogTime, 'simple', true)}
                     </div>
                   </div>
                 ))}

@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { cn, formatCurrency, formatInteger, notifyError } from '@/lib/utils';
+import { cn, formatCurrency, formatDateTime, formatInteger, notifyError } from '@/lib/utils';
 import { useStore } from '@/store';
 import { ChevronDown, LoaderCircleIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -61,59 +61,6 @@ export function CharacterTransactionHistory() {
       notifyError(errorMessage);
     } finally {
       setLoading(false);
-    }
-  };
-
-  /**
-   * 渲染日期
-   */
-  const renderDateTime = (dateString: string) => {
-    try {
-      const date = new Date(dateString);
-      if (isNaN(date.getTime())) {
-        return null;
-      }
-
-      const now = new Date();
-      const diffMs = now.getTime() - date.getTime();
-      const diffSeconds = Math.floor(diffMs / 1000);
-      const diffMinutes = Math.floor(diffMs / (1000 * 60));
-      const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-
-      // 1分钟内显示秒数
-      if (diffSeconds < 60) {
-        return `${diffSeconds}秒前`;
-      }
-      // 1小时内显示分钟
-      else if (diffMinutes < 60) {
-        return `${diffMinutes}分钟前`;
-      }
-      // 24小时内显示小时
-      else if (diffHours < 24) {
-        return `${diffHours}小时前`;
-      }
-      // 7天内显示天数
-      else if (diffDays < 7) {
-        return `${diffDays}天前`;
-      }
-
-      return (
-        <div className="flex flex-col items-end">
-          <div className="text-xs">
-            {date
-              .toLocaleDateString('zh-CN', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
-              })
-              .replace(/\//g, '-')}
-          </div>
-        </div>
-      );
-    } catch (e) {
-      console.error(e);
-      return null;
     }
   };
 
@@ -257,7 +204,7 @@ export function CharacterTransactionHistory() {
                     {formatCurrency(item.Price, {useWUnit: true})}
                   </TableCell>
                   <TableCell className="p-1 text-right">
-                    {renderDateTime(item.Time)}
+                    {formatDateTime(item.Time, 'simple', true)}
                   </TableCell>
                 </TableRow>
               ))}

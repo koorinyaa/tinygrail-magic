@@ -373,7 +373,7 @@ export function UserOrder({
                     })}
                   </TableCell>
                   <TableCell className="p-1 text-right">
-                    {formatDateTime(item.TradeTime, 'simple')}
+                    {formatDateTime(item.TradeTime, 'simple', true)}
                   </TableCell>
                 </TableRow>
               ))}
