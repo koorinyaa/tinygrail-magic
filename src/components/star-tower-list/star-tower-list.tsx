@@ -1,10 +1,9 @@
 import { CharacterDetail, getBabel } from '@/api/character';
-import { StarTowerItem } from './star-tower-item';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { PaginationWrapper } from '@/components/ui/pagination-wrapper';
+import { Skeleton } from '@/components/ui/skeleton';
 import { cn, notifyError } from '@/lib/utils';
 import { useEffect, useRef, useState } from 'react';
-import { Skeleton } from '@/components/ui/skeleton';
+import { StarTowerItem } from './star-tower-item';
 
 /**
  * 通天塔角色列表
@@ -66,44 +65,40 @@ export function StarTowerList() {
 
   return (
     <div className="w-full">
-      <Card className="p-0 gap-0">
-        <CardHeader className="px-4 md:px-6 pt-4 md:pt-6 pb-4 flex flex-row flex-wrap items-center justify-between">
-          <div className="font-bold w-22">通天塔(β)</div>
-          <PaginationWrapper
-            currentPage={page}
-            totalPages={Math.max(1, Math.ceil(500 / pageSize))}
-            onPageChange={setPage}
-            size="sm"
-            className="flex-1 justify-end"
-          />
-        </CardHeader>
-        <CardContent className="px-3 md:px-6 pb-4">
-          <div
-            ref={containerRef}
-            className={cn('grid', {
-              'grid-cols-10': containerWidth >= 640,
-              'grid-cols-5': containerWidth < 640,
-            })}
-          >
-            {loading ? (
-              <>
-                {Array.from({ length: pageSize }).map((_, index) => (
-                  <Skeleton
-                    key={index}
-                    className="w-full aspect-square rounded-none border"
-                  />
-                ))}
-              </>
-            ) : (
-              <>
-                {characterItems.map((character) => (
-                  <StarTowerItem key={character.CharacterId} data={character} />
-                ))}
-              </>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+      <div className="mb-6 flex flex-wrap flex-row items-center justify-between">
+        <h2 className="text-xl font-bold flex-1 w-22">通天塔(β)</h2>
+        <PaginationWrapper
+          currentPage={page}
+          totalPages={Math.max(1, Math.ceil(500 / pageSize))}
+          onPageChange={setPage}
+          size="sm"
+          className="flex-1 justify-end"
+        />
+      </div>
+      <div
+        ref={containerRef}
+        className={cn('grid', {
+          'grid-cols-10': containerWidth >= 640,
+          'grid-cols-5': containerWidth < 640,
+        })}
+      >
+        {loading ? (
+          <>
+            {Array.from({ length: pageSize }).map((_, index) => (
+              <Skeleton
+                key={index}
+                className="w-full aspect-square rounded-none border border-card"
+              />
+            ))}
+          </>
+        ) : (
+          <>
+            {characterItems.map((character) => (
+              <StarTowerItem key={character.CharacterId} data={character} />
+            ))}
+          </>
+        )}
+      </div>
     </div>
   );
 }

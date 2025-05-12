@@ -17,7 +17,7 @@ export function StarTowerItem({ data }: { data: CharacterDetail }) {
     <HoverCard openDelay={100} closeDelay={0}>
       <HoverCardTrigger asChild>
         <div
-          className="relative aspect-square w-full bg-cover bg-top overflow-hidden cursor-pointer"
+          className="relative aspect-square w-full bg-cover bg-top border border-card overflow-hidden cursor-pointer"
           style={{
             backgroundImage: `url(${getAvatarUrl(data.Icon)})`,
           }}
