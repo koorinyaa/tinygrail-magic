@@ -1,6 +1,6 @@
 import { verifyAuth } from '@/lib/auth';
 import { cn } from '@/lib/utils';
-import { NotFound, StarTower, TopWeek } from '@/pages';
+import { NotFound, StarTower, TopWeek, CharacterPage } from '@/pages';
 import { useStore } from '@/store';
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
 import { ComponentProps, useEffect, useRef, useState } from 'react';
@@ -10,7 +10,7 @@ export function MainContent({
   children,
   ...props
 }: ComponentProps<typeof ScrollAreaPrimitive.Root>) {
-  const { currentPage, setUserAssets } = useStore();
+  const { currentPage, setContainerRef, toTop, setUserAssets } = useStore();
   const containerRef = useRef<HTMLDivElement>(null);
   const [currentComponent, setCurrentComponent] = useState<JSX.Element>(
     <div />
@@ -19,8 +19,13 @@ export function MainContent({
   const PAGE_COMPONENTS = {
     topWeek: TopWeek,
     starTower: StarTower,
+    character: CharacterPage,
     default: NotFound,
   } as const;
+
+  useEffect(() => {
+    setContainerRef(containerRef);
+  }, [containerRef]);
 
   useEffect(() => {
     verifyAuth(setUserAssets);
@@ -29,7 +34,7 @@ export function MainContent({
       PAGE_COMPONENTS.default;
     setCurrentComponent(<Component />);
     // 滚动到顶部
-    if (containerRef.current) containerRef.current.scrollTop = 0;
+    toTop();
   }, [currentPage.main.id]);
 
   return (

@@ -42,8 +42,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           icon: Sparkles,
         },
         {
-          name: '市场',
-          id: 'market',
+          name: '角色',
+          id: 'character',
           icon: BadgeCent,
         },
         {
@@ -99,7 +99,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" className="hover:bg-transparent active:bg-transparent" asChild>
+            <SidebarMenuButton
+              size="lg"
+              className="hover:bg-transparent active:bg-transparent"
+              asChild
+            >
               <div>
                 <div className="text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                   <Tinygrail className="size-full" />

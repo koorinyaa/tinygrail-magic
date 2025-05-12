@@ -178,6 +178,7 @@ export async function getTopWeekHistory(
  * @property {number} MarketValue - 市场价值
  * @property {number} Sacrifices - 固定资产上限
  * @property {number} StarForces - 星之力
+ * @property {number} NextStar - 下一级星之力（未知）
  * @property {number} Stars - 星级
  * @property {number} Rank - 通天塔排名
  * @property {number} SubjectId - 所属主题ID
@@ -215,7 +216,7 @@ export interface CharacterDetail {
   Stars: number;
   Rank: number;
   SubjectId: number;
-  SubjectName: string;
+  SubjectName: string | null;
   AirDate: string;
   ListedDate: string;
   LastUpdate: string;
@@ -697,7 +698,6 @@ export async function getCharacterAuctionList(
   }
 }
 
-
 /**
  * 获取通天塔角色数据
  * @param {number} page - 页码
@@ -710,7 +710,9 @@ export async function getBabel(
 ): Promise<TinygrailBaseResponse<CharacterDetail[]>> {
   page = Math.max(page, 1);
   try {
-    return await httpService.get<TinygrailBaseResponse<CharacterDetail[]>>(`/chara/babel/${page}/${pageSize}`);
+    return await httpService.get<TinygrailBaseResponse<CharacterDetail[]>>(
+      `/chara/babel/${page}/${pageSize}`
+    );
   } catch (error) {
     throw error;
   }
@@ -752,7 +754,7 @@ export interface StarLogItem {
   Loss: number;
   LogTime: string;
   Type: number;
-}0
+}
 
 /**
  * 通天塔日志分页数据
@@ -772,7 +774,8 @@ export interface StarLogPageValue {
   Context: any;
 }
 
-export interface StarLogResponse extends TinygrailBaseResponse<StarLogPageValue> {}
+export interface StarLogResponse
+  extends TinygrailBaseResponse<StarLogPageValue> {}
 
 /**
  * 获取通天塔日志

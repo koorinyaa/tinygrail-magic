@@ -1,5 +1,5 @@
 import { httpService, TinygrailBaseResponse } from '@/lib/http';
-import { TempleItem } from './character';
+import { CharacterDetail, TempleItem } from './character';
 
 export const AUTHORIZE_URL =
   'https://bgm.tv/oauth/authorize?response_type=code&client_id=bgm2525b0e4c7d93fec&redirect_uri=https%3A%2F%2Ftinygrail.com%2Fapi%2Faccount%2Fcallback';
@@ -250,7 +250,8 @@ export interface UserTradingValue {
   BidHistory: TradeHistoryItem[];
 }
 
-export interface UserTradingResponse extends TinygrailBaseResponse<UserTradingValue> {}
+export interface UserTradingResponse
+  extends TinygrailBaseResponse<UserTradingValue> {}
 
 /**
  * 获取用户角色交易数据
@@ -284,7 +285,9 @@ export async function bidCharacter(
   isIce?: boolean
 ): Promise<TinygrailBaseResponse<string>> {
   try {
-    const url = `/chara/bid/${characterId}/${price}/${amount}${isIce ? '/true' : ''}`;
+    const url = `/chara/bid/${characterId}/${price}/${amount}${
+      isIce ? '/true' : ''
+    }`;
     return await httpService.post<TinygrailBaseResponse<string>>(url);
   } catch (error) {
     throw error;
@@ -306,7 +309,9 @@ export async function askCharacter(
   isIce?: boolean
 ): Promise<TinygrailBaseResponse<string>> {
   try {
-    const url = `/chara/ask/${characterId}/${price}/${amount}${isIce ? '/true' : ''}`;
+    const url = `/chara/ask/${characterId}/${price}/${amount}${
+      isIce ? '/true' : ''
+    }`;
     return await httpService.post<TinygrailBaseResponse<string>>(url);
   } catch (error) {
     throw error;
@@ -429,7 +434,52 @@ export async function getAuctionList(
 ): Promise<TinygrailBaseResponse<AuctionItem[]>> {
   try {
     const url = `/chara/auction/list`;
-    return await httpService.post<TinygrailBaseResponse<AuctionItem[]>>(url, auctionIds);
+    return await httpService.post<TinygrailBaseResponse<AuctionItem[]>>(
+      url,
+      auctionIds
+    );
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * 用户所持角色列表
+ * @property {number} CurrentPage - 当前页码
+ * @property {number} TotalPages - 总页数
+ * @property {number} TotalItems - 数据总数
+ * @property {number} ItemsPerPage - 每页数量
+ * @property {CharacterDetail[]} Items - 角色列表
+ * @property {any} Context - 上下文信息
+ */
+export interface UserCharaPageValue {
+  CurrentPage: number;
+  TotalPages: number;
+  TotalItems: number;
+  ItemsPerPage: number;
+  Items: CharacterDetail[];
+  Context: any;
+}
+
+export interface UserCharaResponse
+  extends TinygrailBaseResponse<UserCharaPageValue> {}
+
+/**
+ * 获取用户所持角色列表
+ * @param {string} userName - 用户名
+ * @param {number} [page] - 页码
+ * @param {number} [pageSize] - 每页数量
+ * @returns {Promise<UserCharaResponse>} - 用户所持角色列表数据
+ */
+export async function getUserCharaList(
+  userName: string,
+  page: number = 1,
+  pageSize: number = 24
+): Promise<UserCharaResponse> {
+  page = Math.max(page, 1);
+  try {
+    const url = `/chara/user/chara/${userName}/${page}/${pageSize}`;
+    return await httpService.get<UserCharaResponse>(url);
   } catch (error) {
     throw error;
   }

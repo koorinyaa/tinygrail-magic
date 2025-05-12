@@ -248,6 +248,7 @@ export function StarTowerLog() {
                                 log.Rank <= 500,
                             }
                           )}
+                          title="通天塔排名"
                         >
                           #{log.Rank}
                         </Badge>
@@ -263,6 +264,7 @@ export function StarTowerLog() {
                                   log.OldRank < log.Rank,
                               }
                             )}
+                            title="排名变化"
                           >
                             <span>{log.OldRank > log.Rank ? '↑' : '↓'}</span>
                             <span>{Math.abs(log.OldRank - log.Rank)}</span>

@@ -1,4 +1,5 @@
 export { NotFound } from './not-found';
 export { StarTower } from './star-tower';
 export { TopWeek } from './top-week';
+export { CharacterPage } from './character-page';
 

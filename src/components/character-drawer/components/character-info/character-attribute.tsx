@@ -1,3 +1,5 @@
+import { StarLevel } from '@/components/star-level';
+import { TowerRankBadge } from '@/components/tower-rank-badge';
 import { Badge } from '@/components/ui/badge';
 import BadgeLevel from '@/components/ui/badge-level';
 import { cn, formatCurrency } from '@/lib/utils';
@@ -5,8 +7,6 @@ import { useStore } from '@/store';
 import { Copy, Crown } from 'lucide-react';
 import { TbX } from 'react-icons/tb';
 import { toast } from 'sonner';
-import { StarLevel } from '@/components/star-level';
-import { TowerRankBadge } from './tower-rank-badge';
 
 /**
  * 角色属性
@@ -22,6 +22,8 @@ export function CharacterAttribute() {
     Bonus: bonus = 0,
     Fluctuation: fluctuation = 0,
     Stars: stars = 0,
+    Rank: rank = 0,
+    StarForces: starForces = 0,
   } = characterDrawerData.characterDetailData || {};
 
   /**
@@ -98,7 +100,7 @@ export function CharacterAttribute() {
             <Copy className="size-3" />
           </div>
         </div>
-        <TowerRankBadge />
+        <TowerRankBadge rank={rank} starForces={starForces} />
       </div>
       <div className="flex flex-row flex-wrap items-center mt-1.5 gap-2">
         <div className="flex flex-wrap items-center md:justify-start gap-1">
