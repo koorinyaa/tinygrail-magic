@@ -145,9 +145,9 @@ export function StarTowerLog() {
     switch (log.Type) {
       case 0:
         return (
-          <span className="inline-flex flex-row items-center text-pink-500 truncate">
+          <span className="inline-flex flex-row items-center text-pink-500 w-full whitespace-nowrap overflow-hidden">
             <div>星之力</div>
-            <div className="max-w-22 mx-1 truncate">
+            <div className="mx-1 truncate">
               @{decodeHTMLEntities(log.Nickname)}
             </div>
             <div>+{formatInteger(log.Amount)}</div>
@@ -155,9 +155,9 @@ export function StarTowerLog() {
         );
       case 2:
         return (
-          <div className="inline-flex flex-row items-center text-pink-500 truncate">
+          <div className="inline-flex flex-row items-center text-pink-500 w-full whitespace-nowrap overflow-hidden">
             <div>鲤鱼之眼</div>
-            <div className="max-w-22 mx-1 truncate">
+            <div className="mx-1 truncate">
               @{decodeHTMLEntities(log.Nickname)}
             </div>
             <div>-{formatInteger(log.Amount)}</div>
@@ -165,9 +165,9 @@ export function StarTowerLog() {
         );
       case 3:
         return (
-          <div className="inline-flex flex-row items-center text-pink-500 truncate">
+          <div className="inline-flex flex-row items-center text-pink-500 w-full whitespace-nowrap overflow-hidden">
             <div>精炼成功</div>
-            <div className="max-w-22 mx-1 truncate">
+            <div className="mx-1 truncate">
               @{decodeHTMLEntities(log.Nickname)}
             </div>
             <div>+{formatInteger(log.Amount)}</div>
@@ -175,9 +175,9 @@ export function StarTowerLog() {
         );
       case 4:
         return (
-          <div className="inline-flex flex-row items-center text-sky-500 truncate">
+          <div className="inline-flex flex-row items-center text-sky-500 w-full whitespace-nowrap overflow-hidden">
             <div>精炼失败</div>
-            <div className="max-w-22 mx-1 truncate">
+            <div className="mx-1 truncate">
               @{decodeHTMLEntities(log.Nickname)}
             </div>
             <div>+{formatInteger(log.Amount)}</div>
@@ -185,9 +185,9 @@ export function StarTowerLog() {
         );
       default:
         return (
-          <div className="inline-flex flex-row items-center text-sky-500 truncate">
+          <div className="inline-flex flex-row items-center text-sky-500 w-full whitespace-nowrap overflow-hidden">
             <div>受到攻击</div>
-            <div>-{formatInteger(log.Amount)}</div>
+            <div className="truncate">-{formatInteger(log.Amount)}</div>
           </div>
         );
     }
