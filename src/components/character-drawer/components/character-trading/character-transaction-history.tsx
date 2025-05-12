@@ -129,7 +129,7 @@ export function CharacterTransactionHistory() {
   };
 
   return (
-    <div className="w-full h-fit flex flex-col">
+    <div className="w-full h-75 flex flex-col">
       <div
         className={cn('flex-1 flex items-center justify-center', {
           hidden: !loading,
