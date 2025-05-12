@@ -77,8 +77,9 @@ export function AuctionParticipation({ onClose }: { onClose: () => void }) {
     setLoading(true);
     try {
       const resp = await getAuctionList([characterId]);
-      if (resp.State == 0 && resp.Value.length > 0) {
+      if (resp.State == 0) {
         if (
+          resp.Value.length > 0 &&
           resp.Value[0].Id > 0 &&
           resp.Value[0].Price > 0 &&
           resp.Value[0].Amount > 0
