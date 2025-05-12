@@ -41,7 +41,7 @@ export function MainContent({
     <div
       ref={containerRef}
       className={cn(
-        '!h-[calc(100dvh-3.5rem)] h-[calc(100vh-3.5rem)] md:!h-[calc(100dvh-4.5rem)] md:h-[calc(100vh-4.5rem)] w-full px-4 sm:px-6 lg:px-8 py-8 overflow-auto',
+        '!h-[calc(100dvh-3.5rem)] h-[calc(100vh-3.5rem)] md:!h-[calc(100dvh-4.5rem)] md:h-[calc(100vh-4.5rem)] w-full px-4 sm:px-6 lg:px-8 py-8 scroll-smooth overflow-auto',
         className
       )}
       {...props}

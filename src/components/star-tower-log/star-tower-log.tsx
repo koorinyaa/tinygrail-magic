@@ -222,6 +222,7 @@ export function StarTowerLog() {
               <>
                 {starLogItems.map((log) => (
                   <div
+                    key={log.Id}
                     className="flex flex-row items-center gap-1.5 cursor-pointer py-1"
                     onClick={() => {
                       openCharacterDrawer(log.CharacterId);

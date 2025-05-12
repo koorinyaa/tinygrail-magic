@@ -33,7 +33,9 @@ export const createPageSlice: StateCreator<PageState> = (set) => ({
   setContainerRef: (ref) => set({ containerRef: ref }),
   toTop: () =>
     set((state) => {
-      if (state.containerRef?.current) state.containerRef.current.scrollTop = 0;
+      if (state.containerRef?.current) {
+        state.containerRef.current.scrollTop = 0;
+      }
       return {};
     }),
 });
