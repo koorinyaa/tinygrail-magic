@@ -2,7 +2,12 @@ import { CharacterDetail } from '@/api/character';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import BadgeLevel from '@/components/ui/badge-level';
 import { Card } from '@/components/ui/card';
-import { formatCurrency, formatInteger, getAvatarUrl } from '@/lib/utils';
+import {
+  decodeHTMLEntities,
+  formatCurrency,
+  formatInteger,
+  getAvatarUrl,
+} from '@/lib/utils';
 import { useStore } from '@/store';
 
 /**
@@ -58,7 +63,7 @@ export function GensokyoCard({ data }: { data: CharacterDetail }) {
         </Avatar>
         <div className="flex-1 flex flex-col items-center justify-center w-full">
           <div className="flex flex-row items-center justify-center text-md text-foreground font-semibold w-full overflow-hidden">
-            <span className="truncate">{name}</span>
+            <span className="truncate">{decodeHTMLEntities(name)}</span>
             <BadgeLevel level={level} zeroCount={zeroCount} />
           </div>
           <div className="flex items-center gap-1 mt-0.5 text-xs cursor-pointer opacity-60">

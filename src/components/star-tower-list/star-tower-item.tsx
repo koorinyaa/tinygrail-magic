@@ -5,7 +5,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from '@/components/ui/hover-card';
-import { getAvatarUrl, cn, formatInteger } from '@/lib/utils';
+import { getAvatarUrl, cn, formatInteger, decodeHTMLEntities } from '@/lib/utils';
 import { useStore } from '@/store';
 
 /**
@@ -32,7 +32,7 @@ export function StarTowerItem({ data }: { data: CharacterDetail }) {
             )}
           >
             <div className="absolute bottom-0 w-full px-0.5 pt-4 pb-0.5 text-xs truncate">
-              {data.Name}
+              {decodeHTMLEntities(data.Name)}
             </div>
           </div>
         </div>

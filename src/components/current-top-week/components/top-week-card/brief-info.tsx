@@ -1,6 +1,11 @@
 import { CurrentTopWeekItem } from '@/api/character';
 import BadgeLevel from '@/components/ui/badge-level';
-import { cn, formatCurrency, formatInteger } from '@/lib/utils';
+import {
+  cn,
+  decodeHTMLEntities,
+  formatCurrency,
+  formatInteger,
+} from '@/lib/utils';
 
 /**
  * 简要信息区域组件
@@ -19,7 +24,7 @@ export function BriefInfo({ data }: { data: CurrentTopWeekItem }) {
         <div className="flex flex-col">
           <div className="flex flex-row">
             <span className="text-xs font-bold truncate">
-              {data.CharacterName}
+              {decodeHTMLEntities(data.CharacterName)}
             </span>
             <BadgeLevel level={data.CharacterLevel} />
           </div>

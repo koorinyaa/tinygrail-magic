@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PaginationWrapper } from '@/components/ui/pagination-wrapper';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
+  decodeHTMLEntities,
   formatDateTime,
   formatInteger,
   getAvatarUrl,
@@ -190,7 +191,9 @@ export function RecentCharacterLog() {
                     </Avatar>
                     <div className="flex-1 flex flex-col justify-center gap-y-0.5 overflow-hidden">
                       <div className="flex items-center text-sm font-bold overflow-hidden">
-                        <span className="truncate">{chara.Name}</span>
+                        <span className="truncate">
+                          {decodeHTMLEntities(chara.Name)}
+                        </span>
                       </div>
                       <div className="flex flex-row flex-wrap gap-x-1 gap-y-0.5 text-xs opacity-60 truncate">
                         <span>

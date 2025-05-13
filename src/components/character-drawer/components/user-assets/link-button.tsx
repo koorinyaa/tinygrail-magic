@@ -1,5 +1,5 @@
 import { Link } from '@/components/link';
-import { cn, isEmpty } from '@/lib/utils';
+import { cn, decodeHTMLEntities, isEmpty } from '@/lib/utils';
 import { useStore } from '@/store';
 import { ArrowUpRight } from 'lucide-react';
 import { useState } from 'react';
@@ -53,7 +53,7 @@ export function LinkButton() {
             >
               跳转至
               <span className="text-blue-600">
-                {link?.Name}
+                {decodeHTMLEntities(link?.Name || '')}
                 <ArrowUpRight className="size-4 mb-px inline-block" />
               </span>
             </div>

@@ -26,6 +26,17 @@ export function decodeHTMLEntities(str: string): string {
 }
 
 /**
+ * 编码HTML实体
+ * @param {string} str - 字符串
+ * @returns {string}
+ */
+export function encodeHTMLEntities(str: string): string {
+  const element = document.createElement('div');
+  element.textContent = str;
+  return element.innerHTML;
+}
+
+/**
  * 判断是否为空
  * @param {T} value - 值
  * @returns {boolean}
@@ -369,4 +380,22 @@ export function notifyError(message: string) {
  */
 export async function sleep(ms: number): Promise<void> {
   return new Promise<void>((resolve) => setTimeout(resolve, ms));
+}
+
+/**
+ * URL编码（百分号编码）
+ * @param {string} str - 要编码的字符串
+ * @returns {string} - URL编码后的字符串
+ */
+export function urlEncode(str: string): string {
+  return encodeURIComponent(str);
+}
+
+/**
+ * URL解码（百分号解码）
+ * @param {string} str - 要解码的字符串
+ * @returns {string} - URL解码后的字符串
+ */
+export function urlDecode(str: string): string {
+  return decodeURIComponent(str);
 }

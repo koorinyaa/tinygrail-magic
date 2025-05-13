@@ -1,7 +1,12 @@
 import { HistoryTopWeekItem } from '@/api/character';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import BadgeLevel from '@/components/ui/badge-level';
-import { formatCurrency, formatInteger, getAvatarUrl } from '@/lib/utils';
+import {
+  decodeHTMLEntities,
+  formatCurrency,
+  formatInteger,
+  getAvatarUrl,
+} from '@/lib/utils';
 import { useStore } from '@/store';
 import { UsersRound } from 'lucide-react';
 
@@ -48,7 +53,7 @@ export function Item({ data }: { data: HistoryTopWeekItem }) {
         </Avatar>
         <div className="flex flex-col gap-y-1 flex-1 overflow-hidden">
           <div className="flex items-center text-sm">
-            <span className="truncate">{Name}</span>
+            <span className="truncate">{decodeHTMLEntities(Name || '')}</span>
             <BadgeLevel level={CharacterLevel} />
           </div>
           {/* <div

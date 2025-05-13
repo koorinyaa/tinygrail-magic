@@ -239,7 +239,7 @@ export function StarTowerLog() {
                     </Avatar>
                     <div className="flex-1 flex flex-col justify-center gap-y-0.5 overflow-hidden">
                       <div className="flex items-center text-sm font-bold overflow-hidden">
-                        <span className="truncate">{log.CharacterName}</span>
+                        <span className="truncate">{decodeHTMLEntities(log.CharacterName)}</span>
                         <Badge
                           variant="secondary"
                           className={cn(

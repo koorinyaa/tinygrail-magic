@@ -1,5 +1,5 @@
 import { TempleItem } from '@/api/character';
-import { cn, getAvatarUrl, getCoverUrl } from '@/lib/utils';
+import { cn, decodeHTMLEntities, getAvatarUrl, getCoverUrl } from '@/lib/utils';
 import { useStore } from '@/store';
 import { useEffect, useState } from 'react';
 import { PhotoProvider, PhotoView } from 'react-photo-view';
@@ -83,7 +83,7 @@ export function Link({
                 >
                   <div className="absolute bottom-0 w-full px-2 pt-4 pb-1.5">
                     <div className="text-xs w-20 truncate">
-                      {leftLink.CharacterName}
+                      {decodeHTMLEntities(leftLink.CharacterName)}
                     </div>
                   </div>
                 </div>
@@ -118,7 +118,7 @@ export function Link({
             >
               <div className="absolute bottom-0 w-full px-2 pt-4 pb-1.5">
                 <div className="text-xs w-20 truncate">
-                  {leftLink.CharacterName}
+                  {decodeHTMLEntities(leftLink.CharacterName)}
                 </div>
               </div>
             </div>
@@ -163,7 +163,7 @@ export function Link({
                 >
                   <div className="absolute bottom-0 w-full px-2 pt-4 pb-1.5">
                     <div className="text-xs text-right w-25 truncate">
-                      {rightLink.CharacterName}
+                      {decodeHTMLEntities(rightLink.CharacterName)}
                     </div>
                   </div>
                 </div>
@@ -198,7 +198,7 @@ export function Link({
             >
               <div className="absolute bottom-0 w-full px-2 pt-4 pb-1.5">
                 <div className="text-xs text-right w-25 truncate">
-                  {rightLink.CharacterName}
+                  {decodeHTMLEntities(rightLink.CharacterName)}
                 </div>
               </div>
             </div>

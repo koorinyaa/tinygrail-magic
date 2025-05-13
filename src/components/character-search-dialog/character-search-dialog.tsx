@@ -12,7 +12,13 @@ import {
 } from '@/components/ui/command';
 import { Separator } from '@/components/ui/separator';
 import { useDebounce } from '@/hooks/use-debounce';
-import { formatInteger, getAvatarUrl, isEmpty } from '@/lib/utils';
+import {
+  decodeHTMLEntities,
+  formatInteger,
+  getAvatarUrl,
+  isEmpty,
+  urlEncode,
+} from '@/lib/utils';
 import { useStore } from '@/store';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
@@ -65,7 +71,7 @@ export function CharacterSearchDialog({
   const fetchResults = async () => {
     if (isEmpty(userAssets)) return;
     try {
-      const response = await searchCharacter(debouncedSearchTerm);
+      const response = await searchCharacter(urlEncode(debouncedSearchTerm));
       if (response.State !== 0) {
         setSearchResults([]);
         throw new Error(response.Message || '搜索失败');
@@ -119,14 +125,14 @@ export function CharacterSearchDialog({
                   <AvatarImage
                     className="object-cover object-top"
                     src={getAvatarUrl(character.Icon)}
-                    alt={character.Name}
+                    alt={decodeHTMLEntities(character.Name)}
                   />
                   <AvatarFallback className="rounded-lg">C</AvatarFallback>
                 </Avatar>
                 <div className="flex-1 flex flex-col gap-1 overflow-hidden">
                   <div className="flex items-center text-sm font-normal">
                     <span className="truncate">
-                      #{character.CharacterId}「{character.Name}」
+                      #{character.CharacterId}「{decodeHTMLEntities(character.Name)}」
                     </span>
                     <BadgeLevel
                       level={character.Level}

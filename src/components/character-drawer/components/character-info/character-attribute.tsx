@@ -2,7 +2,7 @@ import { StarLevel } from '@/components/star-level';
 import { TowerRankBadge } from '@/components/tower-rank-badge';
 import { Badge } from '@/components/ui/badge';
 import BadgeLevel from '@/components/ui/badge-level';
-import { cn, formatCurrency } from '@/lib/utils';
+import { cn, decodeHTMLEntities, formatCurrency } from '@/lib/utils';
 import { useStore } from '@/store';
 import { Copy, Crown } from 'lucide-react';
 import { TbX } from 'react-icons/tb';
@@ -88,7 +88,7 @@ export function CharacterAttribute() {
       <div className="flex flex-row gap-x-8">
         <div className="flex-1 flex flex-col overflow-hidden">
           <div className="flex flex-row items-center text-md text-foreground font-semibold">
-            <span className="truncate">{name}</span>
+            <span className="truncate">{decodeHTMLEntities(name)}</span>
             <BadgeLevel level={level} zeroCount={zeroCount} />
           </div>
           <div
