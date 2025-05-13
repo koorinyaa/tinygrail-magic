@@ -96,11 +96,11 @@ export function TinygrailCharacters() {
 
   return (
     <div className="flex flex-col">
-      <div className="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-2 w-full">
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-2 w-full">
         {loading ? (
           <>
             {Array.from({ length: 24 }).map((_, index) => (
-              <Skeleton key={index} className="h-50 w-full rounded-md" />
+              <Skeleton key={index} className="h-48 w-full rounded-md" />
             ))}
           </>
         ) : (

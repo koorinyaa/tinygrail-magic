@@ -48,7 +48,7 @@ export function GensokyoCard({ data }: { data: CharacterDetail }) {
         openCharacterDrawer(characterId);
       }}
     >
-      <div className="h-44 flex flex-col items-center gap-y-2 p-5">
+      <div className="h-42 flex flex-col items-center gap-y-2 p-4">
         <Avatar className="size-12 rounded-full border-2 border-secondary">
           <AvatarImage
             className="object-cover object-top pointer-events-none"

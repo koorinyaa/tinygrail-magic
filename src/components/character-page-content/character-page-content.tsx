@@ -21,11 +21,11 @@ export function CharacterPageContent() {
   const categories = [
     { value: 'tinygrail', label: '英灵殿' },
     { value: 'gensokyo', label: '幻想乡' },
-    // { value: 'st', label: 'ST' },
-    // { value: 'msrc', label: '最高股息' },
-    // { value: 'mvc', label: '最高市值' },
-    // { value: 'mrc', label: '最大涨幅' },
-    // { value: 'mfc', label: '最大跌幅' },
+    { value: 'st', label: 'ST' },
+    { value: 'msrc', label: '最高股息' },
+    { value: 'mvc', label: '最高市值' },
+    { value: 'mrc', label: '最大涨幅' },
+    { value: 'mfc', label: '最大跌幅' },
   ];
 
   const renderContent = () => {

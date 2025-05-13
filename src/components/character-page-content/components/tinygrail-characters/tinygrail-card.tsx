@@ -52,12 +52,12 @@ export function TinygrailCard({
 
   return (
     <Card
-      className="h-50 gap-y-2 border-0 rounded-md shadow p-0 overflow-hidden cursor-pointer hover:shadow-md transition duration-300"
+      className="h-48 gap-y-2 border-0 rounded-md shadow p-0 overflow-hidden cursor-pointer hover:shadow-md transition duration-300"
       onClick={() => {
         openCharacterDrawer(characterId);
       }}
     >
-      <div className="flex flex-col items-center gap-y-2 pt-5 px-5">
+      <div className="flex flex-col items-center gap-y-2 pt-4 px-4">
         <Avatar className="size-12 rounded-full border-2 border-secondary">
           <AvatarImage
             className="object-cover object-top pointer-events-none"
@@ -90,7 +90,7 @@ export function TinygrailCard({
       <Button
         variant="ghost"
         className={cn(
-          'w-full text-sm font-medium border-t rounded-none opacity-80 hover:bg-transparent dark:hover:bg-transparent hover:opacity-100',
+          'flex items-center justify-center w-full h-8 text-sm font-medium border-t rounded-none opacity-80 hover:bg-transparent dark:hover:bg-transparent hover:opacity-100',
           {
             'text-(--success) hover:text-(--success)': auctionInfo,
           }
