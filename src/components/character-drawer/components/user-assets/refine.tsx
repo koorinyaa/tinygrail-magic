@@ -16,6 +16,11 @@ import { useEffect, useState } from 'react';
 import { AiFillStar } from 'react-icons/ai';
 import { toast } from 'sonner';
 import { onTemplesChange } from '../../service/user';
+import {
+  fetchCharacterDetailData,
+  fetchCharacterPoolAmount,
+  fetchGensokyoCharacterData,
+} from '../../service/character';
 
 /**
  * 精炼
@@ -108,6 +113,26 @@ export function Refine() {
         userAssets.name,
         setCharacterDrawerData
       );
+
+      // 获取幻想乡数据
+      const gensokyoCharacterData = await fetchGensokyoCharacterData(
+        characterDrawer.characterId
+      );
+      // 获取奖池数量
+      const characterPoolAmount = await fetchCharacterPoolAmount(
+        characterDrawer.characterId
+      );
+
+      // 获取角色详情
+      const characterDetailData = await fetchCharacterDetailData(
+        characterDrawer.characterId
+      );
+
+      setCharacterDrawerData({
+        gensokyoCharacterData,
+        characterPoolAmount,
+        characterDetailData,
+      });
 
       // 更新余额
       verifyAuth(setUserAssets);

@@ -6,14 +6,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { RefObject, useState } from 'react';
+import { useState } from 'react';
 import { GensokyoCharacters } from './components/gensokyo-characters';
 import { TinygrailCharacters } from './components/tinygrail-characters';
 
 /**
  * 角色内容区域
  * @param props
- * @param {RefObject<HTMLDivElement>} props.containerRef 容器Ref
  */
 export function CharacterPageContent() {
   const [selectedCategory, setSelectedCategory] = useState('tinygrail'); // 选中的分类

@@ -174,7 +174,7 @@ export function RecentCharacterLog() {
                 {recentCharacterItems.map((chara) => (
                   <div
                     key={chara.Id}
-                    className="flex flex-row items-center gap-1.5 cursor-pointer py-1"
+                    className="flex flex-row gap-1.5 cursor-pointer py-1"
                     onClick={() => {
                       openCharacterDrawer(chara.CharacterId);
                     }}
@@ -213,7 +213,7 @@ export function RecentCharacterLog() {
                         </span>
                       </div>
                     </div>
-                    <div className="flex flex-col items-end text-xs opacity-60">
+                    <div className="flex flex-col items-end justify-center text-xs opacity-60">
                       {formatDateTime(
                         new Date(chara.LastOrder) > new Date(chara.LastDeal)
                           ? chara.LastOrder
