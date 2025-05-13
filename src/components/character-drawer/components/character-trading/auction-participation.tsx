@@ -40,7 +40,7 @@ export function AuctionParticipation({ onClose }: { onClose: () => void }) {
   } = characterDrawerData.tinygrailCharacterData || {};
   // 起拍价
   const { Price: reservePrice = 0 } =
-    characterDrawerData.characterDetailData || {};
+    characterDrawerData.tinygrailCharacterData || {};
   // 加载中
   const [loading, setLoading] = useState(false);
   // 当前拍卖信息
