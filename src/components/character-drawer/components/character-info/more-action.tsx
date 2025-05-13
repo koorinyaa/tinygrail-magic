@@ -52,7 +52,7 @@ export function MoreAction() {
       onClick: updateCharacterInfo,
     },
     {
-      label: 'FUYUAKE',
+      label: 'fuyuake',
       onClick: () => {
         window.open(`https://fuyuake.top/xsb/chara/${characterId}`);
       },

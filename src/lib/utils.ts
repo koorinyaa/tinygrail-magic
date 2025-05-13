@@ -60,8 +60,18 @@ export function formatCurrency(
     useWUnit?: boolean;
   }
 ): string {
-  const shouldConvert = options?.useWUnit && Math.abs(value) >= 100000;
-  const convertedValue = shouldConvert ? value / 10000 : value;
+  let convertedValue = value;
+  let suffix = '';
+  
+  if (options?.useWUnit) {
+    if (Math.abs(value) >= 100000000) { // 1亿及以上用e
+      convertedValue = value / 100000000;
+      suffix = 'e';
+    } else if (Math.abs(value) >= 10000) { // 1万及以上用w
+      convertedValue = value / 10000;
+      suffix = 'w';
+    }
+  }
 
   const isInteger = Number.isInteger(convertedValue);
   const maxDigits = options?.maximumFractionDigits ?? (isInteger ? 0 : 2);
@@ -75,7 +85,7 @@ export function formatCurrency(
     ...(useRounding ? { roundingMode: 'halfExpand' as const } : {}),
   });
 
-  return shouldConvert ? `${result}w` : result;
+  return result + suffix;
 }
 
 /**

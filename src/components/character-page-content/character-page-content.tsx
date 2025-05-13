@@ -8,7 +8,9 @@ import {
 } from '@/components/ui/select';
 import { useState } from 'react';
 import { GensokyoCharacters } from './components/gensokyo-characters';
+import { STCharacters } from './components/st-characters';
 import { TinygrailCharacters } from './components/tinygrail-characters';
+import { RankCharacters } from './components/rank-characters';
 
 /**
  * 角色内容区域
@@ -34,6 +36,16 @@ export function CharacterPageContent() {
         return <TinygrailCharacters />;
       case 'gensokyo':
         return <GensokyoCharacters />;
+      case 'st':
+        return <STCharacters />;
+      case 'msrc':
+        return <RankCharacters type="msrc" />;
+      case 'mvc':
+        return <RankCharacters type="mvc" />;
+      case 'mrc':
+        return <RankCharacters type="mrc" />;
+      case 'mfc':
+        return <RankCharacters type="mfc" />;
     }
   };
 

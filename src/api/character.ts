@@ -837,3 +837,68 @@ export async function getRecentCharacters(
     throw error;
   }
 }
+
+/**
+ * 取消ST角色分页数据
+ * @property {number} CurrentPage - 当前页码
+ * @property {number} TotalPages - 总页数
+ * @property {number} TotalItems - 数据总数
+ * @property {number} ItemsPerPage - 每页数量
+ * @property {CharacterDetail[]} Items - 角色列表
+ * @property {any} Context - 上下文信息
+ */
+export interface STCharacterPageValue {
+  CurrentPage: number;
+  TotalPages: number;
+  TotalItems: number;
+  ItemsPerPage: number;
+  Items: CharacterDetail[];
+  Context: any;
+}
+
+export interface STCharacterResponse
+  extends TinygrailBaseResponse<STCharacterPageValue> {}
+
+/**
+ * 获取ST角色列表
+ * @param {number} [page] - 页码
+ * @param {number} [pageSize] - 每页数量
+ * @returns {Promise<STCharacterResponse>} - ST角色数据
+ */
+export async function getDelistCharacters(
+  page: number = 1,
+  pageSize: number = 24
+): Promise<STCharacterResponse> {
+  page = Math.max(page, 1);
+  pageSize = Math.max(pageSize, 1);
+  try {
+    return await httpService.get<STCharacterResponse>(
+      `/chara/delist/chara/${page}/${pageSize}`
+    );
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * 获取角色排名列表
+ * @param {'msrc' | 'mvc' | 'mrc'| 'mfc'} page - 排名类型（msrc：最高股息，mvc：最高市值，mrc：最大涨幅，mfc：最大跌幅）
+ * @param {number} [page] - 页码
+ * @param {number} [pageSize] - 每页数量
+ * @returns {Promise<TinygrailBaseResponse<CharacterDetail[]>>} - 角色排名数据
+ */
+export async function getRankCharacters(
+  type: 'msrc' | 'mvc' | 'mrc'| 'mfc',
+  page: number = 1,
+  pageSize: number = 24
+): Promise<TinygrailBaseResponse<CharacterDetail[]>> {
+  page = Math.max(page, 1);
+  pageSize = Math.max(pageSize, 1);
+  try {
+    return await httpService.get<TinygrailBaseResponse<CharacterDetail[]>>(
+      `/chara/${type}/${page}/${pageSize}`
+    );
+  } catch (error) {
+    throw error;
+  }
+}
