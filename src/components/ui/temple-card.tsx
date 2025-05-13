@@ -1,7 +1,13 @@
 import { TempleItem } from '@/api/character';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Progress } from '@/components/ui/progress';
-import { cn, formatCurrency, getCoverUrl, isEmpty } from '@/lib/utils';
+import {
+  cn,
+  formatCurrency,
+  getAvatarUrl,
+  getCoverUrl,
+  isEmpty,
+} from '@/lib/utils';
 import { useState } from 'react';
 import { AiFillStar } from 'react-icons/ai';
 import { PhotoProvider, PhotoView } from 'react-photo-view';
@@ -21,6 +27,7 @@ export function TempleCard({ data, className }: TempleCardProps) {
     Assets: assets = 0,
     Sacrifices: sacrifices = 0,
     Cover: cover = '',
+    Avatar: avatar = '',
     Level: templeLevel = 0,
     Refine: refine = 0,
     StarForces: starForces = 0,
@@ -36,20 +43,34 @@ export function TempleCard({ data, className }: TempleCardProps) {
         className
       )}
     >
-      <PhotoProvider
-        bannerVisible={false}
-        maskOpacity={0.4}
-        className="pointer-events-auto backdrop-blur-xs"
-      >
-        <PhotoView src={getCoverUrl(cover, 'large')}>
+      {cover ? (
+        <PhotoProvider
+          bannerVisible={false}
+          maskOpacity={0.4}
+          className="pointer-events-auto backdrop-blur-xs"
+        >
+          <PhotoView src={getCoverUrl(cover, 'large')}>
+            <img
+              src={getCoverUrl(cover, 'medium')}
+              alt="圣殿"
+              draggable="false"
+              className="w-full h-full object-cover object-top cursor-pointer"
+            />
+          </PhotoView>
+        </PhotoProvider>
+      ) : (
+        <div className="w-full">
           <img
-            src={getCoverUrl(cover, 'medium')}
-            alt="圣殿"
-            draggable="false"
-            className="w-full h-full object-cover object-top cursor-pointer"
+            src={getAvatarUrl(avatar)}
+            className="w-full object-cover blur-lg pointer-events-none"
           />
-        </PhotoView>
-      </PhotoProvider>
+          <div
+            className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-2/3 justify-center items-center 
+                w-1/2 min-w-16 aspect-square rounded-full overflow-hidden bg-cover bg-top"
+            style={{ backgroundImage: `url('${getAvatarUrl(avatar)}')` }}
+          />
+        </div>
+      )}
       <div
         className={cn(
           'absolute -top-1 -right-1 size-8 m-1 p-1',

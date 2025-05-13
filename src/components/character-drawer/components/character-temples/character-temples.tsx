@@ -369,7 +369,7 @@ export function CharacterTemples() {
             )}
           >
             <ImageOff className="size-12" />
-            <span className="text-sm">暂无圣殿</span>
+            <span className="text-sm">暂无图片</span>
           </div>
         </div>
       </div>
