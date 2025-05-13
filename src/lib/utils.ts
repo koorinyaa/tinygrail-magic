@@ -200,7 +200,7 @@ export function formatDateTime(
 
       // 1分钟内显示秒数
       if (diffSeconds < 60) {
-        return `${diffSeconds}秒前`;
+        return `${Math.max(diffSeconds, 1)}秒前`;
       }
       // 1小时内显示分钟
       else if (diffMinutes < 60) {

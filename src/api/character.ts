@@ -161,7 +161,7 @@ export async function getTopWeekHistory(
 /**
  * 角色详细信息数据项
  * @property {number} CharacterId - 角色ID
- * @property {number} Change - 变动(意义不明)
+ * @property {number} Change - 订单数量变动
  * @property {number} UserTotal - 持股总量
  * @property {number} UserAmount - 可用活股
  * @property {number} Id - 和角色ID一致
@@ -790,6 +790,48 @@ export async function getStarLog(
   try {
     return await httpService.get<StarLogResponse>(
       `/chara/star/log/${page}/${pageSize}`
+    );
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * 最近活跃角色分页数据
+ * @property {number} CurrentPage - 当前页码
+ * @property {number} TotalPages - 总页数
+ * @property {number} TotalItems - 数据总数
+ * @property {number} ItemsPerPage - 每页数量
+ * @property {CharacterDetail[]} Items - 角色列表
+ * @property {any} Context - 上下文信息
+ */
+export interface RecentCharacterPageValue {
+  CurrentPage: number;
+  TotalPages: number;
+  TotalItems: number;
+  ItemsPerPage: number;
+  Items: CharacterDetail[];
+  Context: any;
+}
+
+export interface RecentCharacterResponse
+  extends TinygrailBaseResponse<RecentCharacterPageValue> {}
+
+/**
+ * 获取最近活跃角色
+ * @param {number} [page] - 页码
+ * @param {number} [pageSize] - 每页数量
+ * @returns {Promise<RecentCharacterResponse>} - 最近活跃角色数据
+ */
+export async function getRecentCharacters(
+  page: number = 1,
+  pageSize: number = 12
+): Promise<RecentCharacterResponse> {
+  page = Math.max(page, 1);
+  pageSize = Math.max(pageSize, 1);
+  try {
+    return await httpService.get<RecentCharacterResponse>(
+      `/chara/recent/${page}/${pageSize}`
     );
   } catch (error) {
     throw error;
