@@ -2,15 +2,15 @@ import { getUserCharaList, UserCharaPageValue } from '@/api/user';
 import { PaginationWrapper } from '@/components/ui/pagination-wrapper';
 import { Skeleton } from '@/components/ui/skeleton';
 import { notifyError } from '@/lib/utils';
+import { useStore } from '@/store';
 import { useEffect, useState } from 'react';
 import { GensokyoCard } from './gensokyo-card';
-import { useStore } from '@/store';
 
 /**
  * 幻想乡角色
  */
 export function GensokyoCharacters() {
-  const { toTop } = useStore();
+  const { toTop, characterDrawer } = useStore();
   // 加载状态
   const [loading, setLoading] = useState(true);
   // 当前页数
@@ -25,11 +25,21 @@ export function GensokyoCharacters() {
     toTop();
   }, [currentPage]);
 
+  // 监听角色抽屉关闭变化
+  useEffect(() => {
+    if (!characterDrawer.open) {
+      fetchGensokyoCharaPageData(false);
+    }
+  }, [characterDrawer.open]);
+
   /**
    * 获取分页数据
+   * @param {boolean} [updateLoading=true] - 是否更新loading状态
    */
-  const fetchGensokyoCharaPageData = async () => {
-    setLoading(true);
+  const fetchGensokyoCharaPageData = async (updateLoading: boolean = true) => {
+    if (updateLoading) {
+      setLoading(true);
+    }
 
     try {
       const resp = await getUserCharaList('blueleaf', currentPage);
@@ -43,7 +53,9 @@ export function GensokyoCharacters() {
         error instanceof Error ? error.message : '获取幻想乡角色失败';
       notifyError(errorMessage);
     } finally {
-      setLoading(false);
+      if (updateLoading) {
+        setLoading(false);
+      }
     }
   };
 

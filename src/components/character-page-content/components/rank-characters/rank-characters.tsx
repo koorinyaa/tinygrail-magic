@@ -16,7 +16,7 @@ export function RankCharacters({
 }: {
   type: 'msrc' | 'mvc' | 'mrc' | 'mfc';
 }) {
-  const { toTop } = useStore();
+  const { toTop, characterDrawer } = useStore();
   // 加载状态
   const [loading, setLoading] = useState(true);
   // 当前页数
@@ -28,22 +28,36 @@ export function RankCharacters({
 
   // 监听页数变化
   useEffect(() => {
-    fetchGensokyoCharaPageData();
+    fetchRankCharaPageData();
     toTop();
   }, [currentPage]);
 
   // 监听类型变化
   useEffect(() => {
     setCurrentPage(1);
-    fetchGensokyoCharaPageData(1);
+    fetchRankCharaPageData(1);
     toTop();
   }, [type]);
 
+  // 监听角色抽屉关闭变化
+  useEffect(() => {
+    if (!characterDrawer.open) {
+      fetchRankCharaPageData(currentPage, false);
+    }
+  }, [characterDrawer.open]);
+
   /**
    * 获取分页数据
+   * @param {number} [page] - 页数
+   * @param {boolean} [updateLoading=true] - 是否更新loading状态
    */
-  const fetchGensokyoCharaPageData = async (page?: number) => {
-    setLoading(true);
+  const fetchRankCharaPageData = async (
+    page?: number,
+    updateLoading: boolean = true
+  ) => {
+    if (updateLoading) {
+      setLoading(true);
+    }
 
     try {
       const resp = await getRankCharacters(type, page ? page : currentPage);
@@ -57,7 +71,9 @@ export function RankCharacters({
         error instanceof Error ? error.message : '获取最高股息角色失败';
       notifyError(errorMessage);
     } finally {
-      setLoading(false);
+      if (updateLoading) {
+        setLoading(false);
+      }
     }
   };
 

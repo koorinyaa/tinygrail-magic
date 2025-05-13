@@ -10,7 +10,7 @@ import { STCard } from './st-card';
  * ST角色
  */
 export function STCharacters() {
-  const { toTop } = useStore();
+  const { toTop, characterDrawer } = useStore();
   // 加载状态
   const [loading, setLoading] = useState(true);
   // 当前页数
@@ -21,15 +21,25 @@ export function STCharacters() {
 
   // 监听页数变化
   useEffect(() => {
-    fetchGensokyoCharaPageData();
+    fetchSTCharaPageData();
     toTop();
   }, [currentPage]);
 
+  // 监听角色抽屉关闭变化
+  useEffect(() => {
+    if (!characterDrawer.open) {
+      fetchSTCharaPageData(false);
+    }
+  }, [characterDrawer.open]);
+
   /**
    * 获取分页数据
+   * @param {boolean} [updateLoading=true] - 是否更新loading状态
    */
-  const fetchGensokyoCharaPageData = async () => {
-    setLoading(true);
+  const fetchSTCharaPageData = async (updateLoading: boolean = true) => {
+    if (updateLoading) {
+      setLoading(true);
+    }
 
     try {
       const resp = await getDelistCharacters(currentPage);
@@ -43,7 +53,9 @@ export function STCharacters() {
         error instanceof Error ? error.message : '获取ST角色失败';
       notifyError(errorMessage);
     } finally {
-      setLoading(false);
+      if (updateLoading) {
+        setLoading(false);
+      }
     }
   };
 

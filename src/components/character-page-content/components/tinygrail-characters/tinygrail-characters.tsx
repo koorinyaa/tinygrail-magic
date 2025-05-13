@@ -31,19 +31,26 @@ export function TinygrailCharacters() {
   // 监听页数变化
   useEffect(() => {
     fetchTinygrailCharaPageData();
+    fatchAuctionList();
     toTop();
   }, [currentPage]);
 
+  // 监听角色抽屉关闭变化
   useEffect(() => {
-    if (tinygrailCharaPageData && !characterDrawer.open) {
+    if (!characterDrawer.open) {
+      fetchTinygrailCharaPageData(false)
       fatchAuctionList();
     }
-  }, [tinygrailCharaPageData, characterDrawer.open]);
+  }, [characterDrawer.open]);
+  
   /**
    * 获取分页数据
+   * @param {boolean} [updateLoading=true] - 是否更新loading状态
    */
-  const fetchTinygrailCharaPageData = async () => {
-    setLoading(true);
+  const fetchTinygrailCharaPageData = async (updateLoading: boolean = true) => {
+    if (updateLoading) {
+      setLoading(true);
+    }
 
     try {
       const resp = await getUserCharaList('tinygrail', currentPage);
@@ -57,7 +64,9 @@ export function TinygrailCharacters() {
         error instanceof Error ? error.message : '获取英灵殿角色失败';
       notifyError(errorMessage);
     } finally {
-      setLoading(false);
+      if (updateLoading) {
+        setLoading(false);
+      }
     }
   };
 
