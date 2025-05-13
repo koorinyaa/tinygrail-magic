@@ -61,9 +61,9 @@ export function RankCard({
       case 'mvc':
         return [
           {
-            id: 'dividend',
-            label: '股息₵',
-            value: `${formatCurrency(dividend, { useWUnit: true })}`,
+            id: 'current',
+            label: '现价₵',
+            value: `${formatCurrency(current, { useWUnit: true })}`,
           },
           {
             id: 'total',
@@ -87,7 +87,7 @@ export function RankCard({
           {
             id: 'current',
             label: '现价₵',
-            value: `${formatInteger(current, true)}`,
+            value: `${formatCurrency(current, { useWUnit: true })}`,
           },
           {
             id: 'marketValue',
