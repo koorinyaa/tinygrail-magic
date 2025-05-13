@@ -24,7 +24,7 @@ export function UserAvatarDropdownMenu() {
           <UserAvatar src={getAvatarUrl(userAssets?.avatar)} />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="max-w-64 min-w-36">
+      <DropdownMenuContent align="end" className="max-w-64 min-w-36">
         <DropdownMenuLabel className="flex min-w-0 flex-col">
           <span className="text-foreground truncate text-sm font-medium">
             {userAssets?.nickname}
