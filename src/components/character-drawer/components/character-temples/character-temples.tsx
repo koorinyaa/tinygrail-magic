@@ -291,7 +291,7 @@ export function CharacterTemples() {
           className={cn(
             'flex-1 flex flex-col items-center justify-center gap-y-1 py-8 opacity-60',
             {
-              hidden: !isEmpty(currentTemplePageItems),
+              hidden: !isEmpty(currentTemplePageItems) || templeShowMode !== 'temple',
             }
           )}
         >
