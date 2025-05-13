@@ -67,6 +67,8 @@
   --sidebar-ring: oklch(0.704 0.04 256.788);
   --tremor-ring: 229 231 235;
   --dark-tremor-ring: 31 41 55;
+
+  --success: oklch(0.73 0.1935 150.81)
 }
 
 .dark {
@@ -103,6 +105,8 @@
   --sidebar-ring: oklch(0.551 0.027 264.364);
   --tremor-ring: 31 41 55;
   --dark-tremor-ring: 229 231 235;
+
+  --success: oklch(0.73 0.1935 150.81)
 }
 
 @theme inline {

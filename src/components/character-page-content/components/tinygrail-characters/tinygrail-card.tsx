@@ -1,9 +1,10 @@
 import { CharacterDetail } from '@/api/character';
+import { AuctionItem } from '@/api/user';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import BadgeLevel from '@/components/ui/badge-level';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { formatCurrency, formatInteger, getAvatarUrl } from '@/lib/utils';
+import { cn, formatCurrency, formatInteger, getAvatarUrl } from '@/lib/utils';
 import { useStore } from '@/store';
 import { toast } from 'sonner';
 
@@ -12,7 +13,13 @@ import { toast } from 'sonner';
  * @param props
  * @param props.data 角色数据
  */
-export function TinygrailCard({ data }: { data: CharacterDetail }) {
+export function TinygrailCard({
+  data,
+  auctionInfo,
+}: {
+  data: CharacterDetail;
+  auctionInfo: AuctionItem;
+}) {
   const { openCharacterDrawer } = useStore();
 
   const {
@@ -82,13 +89,18 @@ export function TinygrailCard({ data }: { data: CharacterDetail }) {
       </div>
       <Button
         variant="ghost"
-        className="w-full text-sm font-medium- border-t rounded-none opacity-80 hover:bg-transparent hover:opacity-100"
+        className={cn(
+          'w-full text-sm font-medium border-t rounded-none opacity-80 hover:bg-transparent dark:hover:bg-transparent hover:opacity-100',
+          {
+            'text-(--success) hover:text-(--success)': auctionInfo,
+          }
+        )}
         onClick={(e) => {
           e.stopPropagation();
           toast.warning('开发中');
         }}
       >
-        竞拍
+        {auctionInfo ? `${formatInteger(auctionInfo.Amount)} / ₵${formatCurrency(auctionInfo.Price)}` : '参与竞拍'}
       </Button>
     </Card>
   );
