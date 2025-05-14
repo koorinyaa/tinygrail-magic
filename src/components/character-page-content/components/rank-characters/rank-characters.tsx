@@ -3,7 +3,7 @@ import { PaginationWrapper } from '@/components/ui/pagination-wrapper';
 import { Skeleton } from '@/components/ui/skeleton';
 import { notifyError } from '@/lib/utils';
 import { useStore } from '@/store';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { RankCard } from './rank-card';
 
 /**
@@ -26,25 +26,40 @@ export function RankCharacters({
     CharacterDetail[]
   >([]);
 
-  // 监听页数变化
+  // 记录上一次的值
+  const prevStateRef = useRef({
+    currentPage: 1,
+    drawerOpen: characterDrawer.open,
+  });
+
+  // 监听页数和角色抽屉关闭变化
   useEffect(() => {
-    fetchRankCharaPageData();
-    toTop();
-  }, [currentPage]);
+    const prevState = prevStateRef.current;
+
+    // 页数变化
+    if (currentPage !== prevState.currentPage) {
+      fetchRankCharaPageData();
+      toTop();
+      prevState.currentPage = currentPage;
+    }
+    // 抽屉状态从打开变为关闭
+    else if (prevState.drawerOpen && !characterDrawer.open) {
+      fetchRankCharaPageData(currentPage, false);
+    }
+
+    // 更新抽屉状态引用
+    prevState.drawerOpen = characterDrawer.open;
+  }, [currentPage, characterDrawer.open]);
 
   // 监听类型变化
   useEffect(() => {
-    setCurrentPage(1);
-    fetchRankCharaPageData(1);
-    toTop();
-  }, [type]);
-
-  // 监听角色抽屉关闭变化
-  useEffect(() => {
-    if (!characterDrawer.open) {
-      fetchRankCharaPageData(currentPage, false);
+    if (currentPage === 1) {
+      fetchRankCharaPageData();
+      toTop();
+    } else {
+      setCurrentPage(1);
     }
-  }, [characterDrawer.open]);
+  }, [type]);
 
   /**
    * 获取分页数据

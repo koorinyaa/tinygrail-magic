@@ -3,7 +3,7 @@ import { PaginationWrapper } from '@/components/ui/pagination-wrapper';
 import { Skeleton } from '@/components/ui/skeleton';
 import { notifyError } from '@/lib/utils';
 import { useStore } from '@/store';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { STCard } from './st-card';
 
 /**
@@ -19,18 +19,36 @@ export function STCharacters() {
   const [stCharaPageData, setStCharaPageData] =
     useState<STCharacterPageValue>();
 
-  // 监听页数变化
+  // 记录上一次的值
+  const prevStateRef = useRef({
+    currentPage: 1,
+    drawerOpen: characterDrawer.open,
+  });
+
+  // 监听页数和角色抽屉关闭变化
+  useEffect(() => {
+    const prevState = prevStateRef.current;
+
+    // 页数变化
+    if (currentPage !== prevState.currentPage) {
+      fetchSTCharaPageData();
+      toTop();
+      prevState.currentPage = currentPage;
+    }
+    // 抽屉状态从打开变为关闭
+    else if (prevState.drawerOpen && !characterDrawer.open) {
+      fetchSTCharaPageData(false);
+    }
+
+    // 更新抽屉状态引用
+    prevState.drawerOpen = characterDrawer.open;
+  }, [currentPage, characterDrawer.open]);
+
+  // 组件首次加载时获取数据
   useEffect(() => {
     fetchSTCharaPageData();
     toTop();
-  }, [currentPage]);
-
-  // 监听角色抽屉关闭变化
-  useEffect(() => {
-    if (!characterDrawer.open) {
-      fetchSTCharaPageData(false);
-    }
-  }, [characterDrawer.open]);
+  }, []);
 
   /**
    * 获取分页数据
