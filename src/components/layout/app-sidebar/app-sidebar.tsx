@@ -18,6 +18,7 @@ import {
   Images,
   Settings,
   Sparkles,
+  TicketPlus,
   Trophy,
 } from 'lucide-react';
 import { NavProjects, NavSecondary, NavUpdate } from './sidebar-navigation';
@@ -45,6 +46,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           name: '角色',
           id: 'character',
           icon: BadgeCent,
+        },
+        {
+          name: 'ICO',
+          id: 'ico',
+          icon: TicketPlus,
         },
         {
           name: '排行榜',

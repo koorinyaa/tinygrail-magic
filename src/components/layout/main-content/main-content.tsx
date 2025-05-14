@@ -1,6 +1,12 @@
 import { verifyAuth } from '@/lib/auth';
 import { cn } from '@/lib/utils';
-import { NotFound, StarTower, TopWeek, CharacterPage } from '@/pages';
+import {
+  NotFound,
+  StarTower,
+  TopWeek,
+  CharacterPage,
+  RankIngList,
+} from '@/pages';
 import { useStore } from '@/store';
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
 import { ComponentProps, useEffect, useRef, useState } from 'react';
@@ -20,6 +26,7 @@ export function MainContent({
     topWeek: TopWeek,
     starTower: StarTower,
     character: CharacterPage,
+    ranking: RankIngList,
     default: NotFound,
   } as const;
 

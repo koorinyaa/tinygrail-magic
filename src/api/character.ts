@@ -839,7 +839,7 @@ export async function getRecentCharacters(
 }
 
 /**
- * 取消ST角色分页数据
+ * ST角色分页数据
  * @property {number} CurrentPage - 当前页码
  * @property {number} TotalPages - 总页数
  * @property {number} TotalItems - 数据总数

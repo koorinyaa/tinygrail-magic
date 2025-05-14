@@ -202,3 +202,40 @@ export async function convertStarForces(
     throw error;
   }
 }
+
+/**
+ * 精炼排行数据
+ * @property {number} CurrentPage - 当前页码
+ * @property {number} TotalPages - 总页数
+ * @property {number} TotalItems - 数据总数
+ * @property {number} ItemsPerPage - 每页数量
+ * @property {TempleItem[]} Items - 圣殿列表
+ * @property {any} Context - 上下文信息
+ */
+export interface RefineRankValue {
+  CurrentPage: number;
+  TotalPages: number;
+  TotalItems: number;
+  ItemsPerPage: number;
+  Items: TempleItem[];
+  Context: any | null;
+}
+
+/**
+ * 获取精炼排行数据
+ * @param {number} [page] - 页码
+ * @param {number} [pageSize] - 每页数量
+ * @returns {Promise<TinygrailBaseResponse<RefineRankValue>>} - 精炼排行数据
+ */
+export async function getRefineRank(
+  page: number = 1,
+  pageSize: number = 24
+): Promise<TinygrailBaseResponse<RefineRankValue>> {
+  try {
+    return await httpService.get<TinygrailBaseResponse<RefineRankValue>>(
+      `/chara/refine/temple/${page}/${pageSize}`
+    );
+  } catch (error) {
+    throw error;
+  }
+}
