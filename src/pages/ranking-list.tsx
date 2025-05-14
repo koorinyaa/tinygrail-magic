@@ -1,3 +1,4 @@
+import { AssetsRank } from '@/components/assets-rank';
 import { RefineRank } from '@/components/refine-rank';
 import {
   Select,
@@ -24,7 +25,7 @@ export function RankIngList() {
   const renderContent = () => {
     switch (selectedCategory) {
       case 'asset':
-        return <></>;
+        return <AssetsRank />;
       case 'refine':
         return <RefineRank />;
     }

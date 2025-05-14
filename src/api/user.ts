@@ -484,3 +484,50 @@ export async function getUserCharaList(
     throw error;
   }
 }
+
+/**
+ * 用户资产排行榜项
+ * @property {string} Name - 用户名
+ * @property {string} Nickname - 昵称
+ * @property {number} TotalBalance - 流动资金
+ * @property {string} Avatar - 头像
+ * @property {number} Principal - 初始资金
+ * @property {number} Assets - 总资产
+ * @property {string} LastActiveDate - 最后活跃时间
+ * @property {number} LastIndex - 上次排名
+ * @property {number} State - 状态
+ * @property {number} Share - 每周股息
+ */
+export interface UserAssetRankItem {
+  Name: string;
+  Nickname: string;
+  TotalBalance: number;
+  Avatar: string;
+  Principal: number;
+  Assets: number;
+  LastActiveDate: string;
+  LastIndex: number;
+  State: number;
+  Share: number;
+}
+
+/**
+ * 获取用户资产排行榜
+ * @param {number} [page] - 页码
+ * @param {number} [pageSize] - 每页数量
+ * @returns {Promise<TinygrailBaseResponse<UserAssetRankItem[]>>} - 用户资产排行榜
+ */
+export async function getUserAssetRank(
+  page: number = 1,
+  pageSize: number = 20
+): Promise<TinygrailBaseResponse<UserAssetRankItem[]>> {
+  page = Math.max(1, page);
+  pageSize = Math.max(1, pageSize);
+  try {
+    return await httpService.get<TinygrailBaseResponse<UserAssetRankItem[]>>(
+      `/chara/top/${page}/${pageSize}`
+    );
+  } catch (error) {
+    throw error;
+  }
+}

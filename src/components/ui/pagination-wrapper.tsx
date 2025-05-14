@@ -30,9 +30,9 @@ const generatePages = (props: PaginationWrapperProps): React.ReactNode[] => {
         onPageChange(page);
       }}
       isActive={page === currentPage}
-      className={cn('cursor-pointer size-8', {
-        'size-8': size === 'md',
-        'size-6 text-xs rounded-sm': size === 'sm',
+      className={cn('cursor-pointer size-auto', {
+        'h-8 min-w-8': size === 'md',
+        'h-6 min-w-6 text-xs rounded-sm': size === 'sm',
       })}
     >
       {page}

@@ -23,7 +23,7 @@ export function RefineRank() {
   const [refineRankPageData, setRefineRankPageData] =
     useState<RefineRankValue>();
 
-  // 组件首次加载时获取数据
+  // 页数变化时获取数据
   useEffect(() => {
     fetchRefineRankPageData();
     toTop();
@@ -107,7 +107,7 @@ export function RefineRank() {
                       ? `0${Math.max(0, (currentPage - 1) * 24 + index + 1)}`
                       : Math.max(0, (currentPage - 1) * 24 + index + 1)}
                   </div>
-                  <div className="flex flex-col gap-y-0.5 w-full overflow-hidden">
+                  <div className="flex flex-col w-full overflow-hidden">
                     <div
                       className="flex items-center text-xs font-semibold cursor-pointer"
                       onClick={() => {
