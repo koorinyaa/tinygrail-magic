@@ -292,7 +292,7 @@ export function LastTemples() {
       )}
       <div className="p-4">
         {loading && templeItems.length > 0 && (
-          <div className="flex justify-center items-center py-4">
+          <div className="flex justify-center items-center">
             <div className="flex items-center gap-2">
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary" />
             </div>
