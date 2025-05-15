@@ -303,7 +303,7 @@ export interface RecentTempleValue {
  */
 export async function getRecentTemples(
   page: number = 1,
-  pageSize: number = 24
+  pageSize: number = 12
 ): Promise<TinygrailBaseResponse<RecentTempleValue>> {
   try {
     return await httpService.get<TinygrailBaseResponse<RecentTempleValue>>(
