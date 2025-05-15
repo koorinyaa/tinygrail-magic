@@ -2,6 +2,8 @@ import { TempleItem } from '@/api/character';
 import { getRecentTemples } from '@/api/temple';
 import { decodeHTMLEntities, getCoverUrl, notifyError } from '@/lib/utils';
 import { useStore } from '@/store';
+import { motion } from 'framer-motion';
+import { ArrowUpToLine } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import {
   Gallery,
@@ -20,7 +22,7 @@ type TempleImage = GalleryImage & {
  * 最新圣殿
  */
 export function LastTemples() {
-  const { pageContainerRef, openCharacterDrawer } = useStore();
+  const { toTop, pageContainerRef, openCharacterDrawer } = useStore();
   // 加载状态
   const [loading, setLoading] = useState(true);
   // 当前页数
@@ -29,7 +31,10 @@ export function LastTemples() {
   const [templeItems, setTempleItems] = useState<TempleItem[]>([]);
   // 总页数
   const [totalPages, setTotalPages] = useState(1);
+  // 图片数据
   const [images, setImages] = useState<TempleImage[]>([]);
+  // 返回顶部按钮是否显示
+  const [showToTop, setShowToTop] = useState(false);
 
   // 加载锁
   const isLoadingMoreRef = useRef(false);
@@ -49,10 +54,12 @@ export function LastTemples() {
       if (throttleTimer !== null || isLoadingMoreRef.current) return;
 
       const { scrollHeight, scrollTop, clientHeight } = container;
+
+      // 控制返回顶部按钮的显示
+      setShowToTop(scrollTop > 200);
+
       // 滚动到距离底部100px时加载更多
       if (scrollHeight - scrollTop - clientHeight < 100) {
-        console.log('loadMore');
-
         // 设置加载锁
         isLoadingMoreRef.current = true;
 
@@ -79,7 +86,6 @@ export function LastTemples() {
       const { scrollHeight, clientHeight } = container;
       // 如果内容高度小于或等于视口高度，且有更多页可加载，则自动加载下一页
       if (scrollHeight <= clientHeight && currentPage < totalPages) {
-
         isLoadingMoreRef.current = true;
 
         // 设置节流定时器
@@ -240,7 +246,7 @@ export function LastTemples() {
             {...{
               ...props.imageProps,
               title: props.imageProps.title || undefined,
-              loading: "lazy",
+              loading: 'lazy',
             }}
           />
           <div className="absolute bottom-0 left-0 right-0 h-14 bg-gradient-to-b from-[#00000000]/0 to-[#000000cc] text-white">
@@ -299,6 +305,22 @@ export function LastTemples() {
           </div>
         )}
       </div>
+      {showToTop && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <button
+            onClick={toTop}
+            className="fixed bottom-10 right-10 bg-card text-foreground/80 p-2 rounded-full shadow-lg hover:text-foreground/100 transition-colors cursor-pointer"
+            title="返回顶部"
+          >
+            <ArrowUpToLine className="size-4" />
+          </button>
+        </motion.div>
+      )}
     </div>
   );
 }
