@@ -6,6 +6,7 @@ import {
   TopWeek,
   CharacterPage,
   RankIngList,
+  LastTemplesPage,
 } from '@/pages';
 import { useStore } from '@/store';
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
@@ -16,7 +17,7 @@ export function MainContent({
   children,
   ...props
 }: ComponentProps<typeof ScrollAreaPrimitive.Root>) {
-  const { currentPage, setContainerRef, toTop, setUserAssets } = useStore();
+  const { currentPage, setPageContainerRef, toTop, setUserAssets } = useStore();
   const containerRef = useRef<HTMLDivElement>(null);
   const [currentComponent, setCurrentComponent] = useState<JSX.Element>(
     <div />
@@ -27,11 +28,12 @@ export function MainContent({
     starTower: StarTower,
     character: CharacterPage,
     ranking: RankIngList,
+    lastTemples: LastTemplesPage,
     default: NotFound,
   } as const;
 
   useEffect(() => {
-    setContainerRef(containerRef);
+    setPageContainerRef(containerRef);
   }, [containerRef]);
 
   useEffect(() => {

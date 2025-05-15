@@ -59,7 +59,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         },
         {
           name: '最新圣殿',
-          id: 'latestTemples',
+          id: 'lastTemples',
           icon: Images,
         },
       ],

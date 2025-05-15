@@ -239,3 +239,77 @@ export async function getRefineRank(
     throw error;
   }
 }
+
+/**
+ * 最近链接数据
+ * @property {number} CurrentPage - 当前页码
+ * @property {number} TotalPages - 总页数
+ * @property {number} TotalItems - 数据总数
+ * @property {number} ItemsPerPage - 每页数量
+ * @property {TempleItem[]} Items - 圣殿列表
+ * @property {any} Context - 上下文信息
+ */
+export interface RecentLinkValue {
+  CurrentPage: number;
+  TotalPages: number;
+  TotalItems: number;
+  ItemsPerPage: number;
+  Items: TempleItem[];
+  Context: any | null;
+}
+
+/**
+ * 获取最近圣殿链接记录
+ * @param {number} [page] - 页码
+ * @param {number} [pageSize] - 每页数量
+ * @returns {Promise<TinygrailBaseResponse<RecentLinkValue>>} - 最近圣殿链接数据
+ */
+export async function getRecentLinks(
+  page: number = 1,
+  pageSize: number = 24
+): Promise<TinygrailBaseResponse<RecentLinkValue>> {
+  try {
+    return await httpService.get<TinygrailBaseResponse<RecentLinkValue>>(
+      `/chara/link/last/${page}/${pageSize}`
+    );
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * 最近圣殿数据
+ * @property {number} CurrentPage - 当前页码
+ * @property {number} TotalPages - 总页数
+ * @property {number} TotalItems - 数据总数
+ * @property {number} ItemsPerPage - 每页数量
+ * @property {TempleItem[]} Items - 圣殿列表
+ * @property {any} Context - 上下文信息
+ */
+export interface RecentTempleValue {
+  CurrentPage: number;
+  TotalPages: number;
+  TotalItems: number;
+  ItemsPerPage: number;
+  Items: TempleItem[];
+  Context: any | null;
+}
+
+/**
+ * 获取最近圣殿记录
+ * @param {number} [page] - 页码
+ * @param {number} [pageSize] - 每页数量
+ * @returns {Promise<TinygrailBaseResponse<RecentTempleValue>>} - 最近圣殿数据
+ */
+export async function getRecentTemples(
+  page: number = 1,
+  pageSize: number = 24
+): Promise<TinygrailBaseResponse<RecentTempleValue>> {
+  try {
+    return await httpService.get<TinygrailBaseResponse<RecentTempleValue>>(
+      `/chara/temple/last/${page}/${pageSize}`
+    );
+  } catch (error) {
+    throw error;
+  }
+}

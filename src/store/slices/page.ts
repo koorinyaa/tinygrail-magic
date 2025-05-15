@@ -15,8 +15,8 @@ type CurrentPage = {
 export interface PageState {
   currentPage: CurrentPage;
   setCurrentPage: (page: CurrentPage) => void;
-  containerRef: RefObject<HTMLDivElement> | null;
-  setContainerRef: (ref: RefObject<HTMLDivElement>) => void;
+  pageContainerRef: RefObject<HTMLDivElement> | null;
+  setPageContainerRef: (ref: RefObject<HTMLDivElement>) => void;
   toTop: () => void;
 }
 
@@ -29,12 +29,12 @@ export const createPageSlice: StateCreator<PageState> = (set) => ({
     sub: null,
   },
   setCurrentPage: (page) => set({ currentPage: page }),
-  containerRef: null,
-  setContainerRef: (ref) => set({ containerRef: ref }),
+  pageContainerRef: null,
+  setPageContainerRef: (ref) => set({ pageContainerRef: ref }),
   toTop: () =>
     set((state) => {
-      if (state.containerRef?.current) {
-        state.containerRef.current.scrollTop = 0;
+      if (state.pageContainerRef?.current) {
+        state.pageContainerRef.current.scrollTop = 0;
       }
       return {};
     }),

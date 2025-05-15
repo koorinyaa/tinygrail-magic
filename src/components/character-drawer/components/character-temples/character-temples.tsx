@@ -291,7 +291,8 @@ export function CharacterTemples() {
           className={cn(
             'flex-1 flex flex-col items-center justify-center gap-y-1 py-8 opacity-60',
             {
-              hidden: !isEmpty(currentTemplePageItems) || templeShowMode !== 'temple',
+              hidden:
+                !isEmpty(currentTemplePageItems) || templeShowMode !== 'temple',
             }
           )}
         >
@@ -354,8 +355,7 @@ export function CharacterTemples() {
             Object.keys(loadedImages).length < uniqueCovers.length && (
               <div className="flex justify-center items-center py-4">
                 <div className="flex items-center gap-2">
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary"></div>
-                  <span className="text-sm">加载中...</span>
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-primary" />
                 </div>
               </div>
             )}

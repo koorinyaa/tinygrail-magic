@@ -133,7 +133,7 @@ export function RefineRank() {
       </div>
       <PaginationWrapper
         currentPage={currentPage}
-        totalPages={10}
+        totalPages={5}
         onPageChange={setCurrentPage}
         className="flex-1 justify-center mt-4"
       />
