@@ -314,7 +314,7 @@ export function LastTemples() {
         >
           <button
             onClick={toTop}
-            className="fixed bottom-10 right-10 bg-card text-foreground/80 p-2 rounded-full shadow-lg hover:text-foreground/100 transition-colors cursor-pointer"
+            className="fixed bottom-10 right-4 md:right-10 opacity-80 hover:opacity-100 bg-card text-foreground/80 p-2 rounded-full shadow-lg transition-colors cursor-pointer"
             title="返回顶部"
           >
             <ArrowUpToLine className="size-4" />
