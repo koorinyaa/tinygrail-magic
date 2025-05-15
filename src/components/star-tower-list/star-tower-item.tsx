@@ -41,7 +41,7 @@ export function StarTowerItem({ data }: { data: CharacterDetail }) {
         className={cn(
           'absolute bottom-0 top-0 left-0 right-0 p-1',
           'flex flex-col gap-y-0.5 items-center justify-center',
-          'backdrop-blur-xs text-white/90 bg-gray-500/40',
+          'backdrop-blur-xs text-white/90 bg-black/40',
           'opacity-0 group-hover:opacity-100 transition-all duration-300'
         )}
       >
