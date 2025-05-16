@@ -32,6 +32,7 @@ export function ICOPageContent() {
   const categories = [
     { value: 'mri', label: '即将结束' },
     { value: 'mvi', label: '最多资金' },
+    { value: 'mui', label: '最多人数' },
   ];
 
   // 记录上一次的值
@@ -106,6 +107,8 @@ export function ICOPageContent() {
             return new Date(a.End).getTime() - new Date(b.End).getTime();
           case 'mvi':
             return b.Total - a.Total;
+          case 'mui':
+            return b.Users - a.Users;
           default:
             return 0;
         }
