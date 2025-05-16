@@ -29,11 +29,20 @@ export function StarTowerLog() {
   const [pageTotal, setPageTotal] = useState(0);
   // 通天塔日志数据项
   const [starLogItems, setStarLogItems] = useState<StarLogItem[]>([]);
+  // 用于强制刷新时间显示的计数器
+  const [timeRefreshCounter, setTimeRefreshCounter] = useState(0);
 
   useEffect(() => {
     const stop = initializeRealtimeConnection();
 
+    // 设置每3秒更新一次时间格式化的定时器
+    const timeRefreshInterval = setInterval(() => {
+      setTimeRefreshCounter((prev) => prev + 1);
+    }, 3000);
+
     return () => {
+      clearInterval(timeRefreshInterval);
+
       if (stop) {
         stop
           .then((cleanup) => {
@@ -92,14 +101,6 @@ export function StarTowerLog() {
           });
         }
       });
-
-      // connection.on('ReceiveCharacterInitial', (data: any) => {
-      //   console.log('[ico]', data);
-      // });
-
-      // connection.on('ReceiveCharacter', (update: any) => {
-      //   console.log('[最近活跃]', update);
-      // });
 
       await connection.start();
       return () => {
@@ -239,7 +240,9 @@ export function StarTowerLog() {
                     </Avatar>
                     <div className="flex-1 flex flex-col justify-center gap-y-0.5 overflow-hidden">
                       <div className="flex items-center text-sm font-bold overflow-hidden">
-                        <span className="truncate">{decodeHTMLEntities(log.CharacterName)}</span>
+                        <span className="truncate">
+                          {decodeHTMLEntities(log.CharacterName)}
+                        </span>
                         <Badge
                           variant="secondary"
                           className={cn(
