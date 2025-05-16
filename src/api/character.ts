@@ -902,3 +902,68 @@ export async function getRankCharacters(
     throw error;
   }
 }
+
+/**
+ * 角色活动数据项
+ * @property {number} Id - ICOID
+ * @property {number} CharacterId - 角色ID
+ * @property {string} Name - 角色名称
+ * @property {string} Icon - 角色头像
+ * @property {string} Begin - 开始时间
+ * @property {string} End - 结束时间
+ * @property {string} Last - 最后更新时间
+ * @property {number} Total - 已筹集金额
+ * @property {number} Users - 参与用户数
+ * @property {number} UserId - 未知
+ * @property {number} SubjectId - 所属主题ID
+ * @property {string | null} SubjectName - 所属主题名称
+ * @property {string} AirDate - 未知
+ * @property {number} Bonus - 新番加成剩余周数
+ * @property {string} TaskId - 任务ID
+ * @property {number} Type - 类型（type=1为为新番加成）
+ * @property {number} State - 状态
+ */
+export interface CharacterICOItem {
+  Id: number;
+  CharacterId: number;
+  Name: string;
+  Icon: string;
+  Begin: string;
+  End: string;
+  Last: string;
+  Total: number;
+  Users: number;
+  UserId: number;
+  SubjectId: number;
+  SubjectName: string | null;
+  AirDate: string;
+  Bonus: number;
+  TaskId: string;
+  Type: number;
+  State: number;
+}
+
+export interface CharacterICOResponse extends TinygrailBaseResponse<CharacterICOItem[]> {}
+
+/**
+ * 获取ICO角色数据
+ * @param {"mvi" | "rai" | "mri"} type - 活动类型（mvi：最多资金，rai：最近活跃，mri：即将结束）
+ * @param {number} [page] - 页码
+ * @param {number} [pageSize] - 每页数量
+ * @returns {Promise<CharacterICOResponse>} - 角色活动数据
+ */
+export async function getCharacterICO(
+  type: "mvi" | "rai" | "mri",
+  page: number = 1,
+  pageSize: number = 10000
+): Promise<CharacterICOResponse> {
+  page = Math.max(page, 1);
+  pageSize = Math.max(pageSize, 1);
+  try {
+    return await httpService.get<CharacterICOResponse>(
+      `/chara/${type}/${page}/${pageSize}`
+    );
+  } catch (error) {
+    throw error;
+  }
+}

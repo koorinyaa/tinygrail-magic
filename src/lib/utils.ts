@@ -1,3 +1,4 @@
+import { CharacterICOItem } from '@/api/character';
 import { clsx, type ClassValue } from 'clsx';
 import { toast } from 'sonner';
 import { twMerge } from 'tailwind-merge';
@@ -73,12 +74,14 @@ export function formatCurrency(
 ): string {
   let convertedValue = value;
   let suffix = '';
-  
+
   if (options?.useWUnit) {
-    if (Math.abs(value) >= 100000000) { // 1亿及以上用e
+    if (Math.abs(value) >= 100000000) {
+      // 1亿及以上用e
       convertedValue = value / 100000000;
       suffix = 'e';
-    } else if (Math.abs(value) >= 10000) { // 1万及以上用w
+    } else if (Math.abs(value) >= 10000) {
+      // 1万及以上用w
       convertedValue = value / 10000;
       suffix = 'w';
     }
@@ -398,4 +401,108 @@ export function urlEncode(str: string): string {
  */
 export function urlDecode(str: string): string {
   return decodeURIComponent(str);
+}
+
+interface ICOInfoResult {
+  currentLevel: number;
+  realLevel: number;
+  nextAmount: number;
+  minAmount: number;
+  circulation: number;
+  price: number;
+  minPrice: number;
+  userLevel: number;
+}
+
+/**
+ * 计算ICO相关信息
+ * @param {CharacterICOItem} chara 角色信息对象
+ * @returns {ICOInfoResult} 计算结果
+ */
+export function calculateICOInfo(chara: CharacterICOItem): ICOInfoResult {
+  const { Users, Total } = chara;
+  // 当前等级
+  let currentLevel: number = 0;
+  // 上市等级
+  let realLevel: number = 0;
+  // 下一级所需金额
+  let nextAmount: number = 600000.0;
+  // 当前等级最低金额
+  let minAmount: number = 600000.0;
+  // 流通
+  let circulation: number = 0;
+  // 发行价
+  let price: number = 10.0;
+  // 最低发行价
+  let minPrice: number = 10.0;
+  // 人数等级
+  let userLevel: number = Math.max(0, Math.floor((Users - 10) / 5));
+
+  while (Total >= nextAmount && currentLevel < userLevel) {
+    currentLevel += 1;
+    minAmount = nextAmount;
+    nextAmount += Math.pow(currentLevel + 1, 2) * 100000;
+  }
+
+  if (currentLevel > 0) {
+    circulation = 10000 + (currentLevel - 1) * 7500;
+    price = (Total - 500000.0) / circulation;
+    minPrice = (minAmount - 500000.0) / circulation;
+    realLevel = Math.floor(Math.log(circulation / 7500.0) / Math.log(1.3) + 1);
+  }
+
+  return {
+    currentLevel,
+    realLevel,
+    nextAmount,
+    minAmount,
+    circulation,
+    price,
+    minPrice,
+    userLevel,
+  };
+}
+
+/**
+ * 计算剩余时间
+ * @param {string} endDateString - 结束日期字符串
+ * @returns {string} - 格式化的剩余时间
+ */
+export function calculateRemainingTime(endDateString: string): string {
+  try {
+    const endDate = new Date(endDateString);
+    if (isNaN(endDate.getTime())) {
+      return '未知时间';
+    }
+
+    const now = new Date();
+    const diffMs = endDate.getTime() - now.getTime();
+
+    // 如果已经结束
+    if (diffMs <= 0) {
+      return '已结束';
+    }
+
+    const diffSeconds = Math.floor(diffMs / 1000);
+    const diffMinutes = Math.floor(diffSeconds / 60);
+    const diffHours = Math.floor(diffMinutes / 60);
+    const diffDays = Math.floor(diffHours / 24);
+
+    // 不同时间段显示不同格式
+    if (diffDays > 0) {
+      return `${diffDays}天后结束`;
+    } else if (diffHours > 0) {
+      return `${diffHours}小时后结束`;
+    } else if (diffMinutes > 0) {
+      // 小于1小时但大于1分钟，显示分钟和秒
+      const remainingSeconds = diffSeconds % 60;
+      return `${diffMinutes}分${remainingSeconds}秒后结束`;
+    } else {
+      // 小于1分钟，只显示秒数
+      return `${diffSeconds}秒后结束`;
+    }
+  } catch (e) {
+    console.error(e);
+    return '未知时间';
+  }
 }

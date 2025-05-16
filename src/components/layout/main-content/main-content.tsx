@@ -7,6 +7,7 @@ import {
   CharacterPage,
   RankIngList,
   LastTemplesPage,
+  ICOPage,
 } from '@/pages';
 import { useStore } from '@/store';
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
@@ -27,6 +28,7 @@ export function MainContent({
     topWeek: TopWeek,
     starTower: StarTower,
     character: CharacterPage,
+    ico: ICOPage,
     ranking: RankIngList,
     lastTemples: LastTemplesPage,
     default: NotFound,
