@@ -151,7 +151,13 @@ export function ICOPageContent() {
             ) : (
               <>
                 {getSortedAndPaginatedItems().map((item) => (
-                  <ICOCard key={item.CharacterId} data={item} />
+                  <ICOCard
+                    key={item.CharacterId}
+                    data={item}
+                    refresh={() => {
+                      fetchCharacterICOData(false);
+                    }}
+                  />
                 ))}
               </>
             )}

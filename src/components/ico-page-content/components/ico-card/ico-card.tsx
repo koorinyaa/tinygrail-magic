@@ -15,7 +15,12 @@ import { useStore } from '@/store';
 import { ChevronsRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-export function ICOCard({ data }: { data: CharacterICOItem }) {
+/**
+ * ico卡片
+ * @param data ico数据
+ * @param refresh 刷新回调
+ */
+export function ICOCard({ data, refresh }: { data: CharacterICOItem; refresh: () => void }) {
   const { openCharacterDrawer } = useStore();
   // 用于强制刷新时间显示的计数器
   const [timeRefreshCounter, setTimeRefreshCounter] = useState(0);
@@ -36,12 +41,18 @@ export function ICOCard({ data }: { data: CharacterICOItem }) {
     // 设置每1秒更新一次时间格式化的定时器
     const timeRefreshInterval = setInterval(() => {
       setTimeRefreshCounter((prev) => prev + 1);
+      
+      // 检查是否已经结束
+      const endTime = new Date(end);
+      if (endTime <= new Date()) {
+        refresh();
+      }
     }, 1000);
 
     return () => {
       clearInterval(timeRefreshInterval);
     };
-  }, []);
+  }, [end, refresh]);
 
   const infoItems = [
     {
