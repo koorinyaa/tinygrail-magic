@@ -46,16 +46,17 @@ export function AssetsRankCard({ data }: { data: UserAssetRankItem }) {
   return (
     <Card
       className={cn(
-        'h-41.5 gap-y-2 border-0 rounded-md shadow p-0 overflow-hidden cursor-pointer hover:shadow-md transition duration-300',
-        {
-          'border-2 border-red-400 dark:border-red-600': state === 666,
-        }
+        'h-41.5 gap-y-2 border-0 rounded-md shadow p-0',
+        'overflow-hidden cursor-pointer hover:shadow-md transition duration-300'
       )}
-      title={state === 666 ? '已封禁' : undefined}
     >
       <div className="flex flex-col items-center gap-y-2 p-4">
         <div className="relative">
-          <Avatar className="size-16 rounded-full border-2 border-secondary">
+          <Avatar
+            className={cn('size-16 rounded-full border-2 border-secondary', {
+              'border-red-600': state === 666,
+            })}
+          >
             <AvatarImage
               className="object-cover object-top pointer-events-none"
               src={getAvatarUrl(avatar, 'medium')}
@@ -70,8 +71,17 @@ export function AssetsRankCard({ data }: { data: UserAssetRankItem }) {
           </Badge>
         </div>
         <div className="flex-1 flex flex-col items-center justify-center w-full">
-          <div className="flex flex-row items-center justify-center text-md text-foreground font-semibold w-full overflow-hidden">
-            <span className="truncate">{decodeHTMLEntities(nickname)}</span>
+          <div
+            className="flex flex-row items-center justify-center text-md text-foreground font-semibold w-full overflow-hidden"
+            title={state === 666 ? '已封禁' : undefined}
+          >
+            <span
+              className={cn('truncate', {
+                'text-red-600': state === 666,
+              })}
+            >
+              {decodeHTMLEntities(nickname)}
+            </span>
           </div>
         </div>
         <div className="flex flex-row w-full items-center gap-x-1 text-xs">

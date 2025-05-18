@@ -44,7 +44,13 @@ export function UserItem({
       <div className="flex flex-col justify-center gap-y-0.5 text-xs overflow-hidden">
         <div className="flex flex-row gap-x-1">
           <span className="opacity-60 text-nowrap">{index}</span>
-          <span className="truncate">{decodeHTMLEntities(data.NickName)}</span>
+          <span
+            className={cn('truncate', {
+              'text-red-600': data.State === 666,
+            })}
+          >
+            {decodeHTMLEntities(data.NickName)}
+          </span>
         </div>
         <Badge
           variant="secondary"

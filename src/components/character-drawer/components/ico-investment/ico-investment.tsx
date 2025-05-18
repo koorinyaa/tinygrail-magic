@@ -37,13 +37,8 @@ export function IcoInvestment() {
   const [icoInfo, setIcoInfo] = useState<ICOInfoResult>();
   const {
     currentLevel = 0,
-    realLevel = 0,
     nextAmount = 0,
-    minAmount = 0,
-    circulation = 0,
     price = 0,
-    minPrice = 0,
-    userLevel = 0,
   } = icoInfo || {};
   // 注资金额
   const [amount, setAmount] = useState(5000);
