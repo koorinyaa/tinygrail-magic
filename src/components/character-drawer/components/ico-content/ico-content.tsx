@@ -1,3 +1,4 @@
+import { useIsMobile } from '@/hooks/use-mobile';
 import { verifyAuth } from '@/lib/auth';
 import { notifyError } from '@/lib/utils';
 import { useStore } from '@/store';
@@ -14,6 +15,7 @@ import { IcoUsers } from '../ico-users';
  * ICO 内容
  */
 export function IcoContent() {
+  const isMobile = useIsMobile(448);
   const {
     userAssets,
     setUserAssets,
@@ -27,8 +29,8 @@ export function IcoContent() {
   const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setCharacterDrawer({ handleOnly: true });
-  }, [])
+    setCharacterDrawer({ handleOnly: !isMobile });
+  }, [isMobile]);
 
   useEffect(() => {
     // 检查用户登录状态
@@ -82,7 +84,7 @@ export function IcoContent() {
       <div className="border-b border-border/40">
         <IcoInfo />
       </div>
-      <div className="flex-1 h-full">
+      <div className="flex-1 h-full bg-card">
         <IcoUsers />
       </div>
       <div className="sticky bottom-0 left-0 right-0 bg-card m-shadow-card z-10 p-3 rounded-t-md border-t border-border/40">
