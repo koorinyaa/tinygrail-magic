@@ -4,7 +4,6 @@ import { useStore } from '@/store';
 import { useEffect, useRef } from 'react';
 import {
   fatchTinygrailCharacterData,
-  fetchCharacterDetailData,
   fetchCharacterLinkItems,
   fetchCharacterPoolAmount,
   fetchCharacterTempleItems,
@@ -13,11 +12,13 @@ import {
 } from '../../service/character';
 import { fetchUserCharacterData, getUserTempleData } from '../../service/user';
 import { CharacterBackground } from '../character-background/character-background';
-import styles from './character-content.module.css';
 import { CharacterHeader } from '../character-header';
 import { CharacterInfo } from '../character-info';
 import { CharacterDrawerTabs } from '../character-drawer-tabs';
 
+/**
+ * 角色内容
+ */
 export function CharacterContent() {
   const {
     userAssets,
@@ -49,13 +50,11 @@ export function CharacterContent() {
       if (!characterId || !userName) return;
 
       const [
-        characterDetailData,
         characterTempleItems,
         characterLinkItems,
         characterUsersPageData,
         userCharacterData,
       ] = await Promise.all([
-        fetchCharacterDetailData(characterId),
         fetchCharacterTempleItems(characterId),
         fetchCharacterLinkItems(characterId),
         fetchCharacterUsersPageData(characterId, 1),
@@ -70,7 +69,6 @@ export function CharacterContent() {
       );
 
       setCharacterDrawerData({
-        characterDetailData,
         characterTempleItems,
         characterLinkItems,
         characterUsersPageData,
@@ -129,8 +127,7 @@ export function CharacterContent() {
     <div
       ref={contentRef}
       className={cn(
-        'w-full pt-2 overflow-y-auto',
-        styles.characterDrawerContent
+        'w-full pt-2 overflow-y-auto m-scrollbar-none',
       )}
     >
       <CharacterBackground contentRef={contentRef} />

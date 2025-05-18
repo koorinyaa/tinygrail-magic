@@ -403,7 +403,7 @@ export function urlDecode(str: string): string {
   return decodeURIComponent(str);
 }
 
-interface ICOInfoResult {
+export interface ICOInfoResult {
   currentLevel: number;
   realLevel: number;
   nextAmount: number;

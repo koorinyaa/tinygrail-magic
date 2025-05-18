@@ -181,7 +181,7 @@ export function RecentICOLog() {
                         key={ico.CharacterId}
                         className="flex flex-row gap-1.5 cursor-pointer py-1"
                         onClick={() => {
-                          // openCharacterDrawer(ico.CharacterId);
+                          openCharacterDrawer(ico.CharacterId, 'ico');
                         }}
                       >
                         <Avatar className="size-10 rounded-full border-2 border-secondary">

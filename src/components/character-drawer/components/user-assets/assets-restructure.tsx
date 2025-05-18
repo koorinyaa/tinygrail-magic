@@ -146,10 +146,15 @@ export function AssetRestructure({ onClose }: { onClose: () => void }) {
         const characterPoolAmount = await fetchCharacterPoolAmount(characterId);
 
         setCharacterDrawerData({
-          characterDetailData,
           tinygrailCharacterData,
           characterPoolAmount,
         });
+
+        if ('Current' in characterDetailData) {
+          setCharacterDrawerData({
+            characterDetailData,
+          });
+        }
       } else {
         throw new Error(result.Message || '献祭失败');
       }

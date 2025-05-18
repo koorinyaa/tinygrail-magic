@@ -89,9 +89,11 @@ export function CharacterBuyForm({
 
         // 更新相关数据
         callback(characterDepthData, userTradingData);
-        setCharacterDrawerData({
-          characterDetailData,
-        });
+        if ('Current' in characterDetailData) {
+          setCharacterDrawerData({
+            characterDetailData,
+          });
+        }
         verifyAuth(setUserAssets);
         onActiveStockChange(
           characterId,

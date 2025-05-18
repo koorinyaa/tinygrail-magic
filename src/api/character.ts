@@ -234,7 +234,7 @@ export interface CharacterDetail {
   Type: number;
 }
 export interface CharacterDetailResponse
-  extends TinygrailBaseResponse<CharacterDetail> {}
+  extends TinygrailBaseResponse<CharacterDetail | CharacterICOItem> {}
 
 /**
  * 获取角色详细信息
@@ -888,7 +888,7 @@ export async function getDelistCharacters(
  * @returns {Promise<TinygrailBaseResponse<CharacterDetail[]>>} - 角色排名数据
  */
 export async function getRankCharacters(
-  type: 'msrc' | 'mvc' | 'mrc'| 'mfc',
+  type: 'msrc' | 'mvc' | 'mrc' | 'mfc',
   page: number = 1,
   pageSize: number = 24
 ): Promise<TinygrailBaseResponse<CharacterDetail[]>> {
@@ -905,7 +905,7 @@ export async function getRankCharacters(
 
 /**
  * 角色活动数据项
- * @property {number} Id - ICOID
+ * @property {number} Id - ICO ID
  * @property {number} CharacterId - 角色ID
  * @property {string} Name - 角色名称
  * @property {string} Icon - 角色头像
@@ -943,7 +943,8 @@ export interface CharacterICOItem {
   State: number;
 }
 
-export interface CharacterICOResponse extends TinygrailBaseResponse<CharacterICOItem[]> {}
+export interface CharacterICOResponse
+  extends TinygrailBaseResponse<CharacterICOItem[]> {}
 
 /**
  * 获取ICO角色数据
@@ -953,7 +954,7 @@ export interface CharacterICOResponse extends TinygrailBaseResponse<CharacterICO
  * @returns {Promise<CharacterICOResponse>} - 角色活动数据
  */
 export async function getCharacterICO(
-  type: "mvi" | "rai" | "mri",
+  type: 'mvi' | 'rai' | 'mri',
   page: number = 1,
   pageSize: number = 10000
 ): Promise<CharacterICOResponse> {
@@ -962,6 +963,75 @@ export async function getCharacterICO(
   try {
     return await httpService.get<CharacterICOResponse>(
       `/chara/${type}/${page}/${pageSize}`
+    );
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * ICO用户列表项
+ * @property {string} Name - 用户名
+ * @property {string} NickName - 用户昵称
+ * @property {string} Avatar - 用户头像URL
+ * @property {number} LastIndex - 首富排名
+ * @property {number} Id - ID
+ * @property {number} InitialId - ICO ID
+ * @property {number} UserId - 用户内部ID
+ * @property {number} Amount - 金额
+ * @property {string} Begin - 首次注资时间
+ * @property {string} End - 结束时间
+ * @property {number} State - 状态
+ */
+export interface IcoUserItem {
+  Name: string;
+  NickName: string;
+  Avatar: string;
+  LastIndex: number;
+  Id: number;
+  InitialId: number;
+  UserId: number;
+  Amount: number;
+  Begin: string;
+  End: string;
+  State: number;
+}
+
+/**
+ * ICO用户分页数据
+ * @property {number} CurrentPage - 当前页码
+ * @property {number} TotalPages - 总页数
+ * @property {number} TotalItems - 数据总数
+ * @property {number} ItemsPerPage - 每页数量
+ * @property {IcoUserItem[]} Items - 用户列表
+ * @property {any} Context - 上下文信息
+ */
+export interface IcoUsersPageValue {
+  CurrentPage: number;
+  TotalPages: number;
+  TotalItems: number;
+  ItemsPerPage: number;
+  Items: IcoUserItem[];
+  Context: any;
+}
+
+/**
+ * 获取ICO用户分页数据
+ * @param {number} initialId - ICO ID
+ * @param {number} page - 页码
+ * @param {number} pageSize - 每页数量
+ * @returns {Promise<TinygrailBaseResponse<IcoUsersPageValue>>} - ICO用户分页数据
+ */
+export async function getIcoUsersPage(
+  initialId: number,
+  page: number = 1,
+  pageSize: number = 20
+): Promise<TinygrailBaseResponse<IcoUsersPageValue>> {
+  page = Math.max(page, 1);
+  pageSize = Math.max(pageSize, 1);
+  try {
+    return await httpService.get<TinygrailBaseResponse<IcoUsersPageValue>>(
+      `/chara/initial/users/${initialId}/${page}/${pageSize}`
     );
   } catch (error) {
     throw error;

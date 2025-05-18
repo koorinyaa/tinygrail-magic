@@ -1,25 +1,21 @@
 import { PaginationWrapper } from '@/components/ui/pagination-wrapper';
+import { Skeleton } from '@/components/ui/skeleton';
 import { notifyError } from '@/lib/utils';
 import { useStore } from '@/store';
 import { useState } from 'react';
-import { fetchCharacterUsersPageData } from '../../service/character';
+import { fatchIcoUsersPageData } from '../../service/character';
 import { UserItem } from './user-item';
-import { Skeleton } from '@/components/ui/skeleton';
 
-/**
- * 持股用户
- */
-export function CharacterUsers() {
-  const { characterDrawer, characterDrawerData, setCharacterDrawerData } =
-    useStore();
+export function IcoUsers() {
+  const { characterDrawer, icoDrawerData, setIcoDrawerData } = useStore();
   const {
     CurrentPage: currentPage = 1, // 当前页码
     TotalPages: totalPages = 1, // 总页数
     Items: items = [], // 用户数据列表
-  } = characterDrawerData.characterUsersPageData || {};
-  // 流通量
-  const { Total: characterTotal = 0 } =
-    characterDrawerData.characterDetailData || {};
+  } = icoDrawerData.icoUsersPageData || {};
+  const {
+    Id: icoId = 0, // ico id
+  } = icoDrawerData.icoDetailData || {};
   // 加载中
   const [loading, setLoading] = useState(false);
 
@@ -28,12 +24,10 @@ export function CharacterUsers() {
 
     setLoading(true);
     try {
-      const characterUsersPageData = await fetchCharacterUsersPageData(
-        characterDrawer.characterId,
-        page
-      );
-      setCharacterDrawerData({
-        characterUsersPageData,
+      const icoUsersPageData = await fatchIcoUsersPageData(icoId, page);
+      setIcoDrawerData({
+        icoUsersPageData,
+        currentICOUsersPage: page,
       });
     } catch (err) {
       const errMsg =
@@ -45,12 +39,12 @@ export function CharacterUsers() {
   };
 
   return (
-    <div className="flex flex-col gap-y-2 px-3 bg-card">
+    <div className="flex flex-col gap-y-2 px-3 pb-3 mt-2 bg-card">
       <div className="grid grid-cols-[repeat(auto-fill,minmax(8.5rem,1fr))] w-full gap-2">
-        {loading ? (
+        {loading || characterDrawer.loading ? (
           <>
-            {Array.from({ length: 24 }).map((_, i) => (
-              <div className="flex flex-row gap-x-1.5">
+            {Array.from({ length: 20 }).map((_, i) => (
+              <div key={i} className="flex flex-row gap-x-1.5">
                 <Skeleton className="size-10 rounded-full" />
                 <div className="flex flex-col justify-center gap-y-0.5">
                   <Skeleton className="h-4 w-12 rounded-sm" />
@@ -65,7 +59,6 @@ export function CharacterUsers() {
               <UserItem
                 key={item.Id}
                 data={item}
-                characterTotal={characterTotal}
                 index={(currentPage - 1) * 24 + index + 1}
               />
             ))}

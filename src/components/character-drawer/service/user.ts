@@ -1,9 +1,12 @@
 import { TempleItem } from '@/api/character';
 import {
   getUserCharacterData,
+  getUserIco,
   getUserTemples,
   getUserTrading,
+  joinIco,
   UserCharacterValue,
+  UserIcoValue,
   UserTradingValue,
 } from '@/api/user';
 import { isEmpty } from '@/lib/utils';
@@ -13,7 +16,7 @@ import {
   fetchCharacterDetailData,
   fetchCharacterLinkItems,
   fetchCharacterTempleItems,
-  fetchCharacterUsersPageData
+  fetchCharacterUsersPageData,
 } from './character';
 
 /**
@@ -144,8 +147,13 @@ export const onTemplesChange = async (
     characterTempleItems,
     characterLinkItems,
     userTempleData,
-    characterDetailData,
   });
+
+  if ('Current' in characterDetailData) {
+    setCharacterDrawerData({
+      characterDetailData,
+    });
+  }
 };
 
 /**
@@ -161,5 +169,36 @@ export const fatchUserTradingData = async (
     return data.Value;
   } else {
     throw new Error(data.Message || '获取用户委托数据失败');
+  }
+};
+
+/**
+ * 获取用户ICO注资数据
+ * @param {number} icoId — ICO ID
+ * @returns {Promise<UserIcoValue>} - 用户ICO注资数据
+ */
+export const fatchUserIcoData = async (
+  icoId: number
+): Promise<UserIcoValue> => {
+  const data = await getUserIco(icoId);
+  return data.Value;
+};
+
+/**
+ * 参与ICO
+ * @param {number} icoId - ICO ID
+ * @param {number} amount - 参与金额
+ * @returns {Promise<UserIcoValue>} - 参与ICO的响应数据
+ */
+export const joinCharacterIco = async (
+  icoId: number,
+  amount: number
+): Promise<UserIcoValue> => {
+  const data = await joinIco(icoId, amount);
+
+  if (data.State === 0) {
+    return data.Value;
+  } else {
+    throw new Error(data.Message || '参与ICO失败');
   }
 };

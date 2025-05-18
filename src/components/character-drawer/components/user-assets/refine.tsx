@@ -131,8 +131,13 @@ export function Refine() {
       setCharacterDrawerData({
         gensokyoCharacterData,
         characterPoolAmount,
-        characterDetailData,
       });
+
+      if ('Current' in characterDetailData) {
+        setCharacterDrawerData({
+          characterDetailData,
+        });
+      }
 
       // 更新余额
       verifyAuth(setUserAssets);

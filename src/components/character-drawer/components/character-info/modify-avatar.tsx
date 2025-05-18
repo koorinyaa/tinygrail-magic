@@ -117,9 +117,11 @@ export function ModifyAvatar({
             toast.success('头像更换成功');
             fetchCharacterDetailData(characterId).then(
               (characterDetailData) => {
-                setCharacterDrawerData({
-                  characterDetailData,
-                });
+                if ('Current' in characterDetailData) {
+                  setCharacterDrawerData({
+                    characterDetailData,
+                  });
+                }
               }
             );
           } else {

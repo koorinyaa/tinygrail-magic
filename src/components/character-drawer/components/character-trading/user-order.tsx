@@ -119,9 +119,13 @@ export function UserOrder({
         // 更新相关数据
         callback(characterDepthData, userTradingData);
         setCharacterDrawerData({
-          characterDetailData,
           userCharacterData,
         });
+        if ('Current' in characterDetailData) {
+          setCharacterDrawerData({
+            characterDetailData,
+          });
+        }
         verifyAuth(setUserAssets);
       } else {
         throw new Error(result.Message || '取消委托失败');

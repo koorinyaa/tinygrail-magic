@@ -1,10 +1,16 @@
 import {
   CharacterDetail,
+  CharacterICOItem,
   CharacterUserPageValue,
   CharacterUserValue,
+  IcoUsersPageValue,
   TempleItem,
 } from '@/api/character';
-import { TinygrailCharacterValue, UserCharacterValue } from '@/api/user';
+import {
+  TinygrailCharacterValue,
+  UserCharacterValue,
+  UserIcoValue,
+} from '@/api/user';
 import { StateCreator } from 'zustand';
 
 export type CharacterDrawer = {
@@ -13,6 +19,7 @@ export type CharacterDrawer = {
   loading?: boolean;
   error?: string | null;
   handleOnly?: boolean;
+  type?: 'character' | 'ico';
 };
 
 /**
@@ -43,14 +50,34 @@ export type CharacterDrawerData = {
   characterPoolAmount?: number;
 };
 
+/**
+ * ICO数据
+ * @param {CharacterICOItem} icoDetailData ICO详情
+ * @param {number} currentICOUsersPage 当前ICO用户分页
+ * @param {IcoUsersPageValue} icoUsersPageData ICO用户分页数据
+ * @param {UserIcoValue} userIcoData 用户ICO数据
+ */
+export type ICODrawerData = {
+  icoDetailData?: CharacterICOItem | null;
+  currentICOUsersPage?: number;
+  icoUsersPageData?: IcoUsersPageValue | null;
+  userIcoData?: UserIcoValue | null;
+};
+
 export interface CharacterDrawerState {
   characterDrawer: CharacterDrawer;
   setCharacterDrawer: (CharacterDrawer: CharacterDrawer) => void;
-  openCharacterDrawer: (characterId: number) => void;
+  openCharacterDrawer: (
+    characterId: number,
+    type?: 'character' | 'ico'
+  ) => void;
   closeCharacterDrawer: () => void;
   characterDrawerData: CharacterDrawerData;
   setCharacterDrawerData: (CharacterDrawerData: CharacterDrawerData) => void;
   resetCharacterDrawerData: () => void;
+  icoDrawerData: ICODrawerData;
+  setIcoDrawerData: (ICODrawerData: ICODrawerData) => void;
+  resetIcoDrawerData: () => void;
 }
 
 const initialCharacterDrawer: CharacterDrawer = {
@@ -59,6 +86,7 @@ const initialCharacterDrawer: CharacterDrawer = {
   loading: false,
   error: null,
   handleOnly: false,
+  type: 'character',
 };
 
 const initialCharacterDrawerData: CharacterDrawerData = {
@@ -75,6 +103,13 @@ const initialCharacterDrawerData: CharacterDrawerData = {
   characterPoolAmount: 0,
 };
 
+const initialICODrawerData: ICODrawerData = {
+  icoDetailData: null,
+  currentICOUsersPage: 1,
+  icoUsersPageData: null,
+  userIcoData: null,
+};
+
 export const createCharacterDrawerSlice: StateCreator<CharacterDrawerState> = (
   set
 ) => ({
@@ -84,13 +119,23 @@ export const createCharacterDrawerSlice: StateCreator<CharacterDrawerState> = (
       characterDrawer: { ...state.characterDrawer, ...characterDrawer },
     }));
   },
-  openCharacterDrawer: (characterId) => {
+  openCharacterDrawer: (characterId, type = 'character') => {
     set((state) => ({
-      characterDrawer: { ...state.characterDrawer, characterId, open: true },
+      characterDrawer: {
+        ...state.characterDrawer,
+        characterId,
+        open: true,
+        loading: true,
+        type,
+      },
     }));
   },
   closeCharacterDrawer: () => {
-    set({ characterDrawer: initialCharacterDrawer });
+    set({
+      characterDrawer: initialCharacterDrawer,
+      characterDrawerData: initialCharacterDrawerData,
+      icoDrawerData: initialICODrawerData,
+    });
   },
   characterDrawerData: initialCharacterDrawerData,
   setCharacterDrawerData: (characterDrawerData) => {
@@ -103,5 +148,17 @@ export const createCharacterDrawerSlice: StateCreator<CharacterDrawerState> = (
   },
   resetCharacterDrawerData: () => {
     set({ characterDrawerData: initialCharacterDrawerData });
+  },
+  icoDrawerData: initialICODrawerData,
+  setIcoDrawerData: (icoDrawerData) => {
+    set((state) => ({
+      icoDrawerData: {
+        ...state.icoDrawerData,
+        ...icoDrawerData,
+      },
+    }));
+  },
+  resetIcoDrawerData: () => {
+    set({ icoDrawerData: initialICODrawerData });
   },
 });

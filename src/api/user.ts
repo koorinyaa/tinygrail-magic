@@ -531,3 +531,65 @@ export async function getUserAssetRank(
     throw error;
   }
 }
+
+/**
+ * 用户ICO注资信息
+ * @property {string | null} Name - 用户名称
+ * @property {string | null} NickName - 用户昵称
+ * @property {string | null} Avatar - 用户头像
+ * @property {number} LastIndex - 首富排名
+ * @property {number} Id - ID
+ * @property {number} InitialId - ICO ID
+ * @property {number} UserId - 用户内部ID
+ * @property {number} Amount - 金额
+ * @property {string} Begin - 首次注资时间
+ * @property {string} End - 结束时间
+ * @property {number} State - 状态
+ */
+export interface UserIcoValue {
+  Name: string | null;
+  NickName: string | null;
+  Avatar: string | null;
+  LastIndex: number;
+  Id: number;
+  InitialId: number;
+  UserId: number;
+  Amount: number;
+  Begin: string;
+  End: string;
+  State: number;
+}
+
+/**
+ * 获取用户ICO注资信息
+ * @param {number} icoId - ICO ID
+ * @returns {Promise<TinygrailBaseResponse<UserIcoValue>>} - ICO注资信息响应
+ */
+export async function getUserIco(
+  icoId: number
+): Promise<TinygrailBaseResponse<UserIcoValue>> {
+  try {
+    const url = `/chara/initial/${icoId}`;
+    return await httpService.get<TinygrailBaseResponse<UserIcoValue>>(url);
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * 参与ICO
+ * @param {number} icoId - ICO ID
+ * @param {number} amount - 参与金额
+ * @returns {Promise<TinygrailBaseResponse<UserIcoValue>>} - 参与ICO的响应
+ */
+export const joinIco = async (
+  icoId: number,
+  amount: number
+): Promise<TinygrailBaseResponse<UserIcoValue>> => {
+  try {
+    const url = `/chara/join/${icoId}/${amount}`;
+    return await httpService.post<TinygrailBaseResponse<UserIcoValue>>(url);
+  } catch (error) {
+    throw error;
+  }
+};

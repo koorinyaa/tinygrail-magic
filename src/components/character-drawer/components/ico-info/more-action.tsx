@@ -1,58 +1,23 @@
-import { updateCharacter } from '@/api/character';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { cn, notifyError } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import { useStore } from '@/store';
 import { EllipsisVertical } from 'lucide-react';
 import { useState } from 'react';
-import { toast } from 'sonner';
-import { fetchCharacterDetailData } from '../../service/character';
 
 /**
  * 更多操作
  */
 export function MoreAction() {
-  const { characterDrawer, characterDrawerData, setCharacterDrawerData } =
-    useStore();
-  const { CharacterId: characterId = 0 } =
-    characterDrawerData.characterDetailData || {};
+  const { characterDrawer } = useStore();
+  const { characterId = 0 } = characterDrawer;
   const [dropdownMenuOpen, setDropdownMenuOpen] = useState<boolean>(false);
 
-  /**
-   * 更新角色信息
-   */
-  const updateCharacterInfo = async () => {
-    try {
-      const resp = await updateCharacter(characterId);
-      if (resp.State === 0) {
-        toast.success('同步成功', {
-          description: resp.Value,
-        });
-        fetchCharacterDetailData(characterId).then((characterDetailData) => {
-          if ('Current' in characterDetailData) {
-            setCharacterDrawerData({
-              characterDetailData,
-            });
-          }
-        });
-      } else {
-        throw new Error(resp.Message || '角色信息同步失败');
-      }
-    } catch (err) {
-      const errMsg = err instanceof Error ? err.message : '角色信息同步失败';
-      notifyError(errMsg);
-    }
-  };
-
   const menus = [
-    {
-      label: '同步角色名称',
-      onClick: updateCharacterInfo,
-    },
     {
       label: 'fuyuake',
       onClick: () => {

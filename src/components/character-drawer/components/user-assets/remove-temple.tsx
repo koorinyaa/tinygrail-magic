@@ -43,9 +43,11 @@ export function RemoveTemple({ onClose }: { onClose: () => void }) {
           characterDrawer.characterId
         );
 
-        setCharacterDrawerData({
-          characterDetailData,
-        });
+        if ('Current' in characterDetailData) {
+          setCharacterDrawerData({
+            characterDetailData,
+          });
+        }
       } else {
         toast.warning(result.Message || '拆除失败');
       }

@@ -1,6 +1,7 @@
 import {
   CharacterDepthInfo,
   CharacterDetail,
+  CharacterICOItem,
   CharacterUserPageValue,
   CharacterUserValue,
   getCharacterDepth,
@@ -9,6 +10,8 @@ import {
   getCharacterPoolAmount,
   getCharacterTemples,
   getCharacterUsers,
+  getIcoUsersPage,
+  IcoUsersPageValue,
   TempleItem,
 } from '@/api/character';
 import {
@@ -21,11 +24,11 @@ import {
 /**
  * 获取角色详情
  * @param {number | null} characterId - 角色ID
- * @returns {Promise<CharacterDetail>} - 角色详情
+ * @returns {Promise<CharacterDetail | CharacterICOItem>} - 角色详情
  */
 export const fetchCharacterDetailData = async (
   characterId: number
-): Promise<CharacterDetail> => {
+): Promise<CharacterDetail | CharacterICOItem> => {
   const data = await getCharacterDetail(characterId);
   if (data.State === 0) {
     return data.Value;
@@ -163,5 +166,25 @@ export const fatchCharacterDepthData = async (
     return data.Value;
   } else {
     throw new Error(data.Message || '获取角色深度数据失败');
+  }
+};
+
+/**
+ * 获取ICO用户分页数据
+ * @param {number} icoId  - ICO ID
+ * @param {number} [page] - 页码
+ * @returns {Promise<IcoUsersPageValue>} - ICO用户分页数据
+ */
+export const fatchIcoUsersPageData = async (
+  icoId: number,
+  page: number = 1
+): Promise<IcoUsersPageValue> => {
+  page = Math.max(page, 1);
+
+  const data = await getIcoUsersPage(icoId, page);
+  if (data.State === 0) {
+    return data.Value;
+  } else {
+    throw new Error(data.Message || '获取ICO用户分页数据失败');
   }
 };

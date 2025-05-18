@@ -141,9 +141,11 @@ export function ConvertStarForces({ onClose }: { onClose: () => void }) {
         // 获取角色详情
         const characterDetailData = await fetchCharacterDetailData(characterId);
 
-        setCharacterDrawerData({
-          characterDetailData,
-        });
+        if ('Current' in characterDetailData) {
+          setCharacterDrawerData({
+            characterDetailData,
+          });
+        }
       } else {
         throw new Error(result.Message || '星之力转换失败');
       }
@@ -259,10 +261,15 @@ export function ConvertStarForces({ onClose }: { onClose: () => void }) {
       const characterPoolAmount = await fetchCharacterPoolAmount(characterId);
 
       setCharacterDrawerData({
-        characterDetailData,
         tinygrailCharacterData,
         characterPoolAmount,
       });
+
+      if ('Current' in characterDetailData) {
+        setCharacterDrawerData({
+          characterDetailData,
+        });
+      }
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : '冲星时发生错误';

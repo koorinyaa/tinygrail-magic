@@ -6,22 +6,22 @@ import { useStore } from '@/store';
 import { RefObject } from 'react';
 
 /**
- * 角色头部
+ * ico头部
  * @param contentRef 内容区域 ref
  */
-export function CharacterHeader({
+export function IcoHeader({
   contentRef,
 }: {
   contentRef: RefObject<HTMLDivElement>;
 }) {
   const isMobile = useIsMobile(448);
   const { scrollPosition } = useScroll(contentRef);
-  const { characterDrawerData } = useStore();
+  const { icoDrawerData } = useStore();
   const {
     CharacterId: characterId = 0,
     Icon: icon = '',
     Name: name = '',
-  } = characterDrawerData.characterDetailData || {};
+  } = icoDrawerData.icoDetailData || {};
 
   return (
     <div
