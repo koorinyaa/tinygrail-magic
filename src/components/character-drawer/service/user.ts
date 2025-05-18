@@ -184,21 +184,3 @@ export const fatchUserIcoData = async (
   return data.Value;
 };
 
-/**
- * 参与ICO
- * @param {number} icoId - ICO ID
- * @param {number} amount - 参与金额
- * @returns {Promise<UserIcoValue>} - 参与ICO的响应数据
- */
-export const joinCharacterIco = async (
-  icoId: number,
-  amount: number
-): Promise<UserIcoValue> => {
-  const data = await joinIco(icoId, amount);
-
-  if (data.State === 0) {
-    return data.Value;
-  } else {
-    throw new Error(data.Message || '参与ICO失败');
-  }
-};

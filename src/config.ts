@@ -1,6 +1,6 @@
 // 基础配置
 export const APP_NAME = 'Tinygrail Magic';
-export const APP_VERSION = '0.7.2';
+export const APP_VERSION = '0.8.1';
 export const APP_AUTHOR = 'koorinyaa';
 export const APP_DESCRIPTION = '全新的小圣杯界面';
 

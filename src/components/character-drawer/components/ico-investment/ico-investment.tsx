@@ -1,24 +1,39 @@
+import { joinIco } from '@/api/user';
+import {
+  fatchIcoUsersPageData,
+  fetchCharacterDetailData,
+} from '@/components/character-drawer/service/character';
 import { InputNumber } from '@/components/input-number';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { verifyAuth } from '@/lib/auth';
 import {
   calculateICOInfo,
   formatCurrency,
   formatInteger,
   ICOInfoResult,
+  notifyError,
 } from '@/lib/utils';
 import { useStore } from '@/store';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 /**
  * ICO注资组件
  */
 export function IcoInvestment() {
-  const { characterDrawer, icoDrawerData, userAssets } = useStore();
-  const { icoDetailData, userIcoData } = icoDrawerData;
+  const {
+    characterDrawer,
+    icoDrawerData,
+    setIcoDrawerData,
+    userAssets,
+    setUserAssets,
+  } = useStore();
+  const { icoDetailData, userIcoData, currentICOUsersPage } = icoDrawerData;
   const { characterId, loading: drawerLoading = false } = characterDrawer;
+  const { Id: icoId, Total: total = 0 } = icoDetailData || {};
   const { Amount: userAmount = 0 } = userIcoData || {};
-  const { balance = 0 } = userAssets || {};
+  const { name: userName, balance = 0 } = userAssets || {};
   const [icoInfo, setIcoInfo] = useState<ICOInfoResult>();
   const {
     currentLevel = 0,
@@ -31,7 +46,9 @@ export function IcoInvestment() {
     userLevel = 0,
   } = icoInfo || {};
   // 注资金额
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState(5000);
+  // 加载中
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!icoDetailData) return;
@@ -39,9 +56,45 @@ export function IcoInvestment() {
     setIcoInfo(icoInfo);
   }, [icoDetailData]);
 
-  const handleJoinIco = () => {
+  /**
+   * 注资
+   */
+  const handleJoinIco = async () => {
+    if (!userName || !icoId || !characterId || amount <= 0) return;
+    setLoading(true);
+    try {
+      verifyAuth(setUserAssets);
 
-  }
+      const result = await joinIco(icoId, amount);
+      if (result.State === 0) {
+        toast.success('注资成功');
+
+        // 用户ICO数据
+        const userIcoData = result.Value;
+        // ico用户分页数据
+        const icoUsersPageData = await fatchIcoUsersPageData(
+          icoId,
+          currentICOUsersPage
+        );
+        // 角色详情数据
+        const characterDetailData = await fetchCharacterDetailData(characterId);
+        if ('Current' in characterDetailData) return;
+        // 更新相关数据
+        setIcoDrawerData({
+          userIcoData,
+          icoUsersPageData,
+          icoDetailData: characterDetailData,
+        });
+      } else {
+        throw new Error(result.Message || '注资失败');
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : '注资失败';
+      notifyError(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-y-1">
@@ -54,7 +107,11 @@ export function IcoInvestment() {
           minValue={5000}
           className="flex-1"
         />
-        <Button disabled={drawerLoading} className="h-8">
+        <Button
+          disabled={drawerLoading || loading}
+          onClick={handleJoinIco}
+          className="h-8"
+        >
           注资
         </Button>
       </div>
@@ -62,6 +119,9 @@ export function IcoInvestment() {
         <Badge
           variant="outline"
           className="rounded-full cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700"
+          onClick={() => {
+            setAmount(Math.max(0, nextAmount - total));
+          }}
         >
           下一级
         </Badge>
@@ -96,3 +156,4 @@ export function IcoInvestment() {
       </div>
     </div>
   );
+}
