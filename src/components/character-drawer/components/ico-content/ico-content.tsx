@@ -33,6 +33,8 @@ export function IcoContent() {
   }, [isMobile]);
 
   useEffect(() => {
+    if (!icoId) return;
+
     // 检查用户登录状态
     verifyAuth(setUserAssets);
     // 初始化数据
