@@ -4,7 +4,7 @@ import { Link } from '@/components/link';
 import { PaginationWrapper } from '@/components/ui/pagination-wrapper';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { cn, formatInteger, isEmpty, notifyError } from '@/lib/utils';
+import { cn, formatInteger, notifyError } from '@/lib/utils';
 import { useStore } from '@/store';
 import { ImageOff } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
@@ -31,8 +31,6 @@ export function UserLink({
 }) {
   const { userAssets, toTop, characterDrawer } = useStore();
   const isMobile = useIsMobile();
-  // 过滤掉无效的LINK
-  const filteredLinks = data?.Items?.filter((item) => item && item.Link);
   // 加载状态
   const [loading, setLoading] = useState(false);
   // 当前页数
@@ -100,7 +98,7 @@ export function UserLink({
         className={cn(
           'flex-1 flex flex-col items-center justify-center gap-y-1 py-8 opacity-60',
           {
-            hidden: !isEmpty(filteredLinks),
+            hidden: data.TotalItems > 0,
           }
         )}
       >
@@ -111,7 +109,7 @@ export function UserLink({
         className={cn(
           'grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(188px,1fr))] gap-2 w-full',
           {
-            hidden: isEmpty(filteredLinks),
+            hidden: data.TotalItems <= 0,
           }
         )}
       >
@@ -131,16 +129,17 @@ export function UserLink({
           </>
         ) : (
           <>
-            {filteredLinks?.map((item) => {
-              if (!item || !item.Link) return;
-              const link1: TempleItem = {
+            {(data?.Items || [])?.map((item) => {
+              const link1: TempleItem | null = {
                 ...item,
                 CharacterName: item.Name || '',
               };
-              const link2: TempleItem = {
-                ...item.Link,
-                CharacterName: item.Link.Name || '',
-              };
+              const link2: TempleItem | null = item.Link
+                ? {
+                    ...item.Link,
+                    CharacterName: item.Link.Name || '',
+                  }
+                : null;
               return (
                 <div
                   key={item.Id}
@@ -151,9 +150,9 @@ export function UserLink({
                     <div className="text-xs opacity-60 w-full -mt-0.5 truncate">
                       +
                       {formatInteger(
-                        link1.Assets < link2.Assets
+                        link1.Assets < (link2?.Assets ?? 0)
                           ? link1.Assets
-                          : link2.Assets
+                          : link2?.Assets ?? 0
                       )}
                     </div>
                   </div>
