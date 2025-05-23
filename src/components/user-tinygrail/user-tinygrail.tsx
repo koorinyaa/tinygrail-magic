@@ -203,9 +203,13 @@ export function UserTinygrail({ userName }: { userName: string }) {
             </div>
             <div className="flex flex-col w-full gap-y-0.5 md:gap-y-1 overflow-hidden">
               <div className="flex flex-col">
-                <span className="text-lg md:text-3xl font-bold truncate">
+                <a
+                  href={`/user/${userName}`}
+                  target="_black"
+                  className="text-lg md:text-3xl font-bold truncate"
+                >
                   {decodeHTMLEntities(assetsData?.Nickname || '')}
-                </span>
+                </a>
                 <span className="text-xs md:text-sm -mt-1 md:mt-0 truncate">
                   @{assetsData?.Name}
                 </span>

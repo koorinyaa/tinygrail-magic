@@ -179,7 +179,13 @@ export function IcoInfo() {
         <div className="flex flex-row gap-x-8">
           <div className="flex-1 flex flex-col overflow-hidden">
             <div className="flex flex-row items-center text-md text-foreground font-semibold">
-              <span className="truncate">{decodeHTMLEntities(name)}</span>
+              <a
+                href={`/character/${characterId}`}
+                target="_black"
+                className="truncate"
+              >
+                {decodeHTMLEntities(name)}
+              </a>
               {icoInfo && (
                 <>
                   <BadgeLevel level={currentLevel} title="ico等级" />
