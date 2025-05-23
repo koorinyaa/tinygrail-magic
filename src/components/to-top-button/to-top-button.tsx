@@ -16,7 +16,7 @@ export function ToTopButton({ className }: { className?: string }) {
         toTop();
       }}
       className={cn(
-        'bg-card text-foreground/80 p-2 rounded-full shadow-lg transition-colors cursor-pointer',
+        'bg-card border-1 text-foreground/80 p-2 rounded-full shadow-lg transition-colors cursor-pointer',
         className
       )}
       title="返回顶部"
