@@ -708,3 +708,35 @@ export async function getShareBonusTest(
     throw error;
   }
 }
+
+/**
+ * 领取每周分红
+ * @returns {Promise<TinygrailBaseResponse<string>>} - 领取分红结果
+ */
+export async function claimWeeklyShareBonus(): Promise<
+  TinygrailBaseResponse<string>
+> {
+  try {
+    return await httpService.post<TinygrailBaseResponse<string>>(
+      '/event/share/bonus'
+    );
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * 领取每日签到奖励
+ * @returns {Promise<TinygrailBaseResponse<string>>} - 领取每日签到奖励结果
+ */
+export async function claimBonusDaily(): Promise<
+  TinygrailBaseResponse<string>
+> {
+  try {
+    return await httpService.post<TinygrailBaseResponse<string>>(
+      '/event/bangumi/bonus/daily'
+    );
+  } catch (error) {
+    throw error;
+  }
+}

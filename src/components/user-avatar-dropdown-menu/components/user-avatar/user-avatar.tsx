@@ -9,7 +9,7 @@ export function UserAvatar({ src }: { src: string }) {
   return (
     <Avatar>
       <AvatarImage src={src} alt="avatar" />
-      <AvatarFallback>u</AvatarFallback>
+      <AvatarFallback>U</AvatarFallback>
     </Avatar>
   );
 }
