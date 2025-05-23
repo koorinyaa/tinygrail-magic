@@ -740,3 +740,26 @@ export async function claimBonusDaily(): Promise<
     throw error;
   }
 }
+
+/**
+ * 发送红包
+ * @param {string} userName - 用户名
+ * @param {number} amount - 金额
+ * @param {string} message - 留言
+ * @returns {Promise<TinygrailBaseResponse<string>>} - 发送红包结果
+ */
+export async function sendRedPacket(
+  userName: string,
+  amount: number,
+  message: string
+): Promise<TinygrailBaseResponse<string>> {
+  try {
+    return await httpService.post<TinygrailBaseResponse<string>>(
+      `/event/send/${userName}/${amount}/${message}`
+    );
+  } catch (error) {
+    throw error;
+  }
+}
+
+

@@ -33,6 +33,7 @@ import {
 import { useStore } from '@/store';
 import { HelpCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { RedEnvelopeDialog } from './components/red-envelope-dialog';
 import { UserCharacter } from './components/user-character';
 import { UserIco } from './components/user-ico';
 import { UserLink } from './components/user-link';
@@ -73,6 +74,8 @@ export function UserTinygrail({ userName }: { userName: string }) {
   const [charaPageData, setCharaPageData] = useState<UserCharaPageValue>();
   // ico分页数据
   const [icoPageData, setIcoPageData] = useState<UserIcoPageValue>();
+  // 红包弹窗
+  const [openRedEnvelopeDialog, setOpenRedEnvelopeDialog] = useState(false);
 
   useEffect(() => {
     // 初始化数据
@@ -252,7 +255,9 @@ export function UserTinygrail({ userName }: { userName: string }) {
                       }}
                     >
                       <span className="text-xs text-wrap">
-                        {`计息股份共${formatInteger(bonusData.Total)}股，圣殿${formatInteger(bonusData.Temples)}座`}
+                        {`计息股份共${formatInteger(
+                          bonusData.Total
+                        )}股，圣殿${formatInteger(bonusData.Temples)}座`}
                         <br />
                         {`预期股息₵${formatCurrency(bonusData.Share)}`}
                         <br />
@@ -274,7 +279,14 @@ export function UserTinygrail({ userName }: { userName: string }) {
             'hidden md:hidden': userAssets?.name === userName,
           })}
         >
-          <Button disabled={loading} variant="outline" className="rounded-full">
+          <Button
+            disabled={loading}
+            variant="outline"
+            className="rounded-full"
+            onClick={() => {
+              setOpenRedEnvelopeDialog(true);
+            }}
+          >
             发送红包
           </Button>
           {/* <Button disabled={loading} variant="outline" className="rounded-full">
@@ -291,6 +303,9 @@ export function UserTinygrail({ userName }: { userName: string }) {
           disabled={loading}
           variant="outline"
           className="flex-1 rounded-full"
+          onClick={() => {
+            setOpenRedEnvelopeDialog(true);
+          }}
         >
           发送红包
         </Button>
@@ -302,6 +317,12 @@ export function UserTinygrail({ userName }: { userName: string }) {
           红包记录
         </Button> */}
       </div>
+      <RedEnvelopeDialog
+        userName={userName}
+        nickname={assetsData?.Nickname ?? ''}
+        open={openRedEnvelopeDialog}
+        onOpenChange={setOpenRedEnvelopeDialog}
+      />
       <TabsLine
         value={currentTab}
         onValueChange={(value) => {
