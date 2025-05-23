@@ -252,9 +252,7 @@ export function UserTinygrail({ userName }: { userName: string }) {
                       }}
                     >
                       <span className="text-xs text-wrap">
-                        {`计息股份共${formatInteger(bonusData.Total)}股`}
-                        <br />
-                        {`圣殿${formatInteger(bonusData.Temples)}座`}
+                        {`计息股份共${formatInteger(bonusData.Total)}股，圣殿${formatInteger(bonusData.Temples)}座`}
                         <br />
                         {`预期股息₵${formatCurrency(bonusData.Share)}`}
                         <br />
