@@ -38,7 +38,7 @@ export function FloatingButtons() {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
         >
-          <ToTopButton className="opacity-80 hover:opacity-100" />
+          <ToTopButton />
         </motion.div>
       )}
     </div>
