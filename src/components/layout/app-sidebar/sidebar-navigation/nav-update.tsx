@@ -18,21 +18,21 @@ import { ArrowRightIcon } from 'lucide-react';
  */
 export function NavUpdate() {
   return (
-    <div
-      className="bg-background z-50 max-w-[400px] rounded-md border px-4 py-3 shadow-lg cursor-pointer"
-      onClick={() => {
-        window.open(UPDATE_URL);
-      }}
-    >
-      <div className="flex gap-2">
-        <p className="grow flex items-center text-sm">
-          有新版本
-          <Badge className="bg-green-400 dark:bg-green-600 h-4 px-1 ml-1 rounded-full">
-            new
-          </Badge>
-        </p>
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <div
+          className="bg-background z-50 max-w-[400px] rounded-md border px-4 py-3 shadow-lg cursor-pointer"
+          onClick={() => {
+            window.open(UPDATE_URL);
+          }}
+        >
+          <div className="flex gap-2">
+            <p className="grow flex items-center text-sm">
+              有新版本
+              <Badge className="bg-green-400 dark:bg-green-600 h-4 px-1 ml-1 rounded-full">
+                new
+              </Badge>
+            </p>
             <div className="text-sm font-medium whitespace-nowrap">
               更新
               <ArrowRightIcon
@@ -41,30 +41,26 @@ export function NavUpdate() {
                 aria-hidden="true"
               />
             </div>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>版本更新</AlertDialogTitle>
-              <AlertDialogDescription>
-                更新完成后请刷新页面
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel className="cursor-pointer">
-                关闭
-              </AlertDialogCancel>
-              <AlertDialogAction
-                onClick={() => {
-                  window.location.reload();
-                }}
-                className="cursor-pointer"
-              >
-                刷新
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      </div>
-    </div>
+          </div>
+        </div>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>版本更新</AlertDialogTitle>
+          <AlertDialogDescription>更新完成后请刷新页面</AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel className="cursor-pointer">关闭</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={() => {
+              window.location.reload();
+            }}
+            className="cursor-pointer"
+          >
+            刷新
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
