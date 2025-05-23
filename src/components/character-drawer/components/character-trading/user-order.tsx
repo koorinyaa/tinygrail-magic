@@ -361,7 +361,7 @@ export function UserOrder({
               : userTradingData?.BidHistory ?? []
             )
               .slice()
-              .reverse()
+              .sort((a, b) => new Date(b.TradeTime).getTime() - new Date(a.TradeTime).getTime())
               .map((item) => (
                 <TableRow key={item.Id} className="border-none">
                   <TableCell className="p-1">

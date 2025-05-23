@@ -31,8 +31,6 @@ export function RecentCharacterLog() {
   const [timeRefreshCounter, setTimeRefreshCounter] = useState(0);
 
   useEffect(() => {
-    const stop = initializeRealtimeConnection();
-
     // 设置每3秒更新一次时间格式化的定时器
     const timeRefreshInterval = setInterval(() => {
       setTimeRefreshCounter((prev) => prev + 1);
@@ -40,7 +38,15 @@ export function RecentCharacterLog() {
 
     return () => {
       clearInterval(timeRefreshInterval);
+    };
+  }, []);
 
+  useEffect(() => {
+    fetchRecentCharacter();
+
+    const stop = initializeRealtimeConnection();
+
+    return () => {
       if (stop) {
         stop
           .then((cleanup) => {
@@ -53,10 +59,6 @@ export function RecentCharacterLog() {
           });
       }
     };
-  }, []);
-
-  useEffect(() => {
-    fetchRecentCharacter();
   }, [currentPage]);
 
   /**

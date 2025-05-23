@@ -266,7 +266,7 @@ export interface RecentLinkValue {
  */
 export async function getRecentLinks(
   page: number = 1,
-  pageSize: number = 24
+  pageSize: number = 48
 ): Promise<TinygrailBaseResponse<RecentLinkValue>> {
   try {
     return await httpService.get<TinygrailBaseResponse<RecentLinkValue>>(

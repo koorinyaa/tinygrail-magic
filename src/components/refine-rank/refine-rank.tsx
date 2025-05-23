@@ -11,7 +11,12 @@ import { useEffect, useRef, useState } from 'react';
  * 精炼排行
  */
 export function RefineRank() {
-  const { toTop, openCharacterDrawer } = useStore();
+  const {
+    toTop,
+    setCurrentPage: setCurrentPageData,
+    openCharacterDrawer,
+    closeCharacterDrawer,
+  } = useStore();
   const containerRef = useRef<HTMLDivElement>(null);
   // 容器宽度
   const [containerWidth, setContainerWidth] = useState(0);
@@ -65,20 +70,41 @@ export function RefineRank() {
     }
   };
 
+  /**
+   * 跳转到用户的小圣杯
+   */
+  const goToUserTinygrail = (name: string, nickName: string) => {
+    if (!name) return;
+
+    setCurrentPageData({
+      main: {
+        title: `${decodeHTMLEntities(nickName)}的小圣杯`,
+        id: 'user-tinygrail',
+      },
+      data: {
+        userName: name,
+      },
+    });
+    closeCharacterDrawer();
+  };
+
   return (
     <div className="flex flex-col">
       <div
         ref={containerRef}
         className={cn('grid gap-4 grid-cols-1', {
-          'grid-cols-6': containerWidth > 210 * 4 + 3 * 16,
+          'grid-cols-8': containerWidth > 192 * 6 + 5 * 16,
+          'grid-cols-6':
+            containerWidth > 192 * 4 + 3 * 16 &&
+            containerWidth <= 192 * 6 + 5 * 16,
           'grid-cols-4':
-            containerWidth > 210 * 3 + 2 * 16 &&
-            containerWidth <= 210 * 4 + 3 * 16,
+            containerWidth > 192 * 3 + 2 * 16 &&
+            containerWidth <= 192 * 4 + 3 * 16,
           'grid-cols-3':
-            containerWidth > 210 * 2 + 1 * 16 &&
-            containerWidth <= 210 * 3 + 2 * 16,
+            containerWidth > 192 * 2 + 1 * 16 &&
+            containerWidth <= 192 * 3 + 2 * 16,
           'grid-cols-2':
-            containerWidth > 240 && containerWidth <= 210 * 2 + 1 * 16,
+            containerWidth > 240 && containerWidth <= 192 * 2 + 1 * 16,
         })}
       >
         {loading ? (
@@ -119,7 +145,12 @@ export function RefineRank() {
                       </span>
                       <BadgeLevel level={item.CharacterLevel} />
                     </div>
-                    <div className="flex items-center text-xs opacity-60 cursor-pointer">
+                    <div
+                      onClick={() => {
+                        goToUserTinygrail(item.Name || '', item.Nickname || '');
+                      }}
+                      className="flex items-center text-xs opacity-60 hover:opacity-80 cursor-pointer"
+                    >
                       <span className="truncate">
                         @{decodeHTMLEntities(item.Nickname || '')}
                       </span>

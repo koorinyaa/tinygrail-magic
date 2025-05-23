@@ -51,7 +51,7 @@ export function AssetsRank() {
         {loading ? (
           <>
             {Array.from({ length: 20 }).map((_, index) => (
-              <Skeleton key={index} className="h-41.5 w-full rounded-md" />
+              <Skeleton key={index} className="h-39.5 w-full rounded-md" />
             ))}
           </>
         ) : (

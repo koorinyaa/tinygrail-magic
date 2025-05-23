@@ -9,7 +9,7 @@ import {
   decodeHTMLEntities,
   formatCurrency,
   formatInteger,
-  getAvatarUrl
+  getAvatarUrl,
 } from '@/lib/utils';
 import { useStore } from '@/store';
 import { ChevronsRight } from 'lucide-react';
@@ -27,7 +27,7 @@ export function ICOCard({
   data: CharacterICOItem;
   refresh: () => void;
 }) {
-  const { openCharacterDrawer, setCharacterDrawer } = useStore();
+  const { openCharacterDrawer } = useStore();
   // 用于强制刷新时间显示的计数器
   const [timeRefreshCounter, setTimeRefreshCounter] = useState(0);
 
@@ -38,6 +38,7 @@ export function ICOCard({
     End: end,
     Total: total,
     Users: users,
+    State: state,
   } = data;
 
   const { currentLevel, realLevel, nextAmount, minAmount, price } =
@@ -75,9 +76,9 @@ export function ICOCard({
       value: formatCurrency(price, { useWUnit: true }),
     },
     {
-      id: 'total',
-      label: '发行量',
-      value: formatInteger(10000 + (currentLevel - 1) * 7500),
+      id: 'state',
+      label: '已注资',
+      value: state ? formatCurrency(state, { useWUnit: true }) : '???',
     },
   ];
 

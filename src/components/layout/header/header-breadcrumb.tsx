@@ -18,8 +18,10 @@ export function HeaderBreadcrumb({
   return (
     <Breadcrumb className={className} {...props}>
       <BreadcrumbList>
-        <BreadcrumbItem>
-          <BreadcrumbPage>{currentPage.main.title}</BreadcrumbPage>
+        <BreadcrumbItem className="w-full overflow-hidden">
+          <BreadcrumbPage className="truncate">
+            {currentPage.main.title}
+          </BreadcrumbPage>
         </BreadcrumbItem>
         {currentPage.sub && <BreadcrumbSeparator />}
         {currentPage.sub && (

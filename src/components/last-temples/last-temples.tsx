@@ -22,7 +22,13 @@ type TempleImage = GalleryImage & {
  * 最新圣殿
  */
 export function LastTemples() {
-  const { toTop, pageContainerRef, openCharacterDrawer } = useStore();
+  const {
+    toTop,
+    pageContainerRef,
+    setCurrentPage: setCurrentPageData,
+    openCharacterDrawer,
+    closeCharacterDrawer,
+  } = useStore();
   // 加载状态
   const [loading, setLoading] = useState(true);
   // 当前页数
@@ -236,6 +242,7 @@ export function LastTemples() {
       Id: id,
       CharacterId: characterId,
       CharacterName: characterName,
+      Name: name,
       Nickname: nickname,
     } = (props as ThumbnailImageProps<ImageExtended<TempleImage>>).item.data;
 
@@ -262,7 +269,12 @@ export function LastTemples() {
                   {decodeHTMLEntities(characterName)}
                 </span>
               </div>
-              <div className="flex items-center text-xs opacity-60 cursor-pointer">
+              <div
+                onClick={() => {
+                  goToUserTinygrail(name || '', nickname || '');
+                }}
+                className="flex items-center text-xs opacity-60 hover:opacity-80 cursor-pointer"
+              >
                 <span className="truncate">
                   @{decodeHTMLEntities(nickname || '')}
                 </span>
@@ -272,6 +284,24 @@ export function LastTemples() {
         </div>
       </PhotoView>
     );
+  };
+
+  /**
+   * 跳转到用户的小圣杯
+   */
+  const goToUserTinygrail = (name: string, nickName: string) => {
+    if (!name) return;
+
+    setCurrentPageData({
+      main: {
+        title: `${decodeHTMLEntities(nickName)}的小圣杯`,
+        id: 'user-tinygrail',
+      },
+      data: {
+        userName: name,
+      },
+    });
+    closeCharacterDrawer();
   };
 
   return (

@@ -5,3 +5,5 @@ export { CharacterPage } from './character-page';
 export { RankIngList } from './ranking-list';
 export { LastTemplesPage } from './last-temples-page';
 export { ICOPage } from './ico-page';
+export { MyTinygrailPage } from './my-tinygrail-page';
+export { UserTinygrailPage } from './user-tinygrail-page';

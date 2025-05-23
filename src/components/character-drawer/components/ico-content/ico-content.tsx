@@ -62,15 +62,10 @@ export function IcoContent() {
         icoUsersPageData,
         userIcoData,
       });
-    } catch (error) {
-      let errorMessage = '';
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      } else {
-        console.error('初始化ICO数据失败');
-      }
-      notifyError(errorMessage);
-      setCharacterDrawer({ error: errorMessage });
+    } catch (err) {
+      const errMsg = err instanceof Error ? err.message : '初始化ICO数据失败';
+      notifyError(errMsg);
+      setCharacterDrawer({ error: errMsg });
     } finally {
       if (icoId) setCharacterDrawer({ loading: false });
     }

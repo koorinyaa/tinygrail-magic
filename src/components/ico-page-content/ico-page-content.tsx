@@ -145,7 +145,7 @@ export function ICOPageContent() {
             {loading ? (
               <>
                 {Array.from({ length: 24 }).map((_, index) => (
-                  <Skeleton key={index} className="h-56 w-full rounded-md" />
+                  <Skeleton key={index} className="h-54 w-full rounded-md" />
                 ))}
               </>
             ) : (

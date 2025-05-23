@@ -8,11 +8,13 @@ import {
   formatCurrency,
   getAvatarUrl,
 } from '@/lib/utils';
+import { useStore } from '@/store';
 
 /**
  * 资产排名卡片
  */
 export function AssetsRankCard({ data }: { data: UserAssetRankItem }) {
+  const { setCurrentPage, closeCharacterDrawer } = useStore();
   const {
     Name: name = '',
     Nickname: nickname = '',
@@ -43,14 +45,33 @@ export function AssetsRankCard({ data }: { data: UserAssetRankItem }) {
     },
   ];
 
+  /**
+   * 跳转到用户的小圣杯
+   */
+  const goToUserTinygrail = () => {
+    if (!name) return;
+
+    setCurrentPage({
+      main: {
+        title: `${decodeHTMLEntities(nickname)}的小圣杯`,
+        id: 'user-tinygrail',
+      },
+      data: {
+        userName: name,
+      },
+    });
+    closeCharacterDrawer();
+  };
+
   return (
     <Card
+      onClick={goToUserTinygrail}
       className={cn(
-        'h-41.5 gap-y-2 border-0 rounded-md shadow p-0',
+        'h-39.5 gap-y-2 border-0 rounded-md shadow p-0',
         'overflow-hidden cursor-pointer hover:shadow-md transition duration-300'
       )}
     >
-      <div className="flex flex-col items-center gap-y-2 p-4">
+      <div className="flex flex-col items-center gap-y-2 p-3">
         <div className="relative">
           <Avatar
             className={cn('size-16 rounded-full border-2 border-secondary', {

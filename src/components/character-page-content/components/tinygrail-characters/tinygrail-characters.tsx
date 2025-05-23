@@ -125,7 +125,7 @@ export function TinygrailCharacters() {
         {loading ? (
           <>
             {Array.from({ length: 24 }).map((_, index) => (
-              <Skeleton key={index} className="h-48 w-full rounded-md" />
+              <Skeleton key={index} className="h-47 w-full rounded-md" />
             ))}
           </>
         ) : (

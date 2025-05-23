@@ -1,13 +1,15 @@
 import { verifyAuth } from '@/lib/auth';
 import { cn } from '@/lib/utils';
 import {
+  CharacterPage,
+  ICOPage,
+  LastTemplesPage,
+  MyTinygrailPage,
   NotFound,
+  RankIngList,
   StarTower,
   TopWeek,
-  CharacterPage,
-  RankIngList,
-  LastTemplesPage,
-  ICOPage,
+  UserTinygrailPage,
 } from '@/pages';
 import { useStore } from '@/store';
 import * as ScrollAreaPrimitive from '@radix-ui/react-scroll-area';
@@ -31,6 +33,8 @@ export function MainContent({
     ico: ICOPage,
     ranking: RankIngList,
     lastTemples: LastTemplesPage,
+    'my-tinygrail': MyTinygrailPage,
+    'user-tinygrail': UserTinygrailPage,
     default: NotFound,
   } as const;
 
@@ -52,7 +56,13 @@ export function MainContent({
     <div
       ref={containerRef}
       className={cn(
-        '!h-[calc(100dvh-3.5rem)] h-[calc(100vh-3.5rem)] md:!h-[calc(100dvh-4.5rem)] md:h-[calc(100vh-4.5rem)] w-full px-4 sm:px-6 lg:px-8 py-8 scroll-smooth overflow-auto',
+        '!h-[calc(100dvh-3.5rem)] h-[calc(100vh-3.5rem)] md:!h-[calc(100dvh-4.5rem)] md:h-[calc(100vh-4.5rem)]',
+        'w-full px-4 sm:px-6 lg:px-8 py-8 scroll-smooth overflow-auto',
+        {
+          'px-0 sm:px-0 lg:px-0 py-0':
+            currentPage.main.id === 'my-tinygrail' ||
+            currentPage.main.id === 'user-tinygrail',
+        },
         className
       )}
       {...props}

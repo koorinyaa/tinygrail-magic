@@ -1,3 +1,4 @@
+import { getUserAssets } from '@/api/user';
 import { CharacterDrawer } from '@/components/character-drawer';
 import { CharacterSearchDialog } from '@/components/character-search-dialog';
 import { AppSidebar } from '@/components/layout/app-sidebar';
@@ -7,12 +8,20 @@ import { LoginDialog } from '@/components/login-dialog';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { Toaster } from '@/components/ui/sonner';
 import { checkForUpdates } from '@/lib/update-checker';
+import { decodeHTMLEntities } from '@/lib/utils';
 import { useStore } from '@/store';
 import { useEffect, useRef } from 'react';
 import './App.css';
 
 export default function App() {
-  const { theme, setTheme, setUpdateInfo, openCharacterDrawer } = useStore();
+  const {
+    theme,
+    setTheme,
+    userAssets,
+    setCurrentPage,
+    setUpdateInfo,
+    openCharacterDrawer,
+  } = useStore();
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -46,10 +55,30 @@ export default function App() {
    */
   const initPage = () => {
     const path = window.location.pathname;
+    // 角色页面
     if (path.startsWith('/character/')) {
       const characterId = path.split('/').filter(Boolean).pop();
       if (!isNaN(Number(characterId))) {
         openCharacterDrawer(Number(characterId));
+      }
+    }
+    // 用户页面
+    if (path.startsWith('/user/')) {
+      const userName = path.split('/').filter(Boolean).pop();
+      if (userName) {
+        getUserAssets(userName).then((result) => {
+          if (result.State === 0) {
+            setCurrentPage({
+              main: {
+                title: `${decodeHTMLEntities(result.Value.Nickname)}的小圣杯`,
+                id: 'user-tinygrail',
+              },
+              data: {
+                userName: userName,
+              },
+            });
+          }
+        });
       }
     }
   };
@@ -67,6 +96,7 @@ export default function App() {
         richColors
         theme={theme}
         visibleToasts={5}
+        position="top-right"
         toastOptions={{
           style: {
             pointerEvents: 'auto',

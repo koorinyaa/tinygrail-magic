@@ -7,6 +7,7 @@ import {
   formatInteger,
   getAvatarUrl,
 } from '@/lib/utils';
+import { useStore } from '@/store';
 
 /**
  * ico用户Item
@@ -21,13 +22,35 @@ export function UserItem({
   data: IcoUserItem;
   index: number;
 }) {
+  const { setCurrentPage, closeCharacterDrawer } = useStore();
+
+  /**
+   * 跳转到用户的小圣杯
+   */
+  const goToUserTinygrail = () => {
+    setCurrentPage({
+      main: {
+        title: `${decodeHTMLEntities(data.NickName)}的小圣杯`,
+        id: 'user-tinygrail',
+      },
+      data: {
+        userName: data.Name,
+      },
+    });
+    closeCharacterDrawer();
+  };
+
   return (
     <div className="flex flex-row gap-x-1.5">
       <div className="relative">
         <Avatar
-          className={cn('size-10 rounded-full border-2 border-secondary', {
-            'border-red-600': data.State === 666,
-          })}
+          onClick={goToUserTinygrail}
+          className={cn(
+            'size-10 rounded-full border-2 border-secondary cursor-pointer',
+            {
+              'border-red-600': data.State === 666,
+            }
+          )}
         >
           <AvatarImage
             className="object-cover object-top pointer-events-none"
@@ -36,13 +59,19 @@ export function UserItem({
           <AvatarFallback className="rounded-full">U</AvatarFallback>
         </Avatar>
         {data.LastIndex > 0 && (
-          <Badge className="bg-yellow-500 dark:bg-yellow-600 text-white absolute -top-1.5 -left-2.5 size-7 rounded-full border-2 border-card px-1 scale-70">
+          <Badge
+            className="bg-yellow-500 dark:bg-yellow-600 text-white absolute -top-1.5 -left-2.5 size-7 rounded-full border-2 border-card px-1 scale-70 cursor-default"
+            title={`首富排名${data.LastIndex}`}
+          >
             #{data.LastIndex}
           </Badge>
         )}
       </div>
       <div className="flex flex-col justify-center gap-y-0.5 text-xs overflow-hidden">
-        <div className="flex flex-row gap-x-1">
+        <div
+          onClick={goToUserTinygrail}
+          className="flex flex-row gap-x-1 cursor-pointer"
+        >
           <span className="opacity-60 text-nowrap">{index}</span>
           <span
             className={cn('truncate', {

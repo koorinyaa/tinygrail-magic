@@ -83,7 +83,7 @@ export function STCharacters() {
         {loading ? (
           <>
             {Array.from({ length: 24 }).map((_, index) => (
-              <Skeleton key={index} className="h-42 w-full rounded-md" />
+              <Skeleton key={index} className="h-40 w-full rounded-md" />
             ))}
           </>
         ) : (

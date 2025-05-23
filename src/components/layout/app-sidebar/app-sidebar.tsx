@@ -68,15 +68,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       groupName: 'Account',
       items: [
         {
-          name: `${'氷Nyaa'}的小圣杯`,
-          id: 'account',
+          name: userAssets ? `${userAssets.nickname}的小圣杯` : '我的小圣杯',
+          id: 'my-tinygrail',
           icon: CircleUserRound,
         },
-        {
-          name: '设置',
-          id: 'settings',
-          icon: Settings,
-        },
+        // {
+        //   name: '设置',
+        //   id: 'settings',
+        //   icon: Settings,
+        // },
       ],
     },
     navSecondary: [

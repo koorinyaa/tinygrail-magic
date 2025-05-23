@@ -36,8 +36,6 @@ export function RecentICOLog() {
   useEffect(() => {
     fetchCharacterICOData();
 
-    const stop = initializeRealtimeConnection();
-
     // 设置每3秒更新一次时间格式化的定时器
     const timeRefreshInterval = setInterval(() => {
       setTimeRefreshCounter((prev) => prev + 1);
@@ -45,7 +43,13 @@ export function RecentICOLog() {
 
     return () => {
       clearInterval(timeRefreshInterval);
+    };
+  }, []);
 
+  useEffect(() => {
+    const stop = initializeRealtimeConnection();
+
+    return () => {
       if (stop) {
         stop
           .then((cleanup) => {
@@ -58,7 +62,7 @@ export function RecentICOLog() {
           });
       }
     };
-  }, []);
+  }, [currentPage]);
 
   /**
    * 初始化订阅

@@ -15,7 +15,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { PhotoProvider, PhotoView } from 'react-photo-view';
 
 export function CharacterTemples() {
-  const { characterDrawerData } = useStore();
+  const { setCurrentPage, closeCharacterDrawer, characterDrawerData } =
+    useStore();
   const {
     characterDetailData,
     characterLinkItems = [],
@@ -35,6 +36,25 @@ export function CharacterTemples() {
   const [loadedImages, setLoadedImages] = useState<{ [key: string]: boolean }>(
     {}
   );
+
+  /**
+   * 跳转到用户的小圣杯
+   * @param nickName 用户昵称
+   * @param name 用户名
+   */
+  const goToUserTinygrail = (nickName: string, name: string) => {
+    if (!name) return;
+    setCurrentPage({
+      main: {
+        title: `${decodeHTMLEntities(nickName)}的小圣杯`,
+        id: 'user-tinygrail',
+      },
+      data: {
+        userName: name,
+      },
+    });
+    closeCharacterDrawer();
+  };
 
   // 合并圣殿和链接数据
   const allTempleItems = useMemo(() => {
@@ -59,13 +79,13 @@ export function CharacterTemples() {
 
   // 计算LINK总页数
   const linkTotalPages = useMemo(() => {
-    const itemsPerPage = 3;
+    const itemsPerPage = 4;
     return Math.max(1, Math.ceil(characterLinkItems.length / itemsPerPage));
   }, [characterLinkItems]);
 
   // 获取LINK当前页的数据
   const currentLinkPageItems = useMemo(() => {
-    const itemsPerPage = 3;
+    const itemsPerPage = 4;
     const startIndex = (linkCurrentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     return characterLinkItems.slice(startIndex, endIndex);
@@ -211,7 +231,7 @@ export function CharacterTemples() {
         </div>
         <div
           className={cn(
-            'grid grid-cols-[repeat(auto-fill,minmax(214px,1fr))] gap-2 w-full',
+            'grid grid-cols-[repeat(auto-fill,minmax(150px,1fr))] sm:grid-cols-[repeat(auto-fill,minmax(170px,1fr))] gap-2 w-full',
             {
               hidden: isEmpty(currentLinkPageItems),
             }
@@ -222,9 +242,9 @@ export function CharacterTemples() {
             return (
               <div
                 key={item.UserId}
-                className="flex items-center justify-center w-full"
+                className="flex items-center justify-center w-full h-[132px] sm:h-[148px] overflow-hidden"
               >
-                <div className="flex flex-col gap-y-1 w-[214px]">
+                <div className="flex flex-col w-[188px] scale-80 sm:scale-90">
                   <Link
                     link1={{
                       ...item,
@@ -237,7 +257,12 @@ export function CharacterTemples() {
                     }}
                     jumpable
                   />
-                  <div className="text-xs opacity-60 hover:opacity-80 w-full truncate cursor-pointer">
+                  <div
+                    onClick={() => {
+                      goToUserTinygrail(item.Nickname || '', item.Name || '');
+                    }}
+                    className="text-xs opacity-60 hover:opacity-80 w-full -mt-0.5 truncate cursor-pointer"
+                  >
                     @{decodeHTMLEntities(item.Nickname || '')} +
                     {formatInteger(
                       item.Assets < item.Link.Assets
@@ -250,7 +275,7 @@ export function CharacterTemples() {
             );
           })}
         </div>
-        {characterLinkItems.length > 3 && (
+        {characterLinkItems.length > 4 && (
           <PaginationWrapper
             currentPage={linkCurrentPage}
             totalPages={linkTotalPages}
@@ -320,7 +345,12 @@ export function CharacterTemples() {
                     data={item}
                     className="w-full"
                   />
-                  <div className="text-xs opacity-60 hover:opacity-80 w-full truncate	cursor-pointer">
+                  <div
+                    onClick={() => {
+                      goToUserTinygrail(item.Nickname || '', item.Name || '');
+                    }}
+                    className="text-xs opacity-60 hover:opacity-80 w-full truncate cursor-pointer"
+                  >
                     @{decodeHTMLEntities(item.Nickname || '')}
                   </div>
                 </div>

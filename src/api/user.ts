@@ -1,5 +1,5 @@
 import { httpService, TinygrailBaseResponse } from '@/lib/http';
-import { CharacterDetail, TempleItem } from './character';
+import { CharacterDetail, CharacterICOItem, TempleItem } from './character';
 
 export const AUTHORIZE_URL =
   'https://bgm.tv/oauth/authorize?response_type=code&client_id=bgm2525b0e4c7d93fec&redirect_uri=https%3A%2F%2Ftinygrail.com%2Fapi%2Faccount%2Fcallback';
@@ -593,3 +593,118 @@ export const joinIco = async (
     throw error;
   }
 };
+
+/**
+ * 用户连接列表分页数据
+ * @property {number} CurrentPage - 当前页码
+ * @property {number} TotalPages - 总页数
+ * @property {number} TotalItems - 总条目数
+ * @property {number} ItemsPerPage - 每页条目数
+ * @property {TempleItem[]} Items - 连接列表
+ * @property {any | null} Context - 上下文
+ */
+export interface UserLinkPageValue {
+  CurrentPage: number;
+  TotalPages: number;
+  TotalItems: number;
+  ItemsPerPage: number;
+  Items: TempleItem[];
+  Context: any | null;
+}
+
+/**
+ * 获取用户连接列表
+ * @param {string} userName - 用户名
+ * @param {number} page - 页码
+ * @param {number} pageSize - 每页数量
+ * @returns {Promise<TinygrailBaseResponse<UserLinkPageValue>>} - 用户连接列表
+ */
+export async function getUserLinks(
+  userName: string,
+  page: number = 1,
+  pageSize: number = 24
+): Promise<TinygrailBaseResponse<UserLinkPageValue>> {
+  page = Math.max(1, page);
+  pageSize = Math.max(1, pageSize);
+  try {
+    return await httpService.get<TinygrailBaseResponse<UserLinkPageValue>>(
+      `/chara/user/link/${userName}/${page}/${pageSize}`
+    );
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * 用户初始角色列表分页数据
+ * @property {number} CurrentPage - 当前页码
+ * @property {number} TotalPages - 总页数
+ * @property {number} TotalItems - 总条目数
+ * @property {number} ItemsPerPage - 每页条目数
+ * @property {CharacterICOItem[]} Items - 初始角色列表
+ * @property {any | null} Context - 上下文
+ */
+export interface UserIcoPageValue {
+  CurrentPage: number;
+  TotalPages: number;
+  TotalItems: number;
+  ItemsPerPage: number;
+  Items: CharacterICOItem[];
+  Context: any | null;
+}
+
+/**
+ * 获取用户初始角色列表
+ * @param {string} userName - 用户名
+ * @param {number} page - 页码
+ * @param {number} pageSize - 每页数量
+ * @returns {Promise<TinygrailBaseResponse<UserIcoPageValue>>} - 用户初始角色列表
+ */
+export async function getUserIcoCharacters(
+  userName: string,
+  page: number = 1,
+  pageSize: number = 24
+): Promise<TinygrailBaseResponse<UserIcoPageValue>> {
+  page = Math.max(1, page);
+  pageSize = Math.max(1, pageSize);
+  try {
+    return await httpService.get<TinygrailBaseResponse<UserIcoPageValue>>(
+      `/chara/user/initial/${userName}/${page}/${pageSize}`
+    );
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * 用户股息数据
+ * @property {number} Total - 计息股份
+ * @property {number} Temples - 圣殿数量
+ * @property {number} Share - 预期股息
+ * @property {number} Tax - 税收
+ * @property {number} Daily - 每日签到奖励
+ */
+export interface ShareBonusTestValue {
+  Total: number;
+  Temples: number;
+  Share: number;
+  Tax: number;
+  Daily: number;
+}
+
+/**
+ * 获取用户分股息
+ * @param {string} userName - 用户名
+ * @returns {Promise<TinygrailBaseResponse<ShareBonusTestValue>>} - 股息数据
+ */
+export async function getShareBonusTest(
+  userName: string
+): Promise<TinygrailBaseResponse<ShareBonusTestValue>> {
+  try {
+    return await httpService.get<TinygrailBaseResponse<ShareBonusTestValue>>(
+      `/event/share/bonus/test/${userName}`
+    );
+  } catch (error) {
+    throw error;
+  }
+}

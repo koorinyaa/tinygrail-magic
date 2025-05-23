@@ -45,7 +45,7 @@ export function STCard({ data }: { data: CharacterDetail }) {
         openCharacterDrawer(characterId);
       }}
     >
-      <div className="h-42 flex flex-col items-center gap-y-2 p-4">
+      <div className="h-40 flex flex-col items-center gap-y-2 p-3">
         <Avatar className="size-12 rounded-full border-2 border-secondary">
           <AvatarImage
             className="object-cover object-top pointer-events-none"

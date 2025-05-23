@@ -20,7 +20,8 @@ import { useEffect, useState } from 'react';
  * 通天塔日志
  */
 export function StarTowerLog() {
-  const { openCharacterDrawer } = useStore();
+  const { openCharacterDrawer, setCurrentPage, closeCharacterDrawer } =
+    useStore();
   // 加载状态
   const [loading, setLoading] = useState(false);
   // 页数
@@ -33,8 +34,6 @@ export function StarTowerLog() {
   const [timeRefreshCounter, setTimeRefreshCounter] = useState(0);
 
   useEffect(() => {
-    const stop = initializeRealtimeConnection();
-
     // 设置每3秒更新一次时间格式化的定时器
     const timeRefreshInterval = setInterval(() => {
       setTimeRefreshCounter((prev) => prev + 1);
@@ -42,7 +41,15 @@ export function StarTowerLog() {
 
     return () => {
       clearInterval(timeRefreshInterval);
+    };
+  }, []);
 
+  useEffect(() => {
+    fetchStarLog();
+
+    const stop = initializeRealtimeConnection();
+
+    return () => {
       if (stop) {
         stop
           .then((cleanup) => {
@@ -55,10 +62,6 @@ export function StarTowerLog() {
           });
       }
     };
-  }, []);
-
-  useEffect(() => {
-    fetchStarLog();
   }, [page]);
 
   /**
@@ -146,7 +149,13 @@ export function StarTowerLog() {
     switch (log.Type) {
       case 0:
         return (
-          <span className="inline-flex flex-row items-center text-pink-500 w-full whitespace-nowrap overflow-hidden">
+          <span
+            onClick={(e) => {
+              e.stopPropagation();
+              goToUserTinygrail(log.UserName, log.Nickname);
+            }}
+            className="inline-flex flex-row items-center text-pink-500 hover:text-pink-600 w-full whitespace-nowrap cursor-pointer overflow-hidden"
+          >
             <div>星之力</div>
             <div className="mx-1 truncate">
               @{decodeHTMLEntities(log.Nickname)}
@@ -156,7 +165,13 @@ export function StarTowerLog() {
         );
       case 2:
         return (
-          <div className="inline-flex flex-row items-center text-pink-500 w-full whitespace-nowrap overflow-hidden">
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+              goToUserTinygrail(log.UserName, log.Nickname);
+            }}
+            className="inline-flex flex-row items-center text-pink-500 hover:text-pink-600 w-full whitespace-nowrap cursor-pointer overflow-hidden"
+          >
             <div>鲤鱼之眼</div>
             <div className="mx-1 truncate">
               @{decodeHTMLEntities(log.Nickname)}
@@ -166,7 +181,13 @@ export function StarTowerLog() {
         );
       case 3:
         return (
-          <div className="inline-flex flex-row items-center text-pink-500 w-full whitespace-nowrap overflow-hidden">
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+              goToUserTinygrail(log.UserName, log.Nickname);
+            }}
+            className="inline-flex flex-row items-center text-pink-500 hover:text-pink-600 w-full whitespace-nowrap cursor-pointer overflow-hidden"
+          >
             <div>精炼成功</div>
             <div className="mx-1 truncate">
               @{decodeHTMLEntities(log.Nickname)}
@@ -176,7 +197,13 @@ export function StarTowerLog() {
         );
       case 4:
         return (
-          <div className="inline-flex flex-row items-center text-sky-500 w-full whitespace-nowrap overflow-hidden">
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+              goToUserTinygrail(log.UserName, log.Nickname);
+            }}
+            className="inline-flex flex-row items-center text-sky-500 hover:text-sky-600 w-full whitespace-nowrap cursor-pointer overflow-hidden"
+          >
             <div>精炼失败</div>
             <div className="mx-1 truncate">
               @{decodeHTMLEntities(log.Nickname)}
@@ -186,12 +213,30 @@ export function StarTowerLog() {
         );
       default:
         return (
-          <div className="inline-flex flex-row items-center text-sky-500 w-full whitespace-nowrap overflow-hidden">
+          <div className="inline-flex flex-row items-center text-sky-500 hover:text-sky-600 w-full whitespace-nowrap overflow-hidden">
             <div>受到攻击</div>
             <div className="truncate">-{formatInteger(log.Amount)}</div>
           </div>
         );
     }
+  };
+
+  /**
+   * 跳转到用户的小圣杯
+   */
+  const goToUserTinygrail = (name: string, nickName: string) => {
+    if (!name) return;
+
+    setCurrentPage({
+      main: {
+        title: `${decodeHTMLEntities(nickName)}的小圣杯`,
+        id: 'user-tinygrail',
+      },
+      data: {
+        userName: name,
+      },
+    });
+    closeCharacterDrawer();
   };
 
   return (

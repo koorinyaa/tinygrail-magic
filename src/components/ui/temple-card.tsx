@@ -105,7 +105,7 @@ export function TempleCard({ data, className }: TempleCardProps) {
               hidden: showLine,
             })}
           >
-            <div className="flex flex-row items-center mb-0.5">
+            <div className="flex flex-row items-center">
               <div
                 className="flex-1 text-xs font-normal truncate"
                 title={`${formatCurrency(assets)} / ${formatCurrency(
@@ -115,6 +115,19 @@ export function TempleCard({ data, className }: TempleCardProps) {
                 <span className="mr-0.5">{formatCurrency(assets)}</span>/
                 <span className="ml-0.5">{formatCurrency(sacrifices)}</span>
               </div>
+            </div>
+            <div className="flex flex-row items-center gap-x-1 h-2">
+              <Progress
+                value={(assets / sacrifices) * 100}
+                rootColor="bg-white/20"
+                indicatorColor={cn({
+                  'bg-gray-300': templeLevel <= 0,
+                  'bg-green-500 dark:bg-green-600': templeLevel === 1,
+                  'bg-purple-500 dark:bg-purple-600': templeLevel === 2,
+                  'bg-amber-500 dark:bg-amber-600': templeLevel === 3,
+                })}
+                className="h-1"
+              />
               {starForces >= 10000 && (
                 <div
                   className="w-fit text-amber-300 dark:text-amber-500"
@@ -124,17 +137,6 @@ export function TempleCard({ data, className }: TempleCardProps) {
                 </div>
               )}
             </div>
-            <Progress
-              value={(assets / sacrifices) * 100}
-              rootColor="bg-white/20"
-              indicatorColor={cn({
-                'bg-gray-300': templeLevel <= 0,
-                'bg-green-500 dark:bg-green-600': templeLevel === 1,
-                'bg-purple-500 dark:bg-purple-600': templeLevel === 2,
-                'bg-amber-500 dark:bg-amber-600': templeLevel === 3,
-              })}
-              className="h-1"
-            />
           </div>
           <div
             className={cn('flex flex-col mb-0.5', {

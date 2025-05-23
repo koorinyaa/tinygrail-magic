@@ -29,7 +29,7 @@ export function UserItem({
   characterTotal: number;
   index: number;
 }) {
-  const { characterDrawer } = useStore();
+  const { setCurrentPage, characterDrawer, closeCharacterDrawer } = useStore();
   const [userData, setUserData] = useState<CharacterUserValue>({ ...data });
   const [loading, setLoading] = useState(false);
 
@@ -82,13 +82,33 @@ export function UserItem({
     return daysDiff < 5;
   };
 
+  /**
+   * 跳转到用户的小圣杯
+   */
+  const goToUserTinygrail = () => {
+    setCurrentPage({
+      main: {
+        title: `${decodeHTMLEntities(userData.Nickname)}的小圣杯`,
+        id: 'user-tinygrail',
+      },
+      data: {
+        userName: userData.Name,
+      },
+    });
+    closeCharacterDrawer();
+  };
+
   return (
     <div className="flex flex-row gap-x-1.5">
       <div className="relative">
         <Avatar
-          className={cn('size-10 rounded-full border-2 border-secondary', {
-            'border-red-600': userData.State === 666,
-          })}
+          onClick={goToUserTinygrail}
+          className={cn(
+            'size-10 rounded-full border-2 border-secondary cursor-pointer',
+            {
+              'border-red-600': userData.State === 666,
+            }
+          )}
         >
           <AvatarImage
             className="object-cover object-top pointer-events-none"
@@ -97,13 +117,16 @@ export function UserItem({
           <AvatarFallback className="rounded-full">U</AvatarFallback>
         </Avatar>
         {userData.LastIndex > 0 && (
-          <Badge className="bg-yellow-500 dark:bg-yellow-600 text-white absolute -top-1.5 -left-2.5 size-7 rounded-full border-2 border-card px-1 scale-70">
+          <Badge
+            className="bg-yellow-500 dark:bg-yellow-600 text-white absolute -top-1.5 -left-2.5 size-7 rounded-full border-2 border-card px-1 scale-70 cursor-default"
+            title={`首富排名${userData.LastIndex}`}
+          >
             #{userData.LastIndex}
           </Badge>
         )}
       </div>
-      <div className="flex flex-col justify-center gap-y-0.5 text-xs overflow-hidden">
-        <div className="flex flex-row gap-x-1">
+      <div className="flex flex-col justify-center gap-y-0.5 text-xs cursor-pointer overflow-hidden">
+        <div className="flex flex-row gap-x-1" onClick={goToUserTinygrail}>
           <span className="opacity-60 text-nowrap">
             {index === 1 ? '主席' : index}
           </span>

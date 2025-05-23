@@ -146,7 +146,7 @@ export function CharacterTransactionHistory() {
           hidden: loading,
         })}
       >
-        <div className="overflow-auto">
+        <div className="h-66 overflow-auto">
           <Table className="text-xs">
             <TableHeader className="bg-transparent">
               <TableRow className="hover:bg-transparent">
@@ -195,7 +195,7 @@ export function CharacterTransactionHistory() {
                   className="border-none odd:bg-muted/50 odd:hover:bg-muted/50"
                 >
                   <TableCell className="p-1">
-                    {formatCurrency(item.Price / item.Amount)}
+                    {formatCurrency(item.Price / item.Amount || 0)}
                   </TableCell>
                   <TableCell className="p-1">
                     {formatInteger(item.Amount)}
