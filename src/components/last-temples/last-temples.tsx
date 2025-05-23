@@ -2,8 +2,6 @@ import { TempleItem } from '@/api/character';
 import { getRecentTemples } from '@/api/temple';
 import { decodeHTMLEntities, getCoverUrl, notifyError } from '@/lib/utils';
 import { useStore } from '@/store';
-import { motion } from 'framer-motion';
-import { ArrowUpToLine } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import {
   Gallery,
@@ -23,7 +21,6 @@ type TempleImage = GalleryImage & {
  */
 export function LastTemples() {
   const {
-    toTop,
     pageContainerRef,
     setCurrentPage: setCurrentPageData,
     openCharacterDrawer,
@@ -39,8 +36,6 @@ export function LastTemples() {
   const [totalPages, setTotalPages] = useState(1);
   // 图片数据
   const [images, setImages] = useState<TempleImage[]>([]);
-  // 返回顶部按钮是否显示
-  const [showToTop, setShowToTop] = useState(false);
 
   // 加载锁
   const isLoadingMoreRef = useRef(false);
@@ -60,9 +55,6 @@ export function LastTemples() {
       if (throttleTimer !== null || isLoadingMoreRef.current) return;
 
       const { scrollHeight, scrollTop, clientHeight } = container;
-
-      // 控制返回顶部按钮的显示
-      setShowToTop(scrollTop > 200);
 
       // 滚动到距离底部100px时加载更多
       if (scrollHeight - scrollTop - clientHeight < 100) {
@@ -335,22 +327,6 @@ export function LastTemples() {
           </div>
         )}
       </div>
-      {showToTop && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <button
-            onClick={toTop}
-            className="fixed bottom-10 right-4 md:right-10 opacity-80 hover:opacity-100 bg-card text-foreground/80 p-2 rounded-full shadow-lg transition-colors cursor-pointer"
-            title="返回顶部"
-          >
-            <ArrowUpToLine className="size-4" />
-          </button>
-        </motion.div>
-      )}
     </div>
   );
 }

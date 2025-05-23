@@ -1,3 +1,4 @@
+import { FloatingButtons } from '@/components/floating-buttons';
 import { verifyAuth } from '@/lib/auth';
 import { cn } from '@/lib/utils';
 import {
@@ -68,6 +69,7 @@ export function MainContent({
       {...props}
     >
       {currentComponent}
+      <FloatingButtons />
     </div>
   );
 }
