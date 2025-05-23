@@ -18,7 +18,12 @@ import { ArrowRightIcon } from 'lucide-react';
  */
 export function NavUpdate() {
   return (
-    <div className="bg-background z-50 max-w-[400px] rounded-md border px-4 py-3 shadow-lg">
+    <div
+      className="bg-background z-50 max-w-[400px] rounded-md border px-4 py-3 shadow-lg cursor-pointer"
+      onClick={() => {
+        window.open(UPDATE_URL);
+      }}
+    >
       <div className="flex gap-2">
         <p className="grow flex items-center text-sm">
           有新版本
@@ -28,18 +33,14 @@ export function NavUpdate() {
         </p>
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <a
-              href={UPDATE_URL}
-              target="_black"
-              className="group text-sm font-medium whitespace-nowrap"
-            >
+            <div className="text-sm font-medium whitespace-nowrap">
               更新
               <ArrowRightIcon
                 className="ms-1 -mt-0.5 inline-flex opacity-60"
                 size={16}
                 aria-hidden="true"
               />
-            </a>
+            </div>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
