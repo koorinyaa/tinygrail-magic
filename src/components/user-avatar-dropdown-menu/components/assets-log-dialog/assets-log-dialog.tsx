@@ -138,7 +138,7 @@ const processIdsInText = (text: string) => {
           <div className="flex flex-col">
             <div
               ref={contentRef}
-              className="flex flex-col min-h-20 !max-h-[calc(80dvh-4.75rem)] !max-h-[calc(80vh-4.75rem)] relative overflow-auto"
+              className="flex flex-col min-h-20 !max-h-[calc(80dvh-6.875rem)] !max-h-[calc(80vh-6.875rem)] relative overflow-auto"
             >
               {loading && (
                 <div className="absolute inset-0 bg-background/80 flex items-center justify-center">
