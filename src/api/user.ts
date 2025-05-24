@@ -402,8 +402,8 @@ export async function cancelAuctionCharacter(
  * @property {number} Price - 价格
  * @property {number} Amount - 数量
  * @property {string} Bid - 竞拍时间
- * @property {number} Type - 类型（和数量一个值）
- * @property {number} State - 状态
+ * @property {number} Type - 竞拍数量
+ * @property {number} State - 竞拍人数
  */
 export interface AuctionItem {
   Name: string | null;

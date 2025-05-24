@@ -34,26 +34,27 @@ export function TinygrailCard({
     Icon: icon = '',
     Level: level = 0,
     ZeroCount: zeroCount = 0,
-    Stars: stars = 0,
-    Rank: rank = 0,
-    Price: price = 0,
     UserTotal: userTotal = 0,
-    Rate: rate = 0,
   } = data;
-  const dividend = rank <= 500 ? rate * 0.005 * (601 - rank) : stars * 2;
+  const {
+    // 竞拍人数
+    State: auctionUsers = 0,
+    // 竞拍数量
+    Type: auctionTotal = 0,
+  } = auctionInfo || {};
 
   const infoItems = [
     {
-      id: 'dividend',
-      label: '股息₵',
-      value: `${formatCurrency(dividend, { maximumFractionDigits: 2 })}`,
+      id: 'auctionUsers',
+      label: '竞拍人数',
+      value: `${formatInteger(auctionUsers)}`,
     },
     {
-      id: 'price',
-      label: '评估价₵',
-      value: `${formatCurrency(price, { maximumFractionDigits: 2 })}`,
+      id: 'auctionTotal',
+      label: '竞拍数量',
+      value: `${formatInteger(auctionTotal)}`,
     },
-    { id: 'total', label: '数量', value: formatInteger(userTotal) },
+    { id: 'total', label: '英灵殿', value: formatInteger(userTotal) },
   ];
 
   return (
@@ -98,7 +99,11 @@ export function TinygrailCard({
         className={cn(
           'flex items-center justify-center w-full h-8 text-sm font-medium border-t rounded-none opacity-80 hover:bg-transparent dark:hover:bg-transparent hover:opacity-100',
           {
-            'text-(--success) hover:text-(--success)': auctionInfo,
+            'text-(--success) hover:text-(--success)':
+              auctionInfo &&
+              auctionInfo.Id > 0 &&
+              auctionInfo.Price > 0 &&
+              auctionInfo.Amount > 0,
           }
         )}
         onClick={(e) => {
@@ -106,7 +111,10 @@ export function TinygrailCard({
           toast.warning('开发中');
         }}
       >
-        {auctionInfo
+        {auctionInfo &&
+        auctionInfo.Id > 0 &&
+        auctionInfo.Price > 0 &&
+        auctionInfo.Amount > 0
           ? `${formatInteger(auctionInfo.Amount)} / ₵${formatCurrency(
               auctionInfo.Price
             )}`
