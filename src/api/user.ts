@@ -762,4 +762,71 @@ export async function sendRedPacket(
   }
 }
 
+/**
+ * 资金日志项
+ * @property {string | null} RelatedName - 关联角色名称
+ * @property {number} Id - 日志ID
+ * @property {number} UserId - 用户内部ID
+ * @property {number} Change - 变动金额
+ * @property {number} Amount - 关联角色数量
+ * @property {number} Balance - 余额
+ * @property {number} RelatedId - 关联角色ID
+ * @property {string} Description - 描述
+ * @property {string} LogTime - 记录时间
+ * @property {number} Type - 类型
+ * @property {number} State - 状态
+ */
+export interface BalanceLogItem {
+  RelatedName: string | null;
+  Id: number;
+  UserId: number;
+  Change: number;
+  Amount: number;
+  Balance: number;
+  RelatedId: number;
+  Description: string;
+  LogTime: string;
+  Type: number;
+  State: number;
+}
+
+/**
+ * 资金日志分页数据
+ * @property {number} CurrentPage - 当前页码
+ * @property {number} TotalPages - 总页数
+ * @property {number} TotalItems - 总条目数
+ * @property {number} ItemsPerPage - 每页条目数
+ * @property {BalanceLogItem[]} Items - 日志列表
+ * @property {any | null} Context - 上下文
+ */
+export interface BalanceLogPageValue {
+  CurrentPage: number;
+  TotalPages: number;
+  TotalItems: number;
+  ItemsPerPage: number;
+  Items: BalanceLogItem[];
+  Context: any | null;
+}
+
+/**
+ * 获取资金日志
+ * @param {number} page - 页码
+ * @param {number} pageSize - 每页数量
+ * @returns {Promise<TinygrailBaseResponse<BalanceLogPageValue>>} - 资金日志数据
+ */
+export async function getBalanceLog(
+  page: number = 1,
+  pageSize: number = 10
+): Promise<TinygrailBaseResponse<BalanceLogPageValue>> {
+  page = Math.max(1, page);
+  pageSize = Math.max(1, pageSize);
+  try {
+    return await httpService.get<TinygrailBaseResponse<BalanceLogPageValue>>(
+      `/chara/user/balance/${page}/${pageSize}`
+    );
+  } catch (error) {
+    throw error;
+  }
+}
+
 
