@@ -19,7 +19,7 @@ export type CharacterDrawer = {
   loading?: boolean;
   error?: string | null;
   handleOnly?: boolean;
-  type?: 'character' | 'ico';
+  type?: 'character' | 'ico' | 'unlisted';
 };
 
 /**

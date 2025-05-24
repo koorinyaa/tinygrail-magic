@@ -1037,3 +1037,22 @@ export async function getIcoUsersPage(
     throw error;
   }
 }
+
+/**
+ * 开启ICO
+ * @param {number} characterId - 角色ID
+ * @param {number} amount - 金额
+ * @returns {Promise<TinygrailBaseResponse<CharacterICOItem>>} - 开启ICO响应数据
+ */
+export async function initICO(
+  characterId: number,
+  amount: number
+): Promise<TinygrailBaseResponse<CharacterICOItem>> {
+  try {
+    return await httpService.post<TinygrailBaseResponse<CharacterICOItem>>(
+      `/chara/init/${characterId}/${amount}`
+    );
+  } catch (error) {
+    throw error;
+  }
+}

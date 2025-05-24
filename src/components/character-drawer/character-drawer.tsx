@@ -2,11 +2,12 @@ import { IcoContent } from '@/components/character-drawer/components/ico-content
 import { fetchCharacterDetailData } from '@/components/character-drawer/service/character';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { cn, notifyError } from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import { useStore } from '@/store';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { useEffect } from 'react';
 import { CharacterContent } from './components/character-content';
+import { CharacterUnlisted } from './components/character-unlisted';
 
 /**
  * 角色抽屉
@@ -65,14 +66,28 @@ export function CharacterDrawer({
         });
       }
     } catch (error) {
-      let errorMessage = '';
-      if (error instanceof Error) {
-        errorMessage = error.message;
-      } else {
-        console.error('初始化角色数据失败');
-      }
-      notifyError(errorMessage);
-      setCharacterDrawer({ error: errorMessage });
+      setCharacterDrawer({
+        type: 'unlisted',
+      });
+      let errorMessage =
+        error instanceof Error ? error.message : '初始化角色数据失败';
+      console.error(errorMessage);
+    }
+  };
+
+  /**
+   * 根据类型渲染内容
+   */
+  const renderContent = () => {
+    switch (characterType) {
+      case 'character':
+        return <CharacterContent />;
+      case 'ico':
+        return <IcoContent />;
+      case 'unlisted':
+        return <CharacterUnlisted initializeData={initializeData} />;
+      default:
+        return <CharacterUnlisted initializeData={initializeData} />;
     }
   };
 
@@ -101,7 +116,7 @@ export function CharacterDrawer({
         <VisuallyHidden asChild>
           <DrawerTitle />
         </VisuallyHidden>
-        {characterType === 'character' ? <CharacterContent /> : <IcoContent />}
+        {renderContent()}
       </DrawerContent>
     </Drawer>
   );
