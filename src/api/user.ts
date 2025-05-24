@@ -829,4 +829,43 @@ export async function getBalanceLog(
   }
 }
 
+/**
+ * 用户拍卖列表分页数据
+ * @property {number} CurrentPage - 当前页码
+ * @property {number} TotalPages - 总页数
+ * @property {number} TotalItems - 总条目数
+ * @property {number} ItemsPerPage - 每页条目数
+ * @property {AuctionItem[]} Items - 拍卖列表
+ * @property {any | null} Context - 上下文
+ */
+export interface UserAuctionPageValue {
+  CurrentPage: number;
+  TotalPages: number;
+  TotalItems: number;
+  ItemsPerPage: number;
+  Items: AuctionItem[];
+  Context: any | null;
+}
+
+/**
+ * 获取用户拍卖列表
+ * @param {number} page - 页码
+ * @param {number} pageSize - 每页数量
+ * @returns {Promise<TinygrailBaseResponse<UserAuctionPageValue>>} - 用户拍卖列表数据
+ */
+export async function getUserAuctions(
+  page: number = 1,
+  pageSize: number = 10
+): Promise<TinygrailBaseResponse<UserAuctionPageValue>> {
+  page = Math.max(1, page);
+  pageSize = Math.max(1, pageSize);
+  try {
+    return await httpService.get<TinygrailBaseResponse<UserAuctionPageValue>>(
+      `/chara/user/auction/${page}/${pageSize}`
+    );
+  } catch (error) {
+    throw error;
+  }
+}
+
 
