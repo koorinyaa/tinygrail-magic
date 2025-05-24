@@ -3,7 +3,7 @@ import { InputNumber } from '@/components/input-number';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { cn, notifyError } from '@/lib/utils';
+import { cn, decodeHTMLEntities, notifyError } from '@/lib/utils';
 import { LoaderCircleIcon } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -60,7 +60,7 @@ export function RedEnvelopeDialog({
         hideCloseButton
       >
         <div className="flex flex-col space-y-2 text-center">
-          <h2 className="text-lg font-semibold">发送红包给{nickname}</h2>
+          <h2 className="text-lg font-semibold">发送红包给{decodeHTMLEntities(nickname)}</h2>
         </div>
         <div className="flex flex-col gap-y-2 mt-1">
           <div className="flex flex-row items-center justify-evenly h-8 gap-x-1">
