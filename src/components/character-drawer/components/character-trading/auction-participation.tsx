@@ -4,6 +4,7 @@ import {
   cancelAuctionCharacter,
   getAuctionList,
 } from '@/api/user';
+import { fatchTinygrailCharacterData } from '@/components/character-drawer/service/character';
 import { InputNumber } from '@/components/input-number';
 import { Button } from '@/components/ui/button';
 import {
@@ -24,7 +25,7 @@ import { toast } from 'sonner';
  * @param onClose 关闭回调
  */
 export function AuctionParticipation({ onClose }: { onClose: () => void }) {
-  const { userAssets, setUserAssets, characterDrawer, characterDrawerData } =
+  const { userAssets, setUserAssets, characterDrawer, characterDrawerData, setCharacterDrawerData } =
     useStore();
   // 账户余额
   const { balance = 0 } = userAssets || {};
@@ -119,6 +120,11 @@ export function AuctionParticipation({ onClose }: { onClose: () => void }) {
         onClose();
         // 更新余额
         verifyAuth(setUserAssets);
+        // 更新英灵殿数据
+        const tinygrailCharacterData = await fatchTinygrailCharacterData(characterId);
+        setCharacterDrawerData({
+          tinygrailCharacterData
+        })
       } else {
         throw new Error(resp.Message || '参与竞拍失败');
       }
@@ -135,7 +141,7 @@ export function AuctionParticipation({ onClose }: { onClose: () => void }) {
    * 取消竞拍
    */
   const handleCancelAuctionCharacter = async () => {
-    if (!currentAuctionInfo) return;
+    if (!currentAuctionInfo || !characterId) return;
 
     setLoading(true);
     try {
@@ -150,6 +156,11 @@ export function AuctionParticipation({ onClose }: { onClose: () => void }) {
         onClose();
         // 更新余额
         verifyAuth(setUserAssets);
+        // 更新英灵殿数据
+        const tinygrailCharacterData = await fatchTinygrailCharacterData(characterId);
+        setCharacterDrawerData({
+          tinygrailCharacterData
+        })
       } else {
         throw new Error(resp.Message || '参与竞拍失败');
       }
