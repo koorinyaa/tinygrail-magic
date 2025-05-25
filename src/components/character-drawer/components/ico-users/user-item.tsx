@@ -68,10 +68,7 @@ export function UserItem({
         )}
       </div>
       <div className="flex flex-col justify-center gap-y-0.5 text-xs overflow-hidden">
-        <div
-          onClick={goToUserTinygrail}
-          className="flex flex-row gap-x-1 cursor-pointer"
-        >
+        <div className="flex flex-row gap-x-1">
           <span className="opacity-60 text-nowrap">{index}</span>
           <span
             className={cn('truncate', {
