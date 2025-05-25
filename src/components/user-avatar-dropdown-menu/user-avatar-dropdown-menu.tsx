@@ -8,6 +8,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { LogoutDialog } from '@/components/user-avatar-dropdown-menu/components/logout-dialog';
 import { cn, formatCurrency, getAvatarUrl } from '@/lib/utils';
 import { useStore } from '@/store';
 import {
@@ -46,6 +47,8 @@ export function UserAvatarDropdownMenu() {
   const [myBuyOrderDialogOpen, setMyBuyOrderDialogOpen] = useState(false);
   // 我的卖单弹窗打开状态
   const [mySellOrderDialogOpen, setMySellOrderDialogOpen] = useState(false);
+  // 退出登录弹窗打开状态
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
 
   const dailyItems = [
     {
@@ -111,7 +114,10 @@ export function UserAvatarDropdownMenu() {
   const logoutItem = {
     icon: <LogOutIcon size={16} className="opacity-60" aria-hidden="true" />,
     label: '退出登录',
-    onClick: () => toast.warning('开发中'),
+    onClick: () => {
+      setDropdownMenuOpen(false);
+      setLogoutDialogOpen(true);
+    },
   };
 
   return (
@@ -204,6 +210,12 @@ export function UserAvatarDropdownMenu() {
         <MySellOrderDialog
           open={mySellOrderDialogOpen}
           onOpenChange={setMySellOrderDialogOpen}
+        />
+      )}
+      {logoutDialogOpen && (
+        <LogoutDialog
+          open={logoutDialogOpen}
+          onOpenChange={setLogoutDialogOpen}
         />
       )}
     </>

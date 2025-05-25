@@ -946,4 +946,18 @@ export async function getUserAsks(
   }
 }
 
+/**
+ * 用户登出
+ * @returns {Promise<TinygrailBaseResponse<string>>} - 登出结果
+ */
+export async function logout(): Promise<TinygrailBaseResponse<string>> {
+  try {
+    return await httpService.post<TinygrailBaseResponse<string>>(
+      '/account/logout'
+    );
+  } catch (error) {
+    throw error;
+  }
+}
+
 

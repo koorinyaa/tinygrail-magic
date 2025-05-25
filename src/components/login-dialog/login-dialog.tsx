@@ -2,9 +2,7 @@ import { AUTHORIZE_URL } from '@/api/user';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
+  DialogContent
 } from '@/components/ui/dialog';
 import { verifyAuth } from '@/lib/auth';
 import { isEmpty } from '@/lib/utils';
@@ -29,22 +27,33 @@ export function LoginDialog() {
 
   return (
     <Dialog open={isEmpty(userAssets)}>
-      <DialogContent hideCloseButton>
-        <DialogHeader>
-          <DialogTitle>小圣杯未授权</DialogTitle>
-        </DialogHeader>
-        <div className="flex flex-col gap-4">
-          <p className="text-sm text-muted-foreground">
-            需要授权后才能进行操作
-          </p>
-          <Button
-            className="rounded-full cursor-pointer"
-            onClick={() => {
-              window.open(AUTHORIZE_URL);
-            }}
-          >
-            点击授权
-          </Button>
+      <DialogContent className="p-4 rounded-xl" hideCloseButton>
+        <div className="w-full h-fit flex flex-col gap-y-4">
+          <div className="flex flex-col space-y-2 text-center">
+            <h2 className="text-lg font-semibold">小圣杯未授权</h2>
+            <p className="text-sm text-muted-foreground">
+              需要授权后才能进行操作
+            </p>
+          </div>
+          <div className="flex flex-row gap-x-2">
+            <Button
+              className="flex-1 h-8 rounded-lg cursor-pointer"
+              onClick={() => {
+                window.open(AUTHORIZE_URL);
+              }}
+            >
+              点击授权
+            </Button>
+            <Button
+              variant="outline"
+              className="flex-1 h-8 rounded-lg cursor-pointer"
+              onClick={() => {
+                window.location.reload();
+              }}
+            >
+              返回bangumi
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
