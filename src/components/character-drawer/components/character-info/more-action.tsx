@@ -79,7 +79,7 @@ export function MoreAction() {
         </div>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent>
+      <DropdownMenuContent className="z-100">
         {menus.map((menu, index) => (
           <DropdownMenuItem
             key={index}

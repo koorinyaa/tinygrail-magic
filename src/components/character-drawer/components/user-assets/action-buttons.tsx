@@ -17,7 +17,7 @@ import {
   MessageSquareText,
   RotateCw,
   Sparkles,
-  X
+  X,
 } from 'lucide-react';
 import { ReactNode, useState } from 'react';
 import { CharacterDrawerPopover } from '../character-drawer-popover';
@@ -229,7 +229,7 @@ export function ActionButtons() {
                   </span>
                 </div>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="max-w-64 min-w-36">
+              <DropdownMenuContent className="max-w-64 min-w-36 z-100">
                 <DropdownMenuGroup>
                   {moreMenuItems.map((item, index) => {
                     if (!item.show) return null;
