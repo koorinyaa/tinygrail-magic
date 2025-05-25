@@ -76,12 +76,6 @@ export function UserTemple({
     }
 
     try {
-      let top = isMobile ? 104 : 152;
-      if (userAssets?.name !== userName && isMobile) {
-        top += 44;
-      }
-      toTop(top);
-
       const data = await fatchUserTemplePageData(userName, currentPage);
       setData(data);
     } catch (err) {
