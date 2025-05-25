@@ -104,9 +104,6 @@ export function TinygrailCharacters() {
           [key: number]: AuctionItem;
         } = {};
         resp.Value.forEach((item) => {
-          // if (item.Id > 0 && item.Price > 0 && item.Amount > 0) {
-          //   auctionInfo[item.CharacterId] = item;
-          // }
           auctionInfo[item.CharacterId] = item;
         });
         setAuctionItems(auctionInfo);

@@ -868,4 +868,82 @@ export async function getUserAuctions(
   }
 }
 
+/**
+ * 用户买单角色列表分页数据
+ * @property {number} CurrentPage - 当前页码
+ * @property {number} TotalPages - 总页数
+ * @property {number} TotalItems - 总条目数
+ * @property {number} ItemsPerPage - 每页条目数
+ * @property {CharacterDetail[]} Items - 角色列表
+ * @property {any | null} Context - 上下文
+ */
+export interface UserBidsPageValue {
+  CurrentPage: number;
+  TotalPages: number;
+  TotalItems: number;
+  ItemsPerPage: number;
+  Items: CharacterDetail[];
+  Context: any | null;
+}
+
+/**
+ * 获取用户买单角色列表
+ * @param {number} page - 页码
+ * @param {number} pageSize - 每页数量
+ * @returns {Promise<TinygrailBaseResponse<UserBidsPageValue>>} - 用户买单角色列表数据
+ */
+export async function getUserBids(
+  page: number = 1,
+  pageSize: number = 10
+): Promise<TinygrailBaseResponse<UserBidsPageValue>> {
+  page = Math.max(1, page);
+  pageSize = Math.max(1, pageSize);
+  try {
+    return await httpService.get<TinygrailBaseResponse<UserBidsPageValue>>(
+      `/chara/bids/0/${page}/${pageSize}`
+    );
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * 用户卖单角色列表分页数据
+ * @property {number} CurrentPage - 当前页码
+ * @property {number} TotalPages - 总页数
+ * @property {number} TotalItems - 总条目数
+ * @property {number} ItemsPerPage - 每页条目数
+ * @property {CharacterDetail[]} Items - 角色列表
+ * @property {any | null} Context - 上下文
+ */
+export interface UserAsksPageValue {
+  CurrentPage: number;
+  TotalPages: number;
+  TotalItems: number;
+  ItemsPerPage: number;
+  Items: CharacterDetail[];
+  Context: any | null;
+}
+
+/**
+ * 获取用户卖单角色列表
+ * @param {number} page - 页码
+ * @param {number} pageSize - 每页数量
+ * @returns {Promise<TinygrailBaseResponse<UserAsksPageValue>>} - 用户卖单角色列表数据
+ */
+export async function getUserAsks(
+  page: number = 1,
+  pageSize: number = 10
+): Promise<TinygrailBaseResponse<UserAsksPageValue>> {
+  page = Math.max(1, page);
+  pageSize = Math.max(1, pageSize);
+  try {
+    return await httpService.get<TinygrailBaseResponse<UserAsksPageValue>>(
+      `/chara/asks/0/${page}/${pageSize}`
+    );
+  } catch (error) {
+    throw error;
+  }
+}
+
 

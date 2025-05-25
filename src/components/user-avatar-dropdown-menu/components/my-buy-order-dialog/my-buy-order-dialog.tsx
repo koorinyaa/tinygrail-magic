@@ -1,22 +1,25 @@
-import { BalanceLogPageValue, getBalanceLog } from '@/api/user';
+import { getUserBids, UserBidsPageValue } from '@/api/user';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import BadgeLevel from '@/components/ui/badge-level';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { PaginationWrapper } from '@/components/ui/pagination-wrapper';
 import {
   cn,
   decodeHTMLEntities,
-  formatCurrency,
   formatDateTime,
+  formatInteger,
+  getAvatarUrl,
   notifyError,
 } from '@/lib/utils';
 import { useStore } from '@/store';
 import { useEffect, useRef, useState } from 'react';
 
 /**
- * 资金日志弹窗
+ * 我的买单
  * @param open 是否打开
  * @param onOpenChange 打开状态改变回调
  */
-export function AssetsLogDialog({
+export function MyBuyOrderDialog({
   open,
   onOpenChange,
 }: {
@@ -30,7 +33,7 @@ export function AssetsLogDialog({
   // 当前页
   const [currentPage, setCurrentPage] = useState(1);
   // 分页数据
-  const [pageValue, setPageValue] = useState<BalanceLogPageValue>({
+  const [pageValue, setPageValue] = useState<UserBidsPageValue>({
     CurrentPage: 1,
     TotalPages: 0,
     TotalItems: 0,
@@ -45,13 +48,15 @@ export function AssetsLogDialog({
   });
 
   useEffect(() => {
+    // 只有弹窗打开才请求数据
     if (open) {
-      fatchBalanceLog();
+      fatchUserBids();
       if (contentRef.current) {
         contentRef.current.scrollTop = 0;
       }
       return;
     }
+    // 弹窗关闭
     if (!open) {
       setCurrentPage(1);
       setPageValue({
@@ -71,7 +76,7 @@ export function AssetsLogDialog({
 
     // 抽屉状态从打开变为关闭
     if (prevState.drawerOpen && !characterDrawer.open) {
-      fatchBalanceLog(false);
+      fatchUserBids(false);
       return;
     }
     // 记录上一次的抽屉状态
@@ -79,23 +84,23 @@ export function AssetsLogDialog({
   }, [characterDrawer.open]);
 
   /**
-   * 获取资金日志
+   * 获取买单
    * @param {boolean} [updateLoading=true] - 是否更新loading状态
    */
-  const fatchBalanceLog = async (updateLoading: boolean = true) => {
+  const fatchUserBids = async (updateLoading: boolean = true) => {
     if (updateLoading) {
       setLoading(true);
     }
 
     try {
-      const res = await getBalanceLog(currentPage);
+      const res = await getUserBids(currentPage);
       if (res.State === 0) {
         setPageValue(res.Value);
       } else {
-        throw new Error(res.Message ?? '获取资金日志失败');
+        throw new Error(res.Message ?? '获取买单失败');
       }
     } catch (err) {
-      const errMsg = err instanceof Error ? err.message : '获取资金日志失败';
+      const errMsg = err instanceof Error ? err.message : '获取买单失败';
       notifyError(errMsg);
     } finally {
       if (updateLoading) {
@@ -104,62 +109,14 @@ export function AssetsLogDialog({
     }
   };
 
-  /**
-   * 处理文本中的ID
-   * @param text 需要处理的文本
-   * @returns 处理后的JSX元素数组
-   */
-  const processIdsInText = (text: string) => {
-    // 匹配#号开头但前面不是「字符，后面是数字的ID
-    const regex = /(?<!「)(#\d+)/g;
-    const parts = [];
-    let lastIndex = 0;
-    let match;
-
-    while ((match = regex.exec(text)) !== null) {
-      // 获取完整匹配和ID
-      const [id] = match;
-      const matchIndex = match.index;
-
-      // 添加ID前的文本
-      if (matchIndex > lastIndex) {
-        parts.push(text.substring(lastIndex, matchIndex));
-      }
-
-      // 添加span标签
-      parts.push(
-        <span
-          key={matchIndex}
-          className="text-cyan-400 dark:text-cyan-600 hover:text-cyan-500 dark:hover:text-cyan-500 cursor-pointer"
-          onClick={() => {
-            const numericId = parseInt(id.substring(1), 10);
-            openCharacterDrawer(numericId);
-          }}
-        >
-          {id}
-        </span>
-      );
-
-      // 更新lastIndex为当前匹配结束位置
-      lastIndex = matchIndex + id.length;
-    }
-
-    // 添加剩余文本
-    if (lastIndex < text.length) {
-      parts.push(text.substring(lastIndex));
-    }
-
-    return parts;
-  };
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="p-4 rounded-xl">
-        <div className="w-full h-fit flex flex-col gap-y-2">
+        <div className="w-full h-fit flex flex-col gap-y-2 overflow-hidden">
           <div className="flex flex-row space-x-2">
-            <h2 className="text-lg font-semibold">资金日志</h2>
+            <h2 className="text-lg font-semibold">我的买单</h2>
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col w-full overflow-hidden">
             <div
               ref={contentRef}
               className={cn(
@@ -174,34 +131,46 @@ export function AssetsLogDialog({
                   <div className="animate-spin w-6 h-6 border-2 border-primary border-t-transparent rounded-full" />
                 </div>
               )}
-              {pageValue.Items.map((item) => (
+              {pageValue.Items.map((item, index) => (
                 <div
-                  key={item.Id}
-                  className="flex flex-row gap-x-1 p-1.5 odd:bg-muted/50 odd:hover:bg-muted/50"
+                  key={index}
+                  className="flex flex-row gap-x-1 p-1.5 odd:bg-muted/50 odd:hover:bg-muted/50 w-full cursor-pointer"
+                  onClick={() => openCharacterDrawer(item.CharacterId)}
                 >
-                  <div className="flex-1 flex flex-col">
+                  <div className="flex-1 flex flex-row gap-x-1 w-full">
                     <div>
-                      <span className="text-sm font-semibold">
-                        ₵{formatCurrency(item.Balance)}
-                      </span>
-                      {item.Change !== 0 && (
-                        <span
-                          className={cn('ml-1 text-xs', {
-                            'text-pink-400 dark:text-pink-600': item.Change < 0,
-                            'text-sky-400 dark:text-sky-600': item.Change >= 0,
-                          })}
-                        >
-                          {item.Change < 0 ? '-' : '+'}₵
-                          {formatCurrency(Math.abs(item.Change))}
+                      <Avatar className="size-10 rounded-full border-2 border-secondary">
+                        <AvatarImage
+                          className="object-cover object-top pointer-events-none"
+                          src={getAvatarUrl(item.Icon)}
+                        />
+                        <AvatarFallback className="rounded-full">
+                          C
+                        </AvatarFallback>
+                      </Avatar>
+                    </div>
+                    <div className="flex-1 flex flex-col overflow-hidden">
+                      <div className="flex flex-row items-center gap-x-1">
+                        <span className="text-sm font-semibold truncate">
+                          {decodeHTMLEntities(item.Name || '')}
                         </span>
-                      )}
+                        <BadgeLevel
+                          level={item.Level}
+                          zeroCount={item.ZeroCount}
+                        />
+                      </div>
+                      <div className="flex flex-wrap items-center text-xs">
+                        <span className="text-nowrap">
+                          数量
+                          <span className="ml-1 text-green-400 dark:text-green-600">
+                            {formatInteger(item.State)}
+                          </span>
+                        </span>
+                      </div>
                     </div>
-                    <div className="text-xs">
-                      {processIdsInText(decodeHTMLEntities(item.Description))}
+                    <div className="flex items-center text-xs opacity-60">
+                      {formatDateTime(item.LastOrder, 'simple', true)}
                     </div>
-                  </div>
-                  <div className="flex items-center text-xs opacity-60">
-                    {formatDateTime(item.LogTime, 'simple', true)}
                   </div>
                 </div>
               ))}

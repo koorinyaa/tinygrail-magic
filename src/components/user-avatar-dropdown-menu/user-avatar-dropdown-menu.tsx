@@ -23,7 +23,10 @@ import {
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { AssetsLogDialog } from './components/assets-log-dialog';
+import { AuctionLogDialog } from './components/auction-log-dialog';
 import { DailyBonusDialog } from './components/daily-bonus-dialog';
+import { MyBuyOrderDialog } from './components/my-buy-order-dialog';
+import { MySellOrderDialog } from './components/my-sell-order-dialog';
 import { TopWeekBonusDialog } from './components/topweek-bonus-dialog';
 import { UserAvatar } from './components/user-avatar';
 
@@ -37,6 +40,12 @@ export function UserAvatarDropdownMenu() {
   const [dailyBonusDialogOpen, setDailyBonusDialogOpen] = useState(false);
   // 资金日志弹窗打开状态
   const [assetsLogDialogOpen, setAssetsLogDialogOpen] = useState(false);
+  // 拍卖日志弹窗打开状态
+  const [auctionLogDialogOpen, setAuctionLogDialogOpen] = useState(false);
+  // 我的买单弹窗打开状态
+  const [myBuyOrderDialogOpen, setMyBuyOrderDialogOpen] = useState(false);
+  // 我的卖单弹窗打开状态
+  const [mySellOrderDialogOpen, setMySellOrderDialogOpen] = useState(false);
 
   const dailyItems = [
     {
@@ -74,19 +83,28 @@ export function UserAvatarDropdownMenu() {
     {
       icon: <BadgeCent size={16} className="opacity-60" aria-hidden="true" />,
       label: '我的拍卖',
-      onClick: () => toast.warning('开发中'),
+      onClick: () => {
+        setDropdownMenuOpen(false);
+        setAuctionLogDialogOpen(true);
+      },
     },
     {
       icon: <DiamondPlus size={16} className="opacity-60" aria-hidden="true" />,
       label: '我的买单',
-      onClick: () => toast.warning('开发中'),
+      onClick: () => {
+        setDropdownMenuOpen(false);
+        setMyBuyOrderDialogOpen(true);
+      },
     },
     {
       icon: (
         <DiamondMinus size={16} className="opacity-60" aria-hidden="true" />
       ),
       label: '我的卖单',
-      onClick: () => toast.warning('开发中'),
+      onClick: () => {
+        setDropdownMenuOpen(false);
+        setMySellOrderDialogOpen(true);
+      },
     },
   ];
 
@@ -152,18 +170,42 @@ export function UserAvatarDropdownMenu() {
           </DropdownMenuGroup>
         </DropdownMenuContent>
       </DropdownMenu>
-      <TopWeekBonusDialog
-        open={topWeekBonusDialogOpen}
-        onOpenChange={setTopWeekBonusDialogOpen}
-      />
-      <DailyBonusDialog
-        open={dailyBonusDialogOpen}
-        onOpenChange={setDailyBonusDialogOpen}
-      />
-      <AssetsLogDialog
-        open={assetsLogDialogOpen}
-        onOpenChange={setAssetsLogDialogOpen}
-      />
+      {topWeekBonusDialogOpen && (
+        <TopWeekBonusDialog
+          open={topWeekBonusDialogOpen}
+          onOpenChange={setTopWeekBonusDialogOpen}
+        />
+      )}
+      {dailyBonusDialogOpen && (
+        <DailyBonusDialog
+          open={dailyBonusDialogOpen}
+          onOpenChange={setDailyBonusDialogOpen}
+        />
+      )}
+      {assetsLogDialogOpen && (
+        <AssetsLogDialog
+          open={assetsLogDialogOpen}
+          onOpenChange={setAssetsLogDialogOpen}
+        />
+      )}
+      {auctionLogDialogOpen && (
+        <AuctionLogDialog
+          open={auctionLogDialogOpen}
+          onOpenChange={setAuctionLogDialogOpen}
+        />
+      )}
+      {myBuyOrderDialogOpen && (
+        <MyBuyOrderDialog
+          open={myBuyOrderDialogOpen}
+          onOpenChange={setMyBuyOrderDialogOpen}
+        />
+      )}
+      {mySellOrderDialogOpen && (
+        <MySellOrderDialog
+          open={mySellOrderDialogOpen}
+          onOpenChange={setMySellOrderDialogOpen}
+        />
+      )}
     </>
   );
 }
