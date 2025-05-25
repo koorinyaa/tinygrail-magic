@@ -8,6 +8,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import { APP_VERSION } from '@/config';
 import { formatCurrency, getAvatarUrl } from '@/lib/utils';
 import { useStore } from '@/store';
 import {
@@ -16,7 +17,6 @@ import {
   CircleUserRound,
   ExternalLink,
   Images,
-  Settings,
   Sparkles,
   TicketPlus,
   Trophy,
@@ -128,14 +128,28 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         <NavProjects projects={data.navPages} />
         <NavProjects projects={data.navAccount} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <div className="mt-auto">
+          <NavSecondary items={data.navSecondary} />
+          {updateInfo?.hasUpdate && (
+            <SidebarFooter>
+              {/* <NavUser user={data.user} /> */}
+              <NavUpdate />
+            </SidebarFooter>
+          )}
+          <div className="text-xs text-center p-2">
+            <span title="当前版本" className="opacity-80">
+              {APP_VERSION}
+            </span>
+            <span className="mx-1 opacity-80">·</span>
+            <a
+              target="_black"
+              className="cursor-pointer opacity-80 hover:opacity-100"
+            >
+              Github
+            </a>
+          </div>
+        </div>
       </SidebarContent>
-      {updateInfo?.hasUpdate && (
-        <SidebarFooter className="mb-1">
-          {/* <NavUser user={data.user} /> */}
-          <NavUpdate />
-        </SidebarFooter>
-      )}
     </Sidebar>
   );
 }
