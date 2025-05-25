@@ -30,6 +30,8 @@
       display: none !important;
     }
   }
+
+  background-color: var(--background);
 }
 
 :root {
