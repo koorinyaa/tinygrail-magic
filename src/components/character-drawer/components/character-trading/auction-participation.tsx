@@ -238,7 +238,7 @@ export function AuctionParticipation({ onClose }: { onClose: () => void }) {
           <span className="flex-1">
             底价
             <span className="ml-2 text-green-400 dark:text-green-600">
-              ₵{formatCurrency(Number(reservePrice.toFixed(2)) || 0)}
+              ₵{formatCurrency(Math.ceil(reservePrice * 100) / 100 || 0)}
             </span>
           </span>
           <span className="flex-1">
