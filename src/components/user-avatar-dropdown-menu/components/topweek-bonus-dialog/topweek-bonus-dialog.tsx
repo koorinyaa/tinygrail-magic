@@ -1,7 +1,9 @@
 import { claimWeeklyShareBonus } from '@/api/user';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { verifyAuth } from '@/lib/auth';
 import { cn, notifyError } from '@/lib/utils';
+import { useStore } from '@/store';
 import { LoaderCircleIcon } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -18,6 +20,7 @@ export function TopWeekBonusDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { setUserAssets } = useStore();
   // 加载状态
   const [loading, setLoading] = useState(false);
 
@@ -28,6 +31,8 @@ export function TopWeekBonusDialog({
     setLoading(true);
 
     try {
+      verifyAuth(setUserAssets);
+
       const res = await claimWeeklyShareBonus();
       if (res.State === 0) {
         toast.success('领取成功', {
@@ -38,6 +43,7 @@ export function TopWeekBonusDialog({
           },
           description: res.Value || '',
         });
+        verifyAuth(setUserAssets);
       } else {
         throw new Error(res.Message ?? '领取每周分红失败');
       }

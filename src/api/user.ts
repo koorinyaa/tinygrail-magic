@@ -960,4 +960,32 @@ export async function logout(): Promise<TinygrailBaseResponse<string>> {
   }
 }
 
+/**
+ * 检查是否是节日
+ * @returns {Promise<TinygrailBaseResponse<string>>} - 结果
+ */
+export async function holidayCheck(): Promise<TinygrailBaseResponse<string>> {
+  try {
+    return await httpService.get<TinygrailBaseResponse<string>>(
+      '/event/holiday/bonus/check'
+    );
+  } catch (error) {
+    throw error;
+  }
+}
 
+/**
+ * 领取节日奖励
+ * @returns {Promise<TinygrailBaseResponse<string>>} - 结果
+ */
+export async function claimHolidayBonus(): Promise<
+  TinygrailBaseResponse<string>
+> {
+  try {
+    return await httpService.get<TinygrailBaseResponse<string>>(
+      '/event/holiday/bonus'
+    );
+  } catch (error) {
+    throw error;
+  }
+}
