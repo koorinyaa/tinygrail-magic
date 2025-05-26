@@ -12,7 +12,6 @@ import {
   getAvatarUrl,
 } from '@/lib/utils';
 import { useStore } from '@/store';
-import { toast } from 'sonner';
 
 /**
  * 英灵殿角色卡片
@@ -22,9 +21,11 @@ import { toast } from 'sonner';
 export function TinygrailCard({
   data,
   auctionInfo,
+  handleAuction,
 }: {
   data: CharacterDetail;
   auctionInfo: AuctionItem;
+  handleAuction: () => void;
 }) {
   const { openCharacterDrawer } = useStore();
 
@@ -108,7 +109,7 @@ export function TinygrailCard({
         )}
         onClick={(e) => {
           e.stopPropagation();
-          toast.warning('开发中');
+          handleAuction();
         }}
       >
         {auctionInfo &&

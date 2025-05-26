@@ -88,6 +88,7 @@ export const CurrentTopWeek = () => {
           scoreMultiplier={scoreMultiplier}
           setIsPhotoSliderOpen={setIsPhotoSliderOpen}
           setPhotoSliderSrc={setPhotoSliderSrc}
+          fetchTopWeekData={fetchTopWeekData}
         />
       )}
       {error && (

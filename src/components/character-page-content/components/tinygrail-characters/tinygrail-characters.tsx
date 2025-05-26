@@ -4,12 +4,13 @@ import {
   getUserCharaList,
   UserCharaPageValue,
 } from '@/api/user';
+import { AuctionDialog } from '@/components/auction-dialog';
 import { PaginationWrapper } from '@/components/ui/pagination-wrapper';
 import { Skeleton } from '@/components/ui/skeleton';
 import { notifyError } from '@/lib/utils';
-import { useEffect, useState, useRef } from 'react';
-import { TinygrailCard } from './tinygrail-card';
 import { useStore } from '@/store';
+import { useEffect, useRef, useState } from 'react';
+import { TinygrailCard } from './tinygrail-card';
 
 /**
  * 英灵殿角色
@@ -27,28 +28,38 @@ export function TinygrailCharacters() {
   const [auctionItems, setAuctionItems] = useState<{
     [key: number]: AuctionItem;
   }>({});
-  
+  // 拍卖弹窗打开状态
+  const [auctionDialogOpen, setAuctionDialogOpen] = useState(false);
+  // 当前拍卖弹窗的角色信息
+  const [
+    currentAuctionDialogCharacterInfo,
+    setCurrentAuctionDialogCharacterInfo,
+  ] = useState({
+    id: 0,
+    name: '',
+  });
+
   // 记录上一次的值
   const prevStateRef = useRef({
     currentPage: 1,
-    drawerOpen: characterDrawer.open
+    drawerOpen: characterDrawer.open,
   });
 
   // 监听页数和角色抽屉关闭变化
   useEffect(() => {
     const prevState = prevStateRef.current;
-    
+
     // 页数变化
     if (currentPage !== prevState.currentPage) {
       fetchTinygrailCharaPageData();
       toTop();
       prevState.currentPage = currentPage;
-    } 
+    }
     // 抽屉状态从打开变为关闭
     else if (prevState.drawerOpen && !characterDrawer.open) {
       fetchTinygrailCharaPageData(false);
     }
-    
+
     // 更新抽屉状态引用
     prevState.drawerOpen = characterDrawer.open;
   }, [currentPage, characterDrawer.open]);
@@ -117,6 +128,19 @@ export function TinygrailCharacters() {
     }
   };
 
+  /**
+   * 拍卖
+   * @param {number} characterId - 角色ID
+   * @param {string} characterName - 角色名称
+   */
+  const handleAuction = (characterId: number, characterName: string) => {
+    setCurrentAuctionDialogCharacterInfo({
+      id: characterId,
+      name: characterName,
+    });
+    setAuctionDialogOpen(true);
+  };
+
   return (
     <div className="flex flex-col">
       <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-2 w-full">
@@ -133,6 +157,9 @@ export function TinygrailCharacters() {
                 key={item.CharacterId}
                 data={item}
                 auctionInfo={auctionItems[item.CharacterId]}
+                handleAuction={() => {
+                  handleAuction(item.CharacterId, item.Name);
+                }}
               />
             ))}
           </>
@@ -144,6 +171,22 @@ export function TinygrailCharacters() {
         onPageChange={setCurrentPage}
         className="flex-1 justify-center mt-4"
       />
+      {auctionDialogOpen && (
+        <AuctionDialog
+          characterInfo={currentAuctionDialogCharacterInfo}
+          open={auctionDialogOpen}
+          onOpenChange={(open) => {
+            setAuctionDialogOpen(open);
+            setCurrentAuctionDialogCharacterInfo({
+              id: 0,
+              name: '',
+            });
+            if (!open) {
+              fetchTinygrailCharaPageData(false);
+            }
+          }}
+        />
+      )}
     </div>
   );
 }

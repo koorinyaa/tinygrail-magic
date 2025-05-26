@@ -1,4 +1,5 @@
 import { CurrentTopWeekItem } from '@/api/character';
+import { AuctionItem } from '@/api/user';
 import { GlowEffect } from '@/components/glow-effect';
 import { cn } from '@/lib/utils';
 import { ComponentProps, useEffect, useState } from 'react';
@@ -11,6 +12,7 @@ interface TopWeekCardProps extends ComponentProps<'div'> {
   rank: number;
   scoreMultiplier: number;
   data: CurrentTopWeekItem;
+  auctionInfo: AuctionItem;
   handleCoverPreview: () => void;
   handleCharacterDrawer: (characterId: number) => void;
   handleAuction: (characterId: number) => void;
@@ -21,6 +23,7 @@ interface TopWeekCardProps extends ComponentProps<'div'> {
  * @param {number} props.rank - 排名
  * @param {number} props.scoreMultiplier - 评分倍率
  * @param {CurrentTopWeekItem} props.data - 角色数据
+ * @param {AuctionItem} props.auctionInfo - 拍卖信息
  * @param {() => void} props.handleCoverPreview - 封面预览事件
  * @param {(characterId: number) => void} props.handleCharacterDrawer - 打开角色抽屉事件
  * @param {(characterId: number) => void} props.handleAuction - 拍卖事件
@@ -29,6 +32,7 @@ export function TopWeekCard({
   rank,
   scoreMultiplier,
   data,
+  auctionInfo,
   handleCoverPreview,
   handleCharacterDrawer,
   handleAuction,
@@ -87,6 +91,7 @@ export function TopWeekCard({
       />
       <ActionButtons
         data={data}
+        auctionInfo={auctionInfo}
         handleCoverPreview={handleCoverPreview}
         handleCharacterDrawer={handleCharacterDrawer}
         handleAuction={handleAuction}
