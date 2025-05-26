@@ -17,7 +17,6 @@ export default function App() {
   const {
     theme,
     setTheme,
-    userAssets,
     setCurrentPage,
     setUpdateInfo,
     openCharacterDrawer,

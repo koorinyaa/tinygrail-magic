@@ -58,7 +58,14 @@ if (isNotInIframe()) {
 // 挂载ReactDOM
 const createReactDom = (): void => {
   console.info('Initializing tinygrail-magic...');
-  ReactDOM.createRoot(document.body).render(
+  
+  // 创建一个专用的容器元素
+  const rootElement = document.createElement('div');
+  rootElement.id = 'root';
+  document.body.appendChild(rootElement);
+  
+  // 将React应用挂载到专用容器上
+  ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
       <App />
     </React.StrictMode>
