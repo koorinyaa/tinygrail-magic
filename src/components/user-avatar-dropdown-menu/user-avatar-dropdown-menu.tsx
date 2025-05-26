@@ -72,8 +72,6 @@ export function UserAvatarDropdownMenu() {
       const res = await holidayCheck();
       if (res.State === 0) {
         setHolidayName(res.Value);
-      } else {
-        throw new Error(res.Message ?? '节日检查失败');
       }
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : '节日检查失败';
@@ -193,10 +191,12 @@ export function UserAvatarDropdownMenu() {
   return (
     <>
       <DropdownMenu open={dropdownMenuOpen} onOpenChange={setDropdownMenuOpen}>
-        <DropdownMenuTrigger className="size-8">
-          <Button variant="ghost" className="h-auto p-0 hover:bg-transparent">
-            <UserAvatar src={getAvatarUrl(userAssets?.avatar)} />
-          </Button>
+        <DropdownMenuTrigger className="size-8" asChild>
+          <div>
+            <Button variant="ghost" className="h-auto p-0 hover:bg-transparent">
+              <UserAvatar src={getAvatarUrl(userAssets?.avatar)} />
+            </Button>
+          </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="max-w-64 min-w-36">
           <DropdownMenuLabel className="flex min-w-0 flex-col">

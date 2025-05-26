@@ -1,7 +1,8 @@
 import { logout } from '@/api/user';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { cn, notifyError } from '@/lib/utils';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { LoaderCircleIcon } from 'lucide-react';
 import { useState } from 'react';
 
@@ -43,7 +44,10 @@ export function LogoutDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="p-4 rounded-xl">
+      <DialogContent aria-describedby={undefined} className="p-4 rounded-xl">
+        <VisuallyHidden asChild>
+          <DialogTitle />
+        </VisuallyHidden>
         <div className="w-full h-fit flex flex-col gap-y-4">
           <div className="flex flex-col space-y-2 text-center">
             <h2 className="text-lg font-semibold">提示</h2>

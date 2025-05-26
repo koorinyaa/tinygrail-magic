@@ -1,7 +1,7 @@
 import { getUserBids, UserBidsPageValue } from '@/api/user';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import BadgeLevel from '@/components/ui/badge-level';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { PaginationWrapper } from '@/components/ui/pagination-wrapper';
 import {
   cn,
@@ -12,6 +12,7 @@ import {
   notifyError,
 } from '@/lib/utils';
 import { useStore } from '@/store';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { useEffect, useRef, useState } from 'react';
 
 /**
@@ -111,7 +112,10 @@ export function MyBuyOrderDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="p-4 rounded-xl">
+      <DialogContent aria-describedby={undefined} className="p-4 rounded-xl">
+        <VisuallyHidden asChild>
+          <DialogTitle />
+        </VisuallyHidden>
         <div className="w-full h-fit flex flex-col gap-y-2 overflow-hidden">
           <div className="flex flex-row space-x-2">
             <h2 className="text-lg font-semibold">我的买单</h2>
