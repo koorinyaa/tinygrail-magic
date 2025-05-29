@@ -120,15 +120,22 @@ export const createCharacterDrawerSlice: StateCreator<CharacterDrawerState> = (
     }));
   },
   openCharacterDrawer: (characterId, type = 'character') => {
-    set((state) => ({
-      characterDrawer: {
-        ...state.characterDrawer,
-        characterId,
-        open: true,
-        loading: true,
-        type,
-      },
-    }));
+    set((state) => {
+      if (characterId === state.characterDrawer.characterId) {
+        return {
+          characterDrawer: state.characterDrawer,
+        };
+      }
+      return {
+        characterDrawer: {
+          ...state.characterDrawer,
+          characterId,
+          open: true,
+          loading: true,
+          type,
+        },
+      };
+    });
   },
   closeCharacterDrawer: () => {
     set({

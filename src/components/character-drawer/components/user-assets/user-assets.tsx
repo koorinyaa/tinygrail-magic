@@ -1,6 +1,6 @@
 import { ActionButtons } from './action-buttons';
 import { AssetsInfo } from './assets-info';
-import { Items } from './items';
+import { Items } from '../items';
 import { LinkButton } from './link-button';
 import { UserTempleCard } from './user-temple-card';
 
