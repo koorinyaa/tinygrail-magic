@@ -252,104 +252,117 @@ export function StarTowerLog({
   };
 
   return (
-    <div className="flex flex-col h-full">
-      <div
-        ref={scrollContainerRef}
-        className={cn('h-full overflow-y-auto', {
-          'pr-1.5': isMobile,
-        })}
-      >
-        <div className="flex flex-col gap-y-1 divide-y divide-slate-100 dark:divide-slate-800/70">
-          {loading ? (
-            <>
-              {Array.from({ length: 12 }).map((_, index) => (
-                <>
-                  <div
-                    key={index}
-                    className="flex flex-row items-center gap-1.5 py-1"
-                  >
-                    <Skeleton className="size-10 rounded-full" />
-                    <div className="flex-1 flex flex-col justify-center gap-y-0.5">
-                      <Skeleton className="w-20 h-4 rounded-sm" />
-                      <Skeleton className="w-32 h-4 rounded-sm" />
+    <div
+      className={cn('h-full flex flex-col px-4 md:px-6 py-3 overflow-y-auto', {
+        'pt-0': isMobile,
+      })}
+    >
+      <div className="font-semibold mt-2 mb-3">通天塔日志</div>
+      <div className="flex flex-col h-full overflow-hidden">
+        <div
+          ref={scrollContainerRef}
+          className={cn('h-full overflow-y-auto', {
+            'pr-1.5': isMobile,
+          })}
+        >
+          <div className="flex flex-col gap-y-1 divide-y divide-slate-100 dark:divide-slate-800/70">
+            {loading ? (
+              <>
+                {Array.from({ length: 12 }).map((_, index) => (
+                  <>
+                    <div
+                      key={index}
+                      className="flex flex-row items-center gap-1.5 py-1"
+                    >
+                      <Skeleton className="size-10 rounded-full" />
+                      <div className="flex-1 flex flex-col justify-center gap-y-0.5">
+                        <Skeleton className="w-20 h-4 rounded-sm" />
+                        <Skeleton className="w-32 h-4 rounded-sm" />
+                      </div>
                     </div>
-                  </div>
-                </>
-              ))}
-            </>
-          ) : (
-            <>
-              {starLogItems.map((log) => (
-                <div
-                  key={log.Id}
-                  className="flex flex-row items-center gap-1.5 cursor-pointer py-1"
-                  onClick={() => {
-                    onCloseDrawer?.();
-                    openCharacterDrawer(log.CharacterId);
-                  }}
-                >
-                  <Avatar className="size-10 rounded-full border-2 border-secondary">
-                    <AvatarImage
-                      className="object-cover object-top pointer-events-none"
-                      src={getAvatarUrl(log.Icon)}
-                    />
-                    <AvatarFallback className="rounded-full">C</AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 flex flex-col justify-center gap-y-0.5 overflow-hidden">
-                    <div className="flex items-center text-sm font-bold overflow-hidden">
-                      <span className="truncate">
-                        {decodeHTMLEntities(log.CharacterName)}
-                      </span>
-                      <Badge
-                        variant="secondary"
-                        className={cn(
-                          'bg-slate-400 dark:bg-slate-600 text-white font-bold font-mono px-1 py-0 rounded-sm scale-80',
-                          {
-                            'bg-violet-500 dark:bg-violet-600': log.Rank <= 500,
-                          }
-                        )}
-                        title="通天塔排名"
-                      >
-                        #{log.Rank}
-                      </Badge>
-                      {log.Rank !== log.OldRank && (
+                  </>
+                ))}
+              </>
+            ) : (
+              <>
+                {starLogItems.map((log) => (
+                  <div
+                    key={log.Id}
+                    className="flex flex-row items-center gap-1.5 cursor-pointer py-1"
+                    onClick={() => {
+                      onCloseDrawer?.();
+                      openCharacterDrawer(log.CharacterId);
+                    }}
+                  >
+                    <Avatar className="size-10 rounded-full border-2 border-secondary">
+                      <AvatarImage
+                        className="object-cover object-top pointer-events-none"
+                        src={getAvatarUrl(log.Icon)}
+                      />
+                      <AvatarFallback className="rounded-full">
+                        C
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 flex flex-col justify-center gap-y-0.5 overflow-hidden">
+                      <div className="flex items-center text-sm font-bold overflow-hidden">
+                        <span className="truncate">
+                          {decodeHTMLEntities(log.CharacterName)}
+                        </span>
                         <Badge
                           variant="secondary"
                           className={cn(
-                            'bg-slate-400 dark:bg-slate-600 text-white font-bold font-mono px-1 py-0 -ml-0.5 gap-x-px rounded-sm scale-80',
+                            'bg-slate-400 dark:bg-slate-600 text-white font-bold font-mono px-1 py-0 rounded-sm scale-80',
                             {
-                              'bg-pink-500 dark:bg-pink-600':
-                                log.OldRank > log.Rank,
-                              'bg-sky-500 dark:bg-sky-600':
-                                log.OldRank < log.Rank,
+                              'bg-violet-500 dark:bg-violet-600':
+                                log.Rank <= 500,
                             }
                           )}
-                          title="排名变化"
+                          title="通天塔排名"
                         >
-                          <span>{log.OldRank > log.Rank ? '↑' : '↓'}</span>
-                          <span>{Math.abs(log.OldRank - log.Rank)}</span>
+                          #{log.Rank}
                         </Badge>
-                      )}
+                        {log.Rank !== log.OldRank && (
+                          <Badge
+                            variant="secondary"
+                            className={cn(
+                              'bg-slate-400 dark:bg-slate-600 text-white font-bold font-mono px-1 py-0 -ml-0.5 gap-x-px rounded-sm scale-80',
+                              {
+                                'bg-pink-500 dark:bg-pink-600':
+                                  log.OldRank > log.Rank,
+                                'bg-sky-500 dark:bg-sky-600':
+                                  log.OldRank < log.Rank,
+                              }
+                            )}
+                            title="排名变化"
+                          >
+                            <span>{log.OldRank > log.Rank ? '↑' : '↓'}</span>
+                            <span>{Math.abs(log.OldRank - log.Rank)}</span>
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="h-4 text-xs opacity-60 overflow-hidden">
+                        {getLogMessage(log)}
+                      </div>
                     </div>
-                    <div className="h-4 text-xs opacity-60 overflow-hidden">
-                      {getLogMessage(log)}
+                    <div className="flex flex-col items-end text-xs opacity-60">
+                      {formatDateTime(log.LogTime, 'simple', true)}
                     </div>
                   </div>
-                  <div className="flex flex-col items-end text-xs opacity-60">
-                    {formatDateTime(log.LogTime, 'simple', true)}
-                  </div>
-                </div>
-              ))}
-            </>
-          )}
+                ))}
+              </>
+            )}
+          </div>
         </div>
+        <PaginationWrapper
+          currentPage={page}
+          totalPages={pageTotal}
+          onPageChange={setPage}
+          size={isMobile ? 'sm' : 'md'}
+          className={cn('h-8 mt-2', {
+            'h-6': isMobile,
+          })}
+        />
       </div>
-      <PaginationWrapper
-        currentPage={page}
-        totalPages={pageTotal}
-        onPageChange={setPage}
-        className="h-8 mt-2"
-      />
     </div>
   );
 }

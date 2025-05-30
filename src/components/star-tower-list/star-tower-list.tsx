@@ -245,7 +245,7 @@ export function StarTowerList() {
           onCloseAutoFocus={(e) => {
             e.preventDefault();
           }}
-          className={cn('bg-card border-none overflow-hidden h-full', {
+          className={cn('bg-card border-none overflow-hidden', {
             'max-w-96 rounded-l-md': !isMobile,
             '!max-h-[90dvh] max-h-[90vh]': isMobile,
           })}
@@ -253,14 +253,7 @@ export function StarTowerList() {
           <VisuallyHidden asChild>
             <DrawerTitle />
           </VisuallyHidden>
-          <div className="h-full flex flex-col px-4 py-3">
-            <div className="font-semibold mt-2 mb-4">
-              通天塔日志
-            </div>
-            <div className='flex-1 pb-3 overflow-hidden'>
-              <StarTowerLog onCloseDrawer={() => setLogDrawerOpen(false)} />
-            </div>
-          </div>
+          <StarTowerLog onCloseDrawer={() => setLogDrawerOpen(false)} />
         </DrawerContent>
       </Drawer>
     </div>

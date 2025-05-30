@@ -17,10 +17,7 @@ export function StarTower() {
         {!isMobile && (
           <div className="w-90 min-w-90 mt-0">
             <Card className="p-0 gap-0">
-              <CardHeader className="px-4 md:px-6 pt-6 pb-2">
-                <CardTitle>通天塔日志</CardTitle>
-              </CardHeader>
-              <CardContent className="px-4 md:px-6 pb-4">
+              <CardContent className='px-0'>
                 <StarTowerLog />
               </CardContent>
             </Card>
