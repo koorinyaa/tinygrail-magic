@@ -63,11 +63,11 @@ export function StardustContent({
    * 计算效率比例
    */
   const calculateEfficiency = () => {
-    if (characterData.level >= templeData.CharacterLevel) {
+    if (characterData.level + 1 >= templeData.CharacterLevel) {
       return '1:1';
     }
 
-    const levelDifference = templeData.CharacterLevel - characterData.level;
+    const levelDifference = templeData.CharacterLevel - characterData.level - 1;
     const ratio = Math.min(Math.pow(2, levelDifference), 32);
 
     return `${ratio}:1`;
