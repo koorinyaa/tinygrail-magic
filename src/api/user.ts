@@ -1,3 +1,4 @@
+import { DrawCharacterValue } from '@/api/magic-item';
 import { httpService, TinygrailBaseResponse } from '@/lib/http';
 import { CharacterDetail, CharacterICOItem, TempleItem } from './character';
 
@@ -984,6 +985,22 @@ export async function claimHolidayBonus(): Promise<
   try {
     return await httpService.get<TinygrailBaseResponse<string>>(
       '/event/holiday/bonus'
+    );
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * 刮刮乐奖励
+ * @returns {Promise<TinygrailBaseResponse<DrawCharacterValue[]>>} - 刮刮乐奖励结果
+ */
+export async function scratch(): Promise<
+  TinygrailBaseResponse<DrawCharacterValue[]>
+> {
+  try {
+    return await httpService.post<TinygrailBaseResponse<DrawCharacterValue[]>>(
+      '/event/scratch/bonus2'
     );
   } catch (error) {
     throw error;

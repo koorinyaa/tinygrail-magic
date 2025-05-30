@@ -23,6 +23,7 @@ export function Items() {
   useEffect(() => {
     if (!showPopover) {
       setPopoverContent(null);
+      fetchUserItems();
     }
   }, [showPopover]);
 

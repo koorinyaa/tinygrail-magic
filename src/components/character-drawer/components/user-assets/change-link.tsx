@@ -9,7 +9,7 @@ import { PaginationWrapper } from '@/components/ui/pagination-wrapper';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useDebounce } from '@/hooks/use-debounce';
 import { verifyAuth } from '@/lib/auth';
-import { cn, getAvatarUrl, notifyError } from '@/lib/utils';
+import { cn, decodeHTMLEntities, getAvatarUrl, notifyError } from '@/lib/utils';
 import { useStore } from '@/store';
 import { LoaderCircleIcon, SearchIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -187,7 +187,9 @@ export function ChangeLink({ onClose }: { onClose: () => void }) {
                     >
                       <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-b from-[#00000000]/0 to-[#000000cc] text-white">
                         <div className="absolute bottom-0 w-full px-2 pt-4 pb-1.5">
-                          <div className="text-xs truncate">{temple.Name}</div>
+                          <div className="text-xs truncate">
+                            {decodeHTMLEntities(temple.Name || '')}
+                          </div>
                         </div>
                       </div>
                       <Badge

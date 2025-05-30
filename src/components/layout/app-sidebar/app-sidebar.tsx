@@ -145,7 +145,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               target="_black"
               className="cursor-pointer opacity-80 hover:opacity-100"
             >
-              Github
+              GitHub
             </a>
           </div>
         </div>

@@ -9,7 +9,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { LogoutDialog } from '@/components/user-avatar-dropdown-menu/components/logout-dialog';
 import { verifyAuth } from '@/lib/auth';
 import {
   cn,
@@ -35,8 +34,10 @@ import { toast } from 'sonner';
 import { AssetsLogDialog } from './components/assets-log-dialog';
 import { AuctionLogDialog } from './components/auction-log-dialog';
 import { DailyBonusDialog } from './components/daily-bonus-dialog';
+import { LogoutDialog } from './components/logout-dialog';
 import { MyBuyOrderDialog } from './components/my-buy-order-dialog';
 import { MySellOrderDialog } from './components/my-sell-order-dialog';
+import { ScratchDialog } from './components/scratch-dialog';
 import { TopWeekBonusDialog } from './components/topweek-bonus-dialog';
 import { UserAvatar } from './components/user-avatar';
 
@@ -58,7 +59,10 @@ export function UserAvatarDropdownMenu() {
   const [mySellOrderDialogOpen, setMySellOrderDialogOpen] = useState(false);
   // 退出登录弹窗打开状态
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
+  // 节日名称
   const [holidayName, setHolidayName] = useState('');
+  // 刮刮乐弹窗打开状态
+  const [scratchDialogOpen, setScratchDialogOpen] = useState(false);
 
   useEffect(() => {
     fatchHolidayCheck();
@@ -118,7 +122,10 @@ export function UserAvatarDropdownMenu() {
     {
       icon: <Ticket size={16} className="opacity-60" aria-hidden="true" />,
       label: '刮刮乐',
-      onClick: () => toast.warning('开发中'),
+      onClick: () => {
+        setDropdownMenuOpen(false);
+        setScratchDialogOpen(true);
+      },
       show: true,
     },
     {
@@ -290,6 +297,12 @@ export function UserAvatarDropdownMenu() {
         <LogoutDialog
           open={logoutDialogOpen}
           onOpenChange={setLogoutDialogOpen}
+        />
+      )}
+      {scratchDialogOpen && (
+        <ScratchDialog
+          open={scratchDialogOpen}
+          onOpenChange={setScratchDialogOpen}
         />
       )}
     </>
