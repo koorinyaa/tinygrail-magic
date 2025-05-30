@@ -1,23 +1,24 @@
 import { getTopWeekHistory, HistoryTopWeekItem } from '@/api/character';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
+import { CardDescription } from '@/components/ui/card';
 import { PaginationWrapper } from '@/components/ui/pagination-wrapper';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { cn } from '@/lib/utils';
 import { AlertCircle } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Item } from './components/item';
 
 /**
  * 历史萌王
+ * @param onCloseDrawer 关闭抽屉
  */
-export function HistoryTopWeek() {
+export function HistoryTopWeek({
+  onCloseDrawer,
+}: {
+  onCloseDrawer?: () => void;
+}) {
+  const isMobile = useIsMobile(448);
   // 加载状态
   const [loading, setLoading] = useState(true);
   // 错误信息
@@ -32,9 +33,15 @@ export function HistoryTopWeek() {
   const [topWeekHistoryData, setTopWeekHistoryData] = useState<
     HistoryTopWeekItem[]
   >([]);
+  // 滚动容器引用
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetchTopWeekHistoryData();
+    // 页数变化时滚动到顶部
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+    }
   }, [currentPage]);
 
   const fetchTopWeekHistoryData = async () => {
@@ -80,55 +87,64 @@ export function HistoryTopWeek() {
   };
 
   return (
-    <div className="xl:w-90 xl:min-w-90 w-full mt-6 xl:mt-0">
-      <Card className="p-0 gap-0">
-        <CardHeader className="pt-6 pb-4">
-          <CardTitle>往期萌王</CardTitle>
-          {loading ? (
-            <Skeleton className="h-5 w-24 rounded-sm" />
-          ) : (
-            <CardDescription>{weekInfo}</CardDescription>
-          )}
-        </CardHeader>
-        <CardContent className="px-6 pb-4">
-          {!error && (
-            <div className="divide-y divide-slate-100 dark:divide-slate-800/70">
-              {loading ? (
-                <div>
-                  {Array.from({ length: 12 }).map((_, index) => (
-                    <div
-                      key={index}
-                      className="py-2.5 first:pt-0 last:pb-0 cursor-pointer"
-                    >
-                      <Skeleton className="h-10 w-full rounded-md" />
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div>
-                  {topWeekHistoryData.map((item, index) => (
-                    <Item key={index} data={item} />
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-          {error && (
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
-        </CardContent>
-        <CardFooter className="px-6 pb-3 pt-0">
-          <PaginationWrapper
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
-        </CardFooter>
-      </Card>
+    <div
+      className={cn('h-full flex flex-col px-4 md:px-6 py-3 overflow-hidden', {
+        'pt-0': isMobile,
+      })}
+    >
+      <div className="flex flex-col gap-y-1.5 mt-2 mb-3">
+        <div className="font-semibold">往期萌王</div>
+        {loading ? (
+          <Skeleton className="h-5 w-24 rounded-sm" />
+        ) : (
+          <CardDescription>{weekInfo}</CardDescription>
+        )}
+      </div>
+      <div
+        ref={scrollContainerRef}
+        className={cn('h-full overflow-y-auto', {
+          'pr-2': isMobile,
+        })}
+      >
+        {!error && (
+          <div className="flex flex-col gap-y-1 divide-y divide-slate-100 dark:divide-slate-800/70">
+            {loading ? (
+              <>
+                {Array.from({ length: 12 }).map((_, index) => (
+                  <div
+                    key={index}
+                    className="py-1 cursor-pointer"
+                  >
+                    <Skeleton className="h-10 w-full rounded-md" />
+                  </div>
+                ))}
+              </>
+            ) : (
+              <>
+                {topWeekHistoryData.map((item, index) => (
+                  <Item key={index} data={item} onCloseDrawer={onCloseDrawer} />
+                ))}
+              </>
+            )}
+          </div>
+        )}
+        {error && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error</AlertTitle>
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+      </div>
+      <PaginationWrapper
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+        size={isMobile ? 'sm' : 'md'}
+        className={cn('h-8 mt-2 mb-0.5', {
+          'h-6': isMobile,
+        })}
+      />
     </div>
   );
 }

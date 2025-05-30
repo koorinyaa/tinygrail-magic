@@ -14,8 +14,15 @@ import { UsersRound } from 'lucide-react';
  * 历史萌王item
  * @param  props
  * @param {HistoryTopWeekItem} props.data - 历史萌王项数据
+ * @param {() => void} props.onCloseDrawer - 关闭抽屉
  */
-export function Item({ data }: { data: HistoryTopWeekItem }) {
+export function Item({
+  data,
+  onCloseDrawer,
+}: {
+  data: HistoryTopWeekItem;
+  onCloseDrawer?: () => void;
+}) {
   const { setCharacterDrawer } = useStore();
   const {
     CharacterId,
@@ -30,10 +37,11 @@ export function Item({ data }: { data: HistoryTopWeekItem }) {
 
   const handleItemClick = () => {
     setCharacterDrawer({ open: true, characterId: CharacterId });
+    onCloseDrawer?.();
   };
   return (
     <div
-      className="py-2.5 first:pt-0 last:pb-0 cursor-pointer"
+      className="py-1 cursor-pointer"
       onClick={handleItemClick}
     >
       <div className="flex flex-row items-center gap-x-2 h-10">

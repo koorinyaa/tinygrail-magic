@@ -1,5 +1,10 @@
 import { getTopWeek, TopWeekResponse } from '@/api/character';
+import { HistoryTopWeek } from '@/components/history-top-week';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { cn } from '@/lib/utils';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { AlertCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { PhotoSlider } from 'react-photo-view';
@@ -12,6 +17,8 @@ import { Header } from './components/header';
  * 当前萌王组件
  */
 export const CurrentTopWeek = () => {
+  const isMobile = useIsMobile(448);
+  const showDrawer = useIsMobile(1280);
   // 加载状态
   const [loading, setLoading] = useState(false);
   // 错误信息
@@ -24,6 +31,8 @@ export const CurrentTopWeek = () => {
   const [isPhotoSliderOpen, setIsPhotoSliderOpen] = useState(false);
   // 照片查看器图片地址
   const [photoSliderSrc, setPhotoSliderSrc] = useState('');
+  // 抽屉是否打开
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   // 加载当前萌王数据
   const fetchTopWeekData = async (
@@ -78,9 +87,15 @@ export const CurrentTopWeek = () => {
     };
   }, []);
 
+  useEffect(() => {
+    if (!showDrawer) {
+      setDrawerOpen(false);
+    }
+  }, [showDrawer]);
+
   return (
     <div className="w-full">
-      <Header loading={loading} fetchTopWeekData={fetchTopWeekData} />
+      <Header loading={loading} fetchTopWeekData={fetchTopWeekData} setDrawerOpen={setDrawerOpen} />
       {!error && (
         <Content
           loading={loading}
@@ -110,7 +125,32 @@ export const CurrentTopWeek = () => {
         maskOpacity={0.4}
         bannerVisible={false}
         className="backdrop-blur-xs"
-      ></PhotoSlider>
+      />
+      <Drawer
+        open={drawerOpen}
+        onOpenChange={setDrawerOpen}
+        direction={isMobile ? 'bottom' : 'right'}
+        repositionInputs={false}
+      >
+        <DrawerContent
+          aria-describedby={undefined}
+          onOpenAutoFocus={(e) => {
+            e.preventDefault();
+          }}
+          onCloseAutoFocus={(e) => {
+            e.preventDefault();
+          }}
+          className={cn('bg-card border-none overflow-hidden', {
+            'max-w-96 rounded-l-md': !isMobile,
+            '!max-h-[90dvh] max-h-[90vh]': isMobile,
+          })}
+        >
+          <VisuallyHidden asChild>
+            <DrawerTitle />
+          </VisuallyHidden>
+          <HistoryTopWeek onCloseDrawer={() => setDrawerOpen(false)} />
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 };

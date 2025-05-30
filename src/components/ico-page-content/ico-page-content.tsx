@@ -1,5 +1,8 @@
 import { CharacterICOItem, getCharacterICO } from '@/api/character';
 import { ICOCard } from '@/components/ico-page-content/components/ico-card';
+import { RecentICOLog } from '@/components/recent-ico-log';
+import { Badge } from '@/components/ui/badge';
+import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { PaginationWrapper } from '@/components/ui/pagination-wrapper';
 import {
   Select,
@@ -10,14 +13,19 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Skeleton } from '@/components/ui/skeleton';
-import { notifyError } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { cn, notifyError } from '@/lib/utils';
 import { useStore } from '@/store';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
+import { ChevronRight } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 /**
  * ICO内容区域
  */
 export function ICOPageContent() {
+  const isMobile = useIsMobile(448);
+  const showDrawer = useIsMobile(1280);
   const { toTop, characterDrawer } = useStore();
   // 加载状态
   const [loading, setLoading] = useState(true);
@@ -25,7 +33,6 @@ export function ICOPageContent() {
   const [currentPage, setCurrentPage] = useState(1);
   // 选中的分类
   const [selectedCategory, setSelectedCategory] = useState('mri');
-
   // 数据项
   const [icoItems, setIcoItems] = useState<CharacterICOItem[]>([]);
   // 分类选项数据
@@ -34,6 +41,8 @@ export function ICOPageContent() {
     { value: 'mvi', label: '最多资金' },
     { value: 'mui', label: '最多人数' },
   ];
+  // 抽屉是否打开
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   // 记录上一次的值
   const prevStateRef = useRef({
@@ -66,6 +75,13 @@ export function ICOPageContent() {
   useEffect(() => {
     setCurrentPage(1);
   }, [selectedCategory]);
+
+  // 屏幕宽度变化时关闭抽屉
+  useEffect(() => {
+    if (!showDrawer) {
+      setDrawerOpen(false);
+    }
+  }, [showDrawer]);
 
   /**
    * 获取ICO数据
@@ -118,26 +134,38 @@ export function ICOPageContent() {
 
   return (
     <div className="w-full">
-      <div className="mb-6 flex flex-wrap flex-row items-center justify-between">
-        <h2 className="text-xl font-bold flex-1 w-22">ICO</h2>
-        <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-          <SelectTrigger className="w-40">
-            <SelectValue placeholder="选择分类" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              {categories.map((category) => (
-                <SelectItem
-                  key={category.value}
-                  value={category.value}
-                  className="hover:bg-accent cursor-pointer"
-                >
-                  {category.label}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+      <div className="flex flex-col gap-y-0.5 mb-4">
+        <div className="flex flex-wrap flex-row items-center justify-between">
+          <h2 className="text-xl font-bold flex-1 w-22">ICO</h2>
+          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <SelectTrigger className="w-40">
+              <SelectValue placeholder="选择分类" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {categories.map((category) => (
+                  <SelectItem
+                    key={category.value}
+                    value={category.value}
+                    className="hover:bg-accent cursor-pointer"
+                  >
+                    {category.label}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <Badge
+            variant="outline"
+            className="flex xl:hidden rounded-full gap-x-0.5 pl-3 cursor-pointer"
+            onClick={() => setDrawerOpen?.(true)}
+          >
+            最近活跃
+            <ChevronRight />
+          </Badge>
+        </div>
       </div>
       <div>
         <div className="flex flex-col">
@@ -170,6 +198,31 @@ export function ICOPageContent() {
           />
         </div>
       </div>
+      <Drawer
+        open={drawerOpen}
+        onOpenChange={setDrawerOpen}
+        direction={isMobile ? 'bottom' : 'right'}
+        repositionInputs={false}
+      >
+        <DrawerContent
+          aria-describedby={undefined}
+          onOpenAutoFocus={(e) => {
+            e.preventDefault();
+          }}
+          onCloseAutoFocus={(e) => {
+            e.preventDefault();
+          }}
+          className={cn('bg-card border-none overflow-hidden', {
+            'max-w-96 rounded-l-md': !isMobile,
+            '!max-h-[90dvh] max-h-[90vh]': isMobile,
+          })}
+        >
+          <VisuallyHidden asChild>
+            <DrawerTitle />
+          </VisuallyHidden>
+          <RecentICOLog onCloseDrawer={() => setDrawerOpen(false)} />
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 }

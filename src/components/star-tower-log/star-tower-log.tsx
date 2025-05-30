@@ -253,7 +253,7 @@ export function StarTowerLog({
 
   return (
     <div
-      className={cn('h-full flex flex-col px-4 md:px-6 py-3 overflow-y-auto', {
+      className={cn('h-full flex flex-col px-4 md:px-6 py-3 overflow-hidden', {
         'pt-0': isMobile,
       })}
     >
@@ -262,7 +262,7 @@ export function StarTowerLog({
         <div
           ref={scrollContainerRef}
           className={cn('h-full overflow-y-auto', {
-            'pr-1.5': isMobile,
+            'pr-2': isMobile,
           })}
         >
           <div className="flex flex-col gap-y-1 divide-y divide-slate-100 dark:divide-slate-800/70">
@@ -358,7 +358,7 @@ export function StarTowerLog({
           totalPages={pageTotal}
           onPageChange={setPage}
           size={isMobile ? 'sm' : 'md'}
-          className={cn('h-8 mt-2', {
+          className={cn('h-8 mt-2 mb-0.5', {
             'h-6': isMobile,
           })}
         />

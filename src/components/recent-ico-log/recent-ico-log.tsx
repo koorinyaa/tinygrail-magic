@@ -1,11 +1,12 @@
 import { CharacterICOItem, getCharacterICO } from '@/api/character';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import BadgeLevel from '@/components/ui/badge-level';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { PaginationWrapper } from '@/components/ui/pagination-wrapper';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useIsMobile } from '@/hooks/use-mobile';
 import {
   calculateICOInfo,
+  cn,
   decodeHTMLEntities,
   formatCurrency,
   formatDateTime,
@@ -16,25 +17,34 @@ import {
 import { useStore } from '@/store';
 import { HubConnectionBuilder } from '@microsoft/signalr';
 import { ChevronsRight } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 /**
  * 最近活跃ICO
+ * @param onCloseDrawer 关闭抽屉
  */
-export function RecentICOLog() {
+export function RecentICOLog({
+  onCloseDrawer,
+}: {
+  onCloseDrawer?: () => void;
+}) {
+  const isMobile = useIsMobile(448);
   const { openCharacterDrawer } = useStore();
   // 加载状态
   const [loading, setLoading] = useState(false);
   // 页数
   const [currentPage, setCurrentPage] = useState(1);
-  // 最近活跃角色数据项
-  // 数据项
+  // 最近活跃ICO数据项
   const [icoItems, setIcoItems] = useState<CharacterICOItem[]>([]);
   // 用于强制刷新时间显示的计数器
   const [timeRefreshCounter, setTimeRefreshCounter] = useState(0);
+  // 滚动容器引用
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetchCharacterICOData();
+
+    const stop = initializeRealtimeConnection();
 
     // 设置每3秒更新一次时间格式化的定时器
     const timeRefreshInterval = setInterval(() => {
@@ -43,13 +53,7 @@ export function RecentICOLog() {
 
     return () => {
       clearInterval(timeRefreshInterval);
-    };
-  }, []);
 
-  useEffect(() => {
-    const stop = initializeRealtimeConnection();
-
-    return () => {
       if (stop) {
         stop
           .then((cleanup) => {
@@ -62,6 +66,13 @@ export function RecentICOLog() {
           });
       }
     };
+  }, []);
+
+  useEffect(() => {
+    // 页数变化时滚动到顶部
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+    }
   }, [currentPage]);
 
   /**
@@ -149,12 +160,19 @@ export function RecentICOLog() {
   };
 
   return (
-    <div className="xl:w-90 xl:min-w-90 w-full mt-6 xl:mt-0">
-      <Card className="p-0 gap-0">
-        <CardHeader className="px-4 md:px-6 pt-6 pb-2">
-          <CardTitle>最近活跃</CardTitle>
-        </CardHeader>
-        <CardContent className="px-4 md:px-6 pb-4">
+    <div
+      className={cn('h-full flex flex-col px-4 md:px-6 py-3 overflow-hidden', {
+        'pt-0': isMobile,
+      })}
+    >
+      <div className="font-semibold mt-2 mb-3">最近活跃</div>
+      <div className="flex flex-col h-full overflow-hidden">
+        <div
+          ref={scrollContainerRef}
+          className={cn('h-full overflow-y-auto', {
+            'pr-2': isMobile,
+          })}
+        >
           <div className="flex flex-col gap-y-1 divide-y divide-slate-100 dark:divide-slate-800/70">
             {loading ? (
               <>
@@ -185,6 +203,7 @@ export function RecentICOLog() {
                         key={ico.CharacterId}
                         className="flex flex-row gap-1.5 cursor-pointer py-1"
                         onClick={() => {
+                          onCloseDrawer?.();
                           openCharacterDrawer(ico.CharacterId, 'ico');
                         }}
                       >
@@ -230,14 +249,17 @@ export function RecentICOLog() {
               </>
             )}
           </div>
-          <PaginationWrapper
-            currentPage={currentPage}
-            totalPages={Math.ceil(icoItems.length / 12) || 0}
-            onPageChange={setCurrentPage}
-            className="flex-1 mt-2"
-          />
-        </CardContent>
-      </Card>
+        </div>
+        <PaginationWrapper
+          currentPage={currentPage}
+          totalPages={Math.ceil(icoItems.length / 12) || 0}
+          onPageChange={setCurrentPage}
+          size={isMobile ? 'sm' : 'md'}
+          className={cn('h-8 mt-2 mb-0.5', {
+            'h-6': isMobile,
+          })}
+        />
+      </div>
     </div>
   );
 }

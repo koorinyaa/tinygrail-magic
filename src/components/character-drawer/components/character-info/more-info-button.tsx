@@ -81,7 +81,7 @@ export function MoreInfoButton() {
               <HelpCircle className="size-3 opacity-60 cursor-pointer" />
             </PopoverTrigger>
             <PopoverContent
-              className="px-3 py-2 w-fit"
+              className="px-3 py-2 w-fit z-100 pointer-events-auto"
               onOpenAutoFocus={(e) => {
                 e.preventDefault();
               }}

@@ -1,7 +1,8 @@
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { RotateCw } from 'lucide-react';
+import { ChevronRight, RotateCw } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 interface HeaderProps {
@@ -11,6 +12,7 @@ interface HeaderProps {
     autoUpdate?: boolean,
     callback?: () => void
   ) => void;
+  setDrawerOpen?: (open: boolean) => void;
 }
 /**
  * 头部区域组件
@@ -18,7 +20,11 @@ interface HeaderProps {
  * @param {boolean} props.loading - 加载状态
  * @param {(isInit?: boolean, autoUpdate?: boolean, callback?: () => void) => void} props.fetchTopWeekData - 加载萌王投票数据
  */
-export function Header({ loading, fetchTopWeekData }: HeaderProps) {
+export function Header({
+  loading,
+  fetchTopWeekData,
+  setDrawerOpen,
+}: HeaderProps) {
   // 自动更新
   const [autoUpdate, setAutoUpdate] = useState(false);
   // 最后更新时间
@@ -61,42 +67,54 @@ export function Header({ loading, fetchTopWeekData }: HeaderProps) {
   };
 
   return (
-    <div className="mb-6 flex flex-wrap flex-row items-center justify-between">
-      <h2 className="text-xl font-bold flex-1 min-w-45 w-full">
-        萌王投票
-        <span className="text-xs opacity-60">
-          {formatTimeSinceLastUpdate()}
-        </span>
-      </h2>
-      <div className="flex items-center justify-between space-x-4 h-9">
-        <div className="flex mr-1 items-center space-x-2">
-          <Switch
-            id="auto-update"
-            checked={autoUpdate}
-            onCheckedChange={setAutoUpdate}
-            disabled={loading}
-            className="cursor-pointer"
-          />
-          <Label htmlFor="auto-update" className="cursor-pointer">
-            自动更新
-          </Label>
-        </div>
-        {!autoUpdate && (
-          <div className="flex items-center space-x-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => {
-                fetchTopWeekData(false, false, () => {
-                  setLastUpdated(Date.now());
-                });
-              }}
-              className="hover:bg-transparent opacity-60 hover:opacity-100 cursor-pointer"
-            >
-              <RotateCw />
-            </Button>
+    <div className="flex flex-col gap-y-0.5 mb-6">
+      <div className="flex flex-wrap flex-row items-center justify-between">
+        <h2 className="text-xl font-bold flex-1 min-w-45 w-full">
+          萌王投票
+          <span className="text-xs opacity-60">
+            {formatTimeSinceLastUpdate()}
+          </span>
+        </h2>
+        <div className="flex items-center justify-between space-x-4 h-9">
+          <div className="flex mr-1 items-center space-x-2">
+            <Switch
+              id="auto-update"
+              checked={autoUpdate}
+              onCheckedChange={setAutoUpdate}
+              disabled={loading}
+              className="cursor-pointer"
+            />
+            <Label htmlFor="auto-update" className="cursor-pointer">
+              自动更新
+            </Label>
           </div>
-        )}
+          {!autoUpdate && (
+            <div className="flex items-center space-x-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => {
+                  fetchTopWeekData(false, false, () => {
+                    setLastUpdated(Date.now());
+                  });
+                }}
+                className="hover:bg-transparent opacity-60 hover:opacity-100 cursor-pointer"
+              >
+                <RotateCw />
+              </Button>
+            </div>
+          )}
+        </div>
+      </div>
+      <div>
+        <Badge
+          variant="outline"
+          className="flex xl:hidden rounded-full gap-x-0.5 pl-3 cursor-pointer"
+          onClick={() => setDrawerOpen?.(true)}
+        >
+          往期萌王  
+          <ChevronRight />
+        </Badge>
       </div>
     </div>
   );
