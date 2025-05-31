@@ -58,7 +58,7 @@ export function MainContent({
       ref={containerRef}
       className={cn(
         '!h-[calc(100dvh-3.5rem)] h-[calc(100vh-3.5rem)] md:!h-[calc(100dvh-4.5rem)] md:h-[calc(100vh-4.5rem)]',
-        'w-full px-4 sm:px-6 lg:px-8 py-8 scroll-smooth overflow-auto',
+        'w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 scroll-smooth overflow-auto',
         {
           'px-0 sm:px-0 lg:px-0 py-0':
             currentPage.main.id === 'my-tinygrail' ||
