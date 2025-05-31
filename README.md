@@ -73,10 +73,9 @@ Tinygrail Magic
 
 ## 预览
 
-<img alt="移动端截图" src="./images/mobile1.PNG" width="400">
-<img alt="移动端截图" src="./images/mobile2.PNG" width="400">
+<img alt="移动端截图" src="./images/mobile1.jpg" width="300">
+<img alt="移动端截图" src="./images/mobile2.jpg" width="300">
 
-<img alt="PC端截图" src="./images/pc1.PNG" width="800">
-
-<img alt="PC端截图" src="./images/pc2.PNG" width="800">
+<img alt="PC端截图" src="./images/pc1.jpg" width="600">
+<img alt="PC端截图" src="./images/pc2.jpg" width="600">
 
