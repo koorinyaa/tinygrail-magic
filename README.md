@@ -53,7 +53,7 @@ Tinygrail Magic
   }
   const script = document.createElement('script')
   script.type = 'text/javascript'
-  script.src = 'https://cdn.jsdelivr.net/gh/koorinyaa/tinygrail-magic@master-cdn/dist/tinygrail-magic.min.js'
+  script.src = 'https://cdn.jsdelivr.net/gh/koorinyaa/tinygrail-magic@main/dist/tinygrail-magic.user.js'
   script.async = true
   document.body.appendChild(script)
 })()
@@ -69,7 +69,7 @@ Tinygrail Magic
 
 需要浏览器装有 [Tampermonkey](https://tampermonkey.net/) 插件
 
-[点击安装](https://cdn.jsdelivr.net/gh/koorinyaa/tinygrail-magic@master-cdn/dist/tinygrail-magic.user.js)
+[点击安装](https://cdn.jsdelivr.net/gh/koorinyaa/tinygrail-magic@main/dist/tinygrail-magic.user.js)
 
 ## 预览
 
