@@ -48,9 +48,9 @@ export async function checkForUpdates(): Promise<{
     // 获取最新的元数据文件
     const response = await fetch(UPDATE_CHECK_URL, {
       cache: 'no-cache', // 避免缓存
-      headers: {
-        'Content-Type': 'application/javascript',
-      },
+      // headers: {
+      //   'Content-Type': 'application/javascript',
+      // },
     });
 
     if (!response.ok) {
