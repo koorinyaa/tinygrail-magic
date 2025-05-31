@@ -13,11 +13,11 @@ export default defineConfig({
       entry: 'src/main.tsx',
       userscript: {
         name: APP_NAME,
+        description: APP_DESCRIPTION,
         version: APP_VERSION,
         author: APP_AUTHOR,
-        description: APP_DESCRIPTION,
         icon: 'https://tinygrail.com/favicon.ico',
-        namespace: 'tinygrail-magic',
+        namespace: 'https://github.com/koorinyaa/tinygrail-magic',
         match: [
           '*://*.bgm.tv/*',
           '*://*.bangumi.tv/*',

@@ -142,6 +142,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </span>
             <span className="mx-1 opacity-80">·</span>
             <a
+              href="https://github.com/koorinyaa/tinygrail-magic"
               target="_black"
               className="cursor-pointer opacity-80 hover:opacity-100"
             >
