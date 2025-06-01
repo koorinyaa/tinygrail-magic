@@ -302,10 +302,10 @@ export function AuctionParticipation({ onClose }: { onClose: () => void }) {
             锁定金额
             <Popover>
               <PopoverTrigger>
-                <HelpCircle className="size-3 opacity-60 cursor-pointer" />
+                <HelpCircle className="size-3 opacity-60 cursor-pointer pointer-events-auto" />
               </PopoverTrigger>
               <PopoverContent
-                className="px-3 py-2 w-fit"
+                className="px-3 py-2 w-fit z-100"
                 onOpenAutoFocus={(e) => {
                   e.preventDefault();
                 }}
