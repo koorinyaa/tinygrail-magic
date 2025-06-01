@@ -1,3 +1,4 @@
+import { GM_addStyle } from '$';
 import { Tinygrail } from '@/components/icons';
 import {
   Sidebar,
@@ -9,7 +10,7 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { APP_VERSION } from '@/config';
-import { formatCurrency, getAvatarUrl } from '@/lib/utils';
+import { formatCurrency, getAvatarUrl, isEmpty } from '@/lib/utils';
 import { useStore } from '@/store';
 import {
   BadgeCent,
@@ -130,9 +131,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavProjects projects={data.navAccount} />
         <div className="mt-auto">
           <NavSecondary items={data.navSecondary} />
-          {updateInfo?.hasUpdate && (
+          {/* 只有油猴环境显示更新 */}
+          {!isEmpty(GM_addStyle) && updateInfo?.hasUpdate && (
             <SidebarFooter>
-              {/* <NavUser user={data.user} /> */}
               <NavUpdate />
             </SidebarFooter>
           )}

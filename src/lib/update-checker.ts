@@ -1,4 +1,4 @@
-import { APP_VERSION, UPDATE_CHECK_URL } from '@/config';
+import { APP_VERSION, UPDATE_URL } from '@/config';
 
 /**
  * 从元数据文件中提取版本号
@@ -46,7 +46,7 @@ export async function checkForUpdates(): Promise<{
 }> {
   try {
     // 获取最新的元数据文件
-    const response = await fetch(UPDATE_CHECK_URL, {
+    const response = await fetch(UPDATE_URL, {
       cache: 'no-cache', // 避免缓存
       // headers: {
       //   'Content-Type': 'application/javascript',
