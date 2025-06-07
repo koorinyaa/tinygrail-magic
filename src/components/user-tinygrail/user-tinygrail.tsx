@@ -206,7 +206,9 @@ export function UserTinygrail({ userName }: { userName: string }) {
                 <a
                   href={`/user/${userName}`}
                   target="_black"
-                  className="text-lg md:text-3xl font-bold truncate"
+                  className={cn('text-lg md:text-3xl font-bold truncate', {
+                    'text-red-600': assetsData?.State === 666,
+                  })}
                 >
                   {decodeHTMLEntities(assetsData?.Nickname || '')}
                 </a>
