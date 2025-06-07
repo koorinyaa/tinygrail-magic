@@ -34,6 +34,7 @@ import { toast } from 'sonner';
 import { AssetsLogDialog } from './components/assets-log-dialog';
 import { AuctionLogDialog } from './components/auction-log-dialog';
 import { DailyBonusDialog } from './components/daily-bonus-dialog';
+import { GensokyoScratchDialog } from './components/gensokyo-scratch-dialog';
 import { LogoutDialog } from './components/logout-dialog';
 import { MyBuyOrderDialog } from './components/my-buy-order-dialog';
 import { MySellOrderDialog } from './components/my-sell-order-dialog';
@@ -63,7 +64,8 @@ export function UserAvatarDropdownMenu() {
   const [holidayName, setHolidayName] = useState('');
   // 刮刮乐弹窗打开状态
   const [scratchDialogOpen, setScratchDialogOpen] = useState(false);
-
+  // 幻想乡刮刮乐弹窗打开状态
+  const [gensokyoDialogOpen, setGensokyoDialogOpen] = useState(false);
   useEffect(() => {
     fatchHolidayCheck();
   }, []);
@@ -121,10 +123,19 @@ export function UserAvatarDropdownMenu() {
     },
     {
       icon: <Ticket size={16} className="opacity-60" aria-hidden="true" />,
-      label: '刮刮乐',
+      label: '环保刮刮乐',
       onClick: () => {
         setDropdownMenuOpen(false);
         setScratchDialogOpen(true);
+      },
+      show: true,
+    },
+    {
+      icon: <Ticket size={16} className="opacity-60" aria-hidden="true" />,
+      label: '幻想乡刮刮乐',
+      onClick: () => {
+        setDropdownMenuOpen(false);
+        setGensokyoDialogOpen(true);
       },
       show: true,
     },
@@ -303,6 +314,12 @@ export function UserAvatarDropdownMenu() {
         <ScratchDialog
           open={scratchDialogOpen}
           onOpenChange={setScratchDialogOpen}
+        />
+      )}
+      {gensokyoDialogOpen && (
+        <GensokyoScratchDialog
+          open={gensokyoDialogOpen}
+          onOpenChange={setGensokyoDialogOpen}
         />
       )}
     </>

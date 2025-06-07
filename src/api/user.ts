@@ -993,14 +993,30 @@ export async function claimHolidayBonus(): Promise<
 
 /**
  * 刮刮乐奖励
+ * @param {boolean} isGensokyo - 是否是幻想乡刮刮乐
  * @returns {Promise<TinygrailBaseResponse<DrawCharacterValue[]>>} - 刮刮乐奖励结果
  */
-export async function scratch(): Promise<
-  TinygrailBaseResponse<DrawCharacterValue[]>
-> {
+export async function scratch(
+  isGensokyo: boolean = false
+): Promise<TinygrailBaseResponse<DrawCharacterValue[]>> {
   try {
+    const url = `/event/scratch/bonus2${isGensokyo ? '/true' : ''}`;
     return await httpService.post<TinygrailBaseResponse<DrawCharacterValue[]>>(
-      '/event/scratch/bonus2'
+      url
+    );
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * 获取用户已使用幻想乡刮刮乐次数
+ * @returns {Promise<TinygrailBaseResponse<number>>} - 已使用次数
+ */
+export async function getGensokyoScratchCount(): Promise<TinygrailBaseResponse<number>> {
+  try {
+    return await httpService.get<TinygrailBaseResponse<number>>(
+      '/event/daily/count/10'
     );
   } catch (error) {
     throw error;
