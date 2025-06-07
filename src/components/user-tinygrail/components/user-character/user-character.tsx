@@ -117,7 +117,11 @@ export function UserCharacter({
         ) : (
           <>
             {data?.Items.map((item) => (
-              <CharacterCard key={item.CharacterId} data={item} />
+              <CharacterCard
+                key={item.CharacterId}
+                data={item}
+                userName={userName}
+              />
             ))}
           </>
         )}

@@ -1,22 +1,39 @@
 import { CharacterDetail } from '@/api/character';
+import { getUserCharacterData } from '@/api/user';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import BadgeLevel from '@/components/ui/badge-level';
 import { Card } from '@/components/ui/card';
 import {
+  cn,
   decodeHTMLEntities,
   formatCurrency,
   formatInteger,
   getAvatarUrl,
+  notifyError,
 } from '@/lib/utils';
 import { useStore } from '@/store';
+import { LoaderCircleIcon } from 'lucide-react';
+import { useState } from 'react';
 
 /**
  * 用户角色卡片
  * @param props
  * @param props.data 角色数据
+ * @param props.isCurrentUser 是否是当前用户本人
  */
-export function CharacterCard({ data }: { data: CharacterDetail }) {
-  const { openCharacterDrawer } = useStore();
+export function CharacterCard({
+  data,
+  userName,
+}: {
+  data: CharacterDetail;
+  userName: string;
+}) {
+  const { openCharacterDrawer, userAssets } = useStore();
+  const [loading, setLoading] = useState(false);
+  const [showUserTotal, setShowUserTotal] = useState(
+    userAssets?.name === userName
+  );
+  const [userTotal, setUserTotal] = useState<number>(data.UserTotal || 0);
 
   const {
     Name: name = '',
@@ -26,7 +43,6 @@ export function CharacterCard({ data }: { data: CharacterDetail }) {
     ZeroCount: zeroCount = 0,
     Stars: stars = 0,
     Rank: rank = 0,
-    UserTotal: userTotal = 0,
     Rate: rate = 0,
     Sacrifices: sacrifices = 0,
   } = data;
@@ -38,13 +54,36 @@ export function CharacterCard({ data }: { data: CharacterDetail }) {
       label: '股息₵',
       value: `${formatCurrency(dividend, { maximumFractionDigits: 2 })}`,
     },
-    { id: 'userTotal', label: '持股', value: formatInteger(userTotal) },
     {
       id: 'sacrifices',
       label: '圣殿',
       value: `${formatInteger(sacrifices)}`,
     },
   ];
+
+  /**
+   * 点击查看用户持股数
+   */
+  const fatchUserCharacterData = async () => {
+    if (!characterId || !userName) return;
+
+    setLoading(true);
+    try {
+      const resp = await getUserCharacterData(characterId, userName);
+      if (resp.State === 0) {
+        setUserTotal(resp.Value.Total);
+        setShowUserTotal(true);
+      } else {
+        throw new Error(resp.Message || '获取用户持股数失败');
+      }
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : '获取用户持股数失败';
+      notifyError(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Card
@@ -53,7 +92,7 @@ export function CharacterCard({ data }: { data: CharacterDetail }) {
         openCharacterDrawer(characterId);
       }}
     >
-      <div className="h-40 flex flex-col items-center gap-y-2 p-3">
+      <div className="h-40 flex flex-col items-center gap-y-2 p-3 pb-0">
         <Avatar className="size-12 rounded-full border-2 border-secondary">
           <AvatarImage
             className="object-cover object-top pointer-events-none"
@@ -82,6 +121,36 @@ export function CharacterCard({ data }: { data: CharacterDetail }) {
             </div>
           ))}
         </div>
+      </div>
+      <div
+        className={cn(
+          'flex items-center justify-center w-full h-8 text-sm font-medium border-t rounded-none'
+        )}
+        onClick={(e) => {
+          if (!showUserTotal) {
+            e.stopPropagation();
+            fatchUserCharacterData();
+          }
+        }}
+      >
+        {showUserTotal ? (
+          <span>持股：{formatInteger(userTotal)}</span>
+        ) : (
+          <>
+            <LoaderCircleIcon
+              className={cn('-ms-1 animate-spin', { hidden: !loading })}
+              size={12}
+              aria-hidden="true"
+            />
+            <span
+              className={cn({
+                hidden: loading,
+              })}
+            >
+              查看持股
+            </span>
+          </>
+        )}
       </div>
     </Card>
   );

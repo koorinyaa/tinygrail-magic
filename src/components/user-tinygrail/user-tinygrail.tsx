@@ -338,7 +338,7 @@ export function UserTinygrail({ userName }: { userName: string }) {
       >
         <div
           className={cn(
-            'sticky z-10 top-0 flex justify-center border-b border-slate-300/30 dark:border-slate-700/30 bg-background'
+            'sticky z-10 top-0 sm:-top-6 lg:-top-8 flex justify-center border-b border-slate-300/30 dark:border-slate-700/30 bg-background'
           )}
         >
           <div className="flex justify-center md:justify-start max-w-screen-xl w-full px-2.5 md:px-4.5 overflow-x-auto">
