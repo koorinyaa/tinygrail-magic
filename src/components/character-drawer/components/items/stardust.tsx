@@ -163,6 +163,7 @@ export function Stardust({ onClose }: { onClose: () => void }) {
           avatar: selectedCharacter.Icon,
           level: selectedCharacter.Level,
           amount: selectedCharacter.UserAmount,
+          star: selectedCharacter.Stars,
         }}
         templeData={{
           ...userTempleData,

@@ -4,6 +4,12 @@ import { InputNumber } from '@/components/input-number';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import BadgeLevel from '@/components/ui/badge-level';
 import { Button } from '@/components/ui/button';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { Switch } from '@/components/ui/switch';
 import { TempleCard } from '@/components/ui/temple-card';
 import { verifyAuth } from '@/lib/auth';
 import {
@@ -14,8 +20,9 @@ import {
   notifyError,
 } from '@/lib/utils';
 import { useStore } from '@/store';
-import { ArrowBigRight, LoaderCircleIcon } from 'lucide-react';
+import { ArrowBigRight, HelpCircle, LoaderCircleIcon } from 'lucide-react';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 /**
  * 角色数据
@@ -26,6 +33,7 @@ interface CharacterData {
   avatar: string;
   level: number;
   amount: number;
+  star: number;
 }
 
 /**
@@ -56,8 +64,12 @@ export function StardustContent({
   const { setUserAssets } = useStore();
   // 加载状态
   const [loading, setLoading] = useState(false);
+  // 加载信息
+  const [loadingMsg, setLoadingMsg] = useState('');
   // 数量
   const [amount, setAmount] = useState(0);
+  // 退市模式
+  const [isStMode, setIsStMode] = useState(false);
 
   /**
    * 计算效率比例
@@ -82,22 +94,63 @@ export function StardustContent({
     try {
       verifyAuth(setUserAssets);
 
-      const response = await useStardust(
-        characterData.id,
-        templeData.CharacterId,
-        amount
-      );
-      if (response.State === 0) {
-        onOk(response.Value);
+      if (isStMode) {
+        setLoadingMsg(`0/${amount}`);
+        let count = 0;
+        let errMsg = '';
+        // 退市模式
+        for (let i = 0; i < amount; i++) {
+          const response = await useStardust(
+            characterData.id,
+            templeData.CharacterId,
+            1
+          );
+          if (response.State === 0) {
+            count++;
+            setLoadingMsg(`${count}/${amount}`);
+          } else {
+            errMsg = response.Message ?? '星光碎片使用失败';
+            break;
+          }
+        }
+        setLoadingMsg('');
+        if (count === amount) {
+          onOk(`共消耗${count}股`);
+        } else {
+          toast.warning('执行中断', {
+            duration: Infinity,
+            cancel: {
+              label: '关闭',
+              onClick: () => {},
+            },
+            description: (
+              <span>
+                {`共消耗${count}股`}
+                <br />
+                {errMsg}
+              </span>
+            ),
+          });
+        }
       } else {
-        onClose();
-        throw new Error(response.Message ?? '星光碎片使用失败');
+        // 正常模式
+        const response = await useStardust(
+          characterData.id,
+          templeData.CharacterId,
+          amount
+        );
+        if (response.State === 0) {
+          onOk(response.Value);
+        } else {
+          throw new Error(response.Message ?? '星光碎片使用失败');
+        }
       }
     } catch (err) {
       const errMsg = err instanceof Error ? err.message : '星光碎片使用失败';
       notifyError(errMsg);
     } finally {
       setLoading(false);
+      onClose();
     }
   };
 
@@ -108,6 +161,12 @@ export function StardustContent({
         className
       )}
     >
+      {loading && loadingMsg && (
+        <div className="absolute inset-0 bg-background/80 flex flex-col items-center justify-center gap-y-0.5 z-10">
+          <div className="animate-spin w-6 h-6 border-2 border-primary border-t-transparent rounded-full" />
+          <span className="text-xs">{loadingMsg}</span>
+        </div>
+      )}
       <div className="flex flex-col space-y-2 text-center">
         <h2 className="text-lg font-semibold">星光碎片</h2>
       </div>
@@ -160,6 +219,41 @@ export function StardustContent({
             </div>
           </div>
         </div>
+        {characterData.star < 5 && (
+          <div className="flex flex-col gap-y-2">
+            <div className="flex flex-row items-center justify-evenly h-9 gap-x-1">
+              <div className="w-20 text-sm opacity-60">
+                退市模式
+                <Popover>
+                  <PopoverTrigger>
+                    <HelpCircle className="size-3 ml-0.5 opacity-60 cursor-pointer pointer-events-auto" />
+                  </PopoverTrigger>
+                  <PopoverContent
+                    className="px-3 py-2 w-fit z-100"
+                    onOpenAutoFocus={(e) => {
+                      e.preventDefault();
+                    }}
+                  >
+                    <span className="text-xs">
+                      <span className="text-orange-400 dark:text-orange-600">
+                        非必要情况请不要开启
+                      </span>
+                      <br />
+                      每次烧1股，可保证低于5星的角色不会进入幻想乡
+                    </span>
+                  </PopoverContent>
+                </Popover>
+              </div>
+              <div className="flex-1 flex justify-end">
+                <Switch
+                  checked={isStMode}
+                  onCheckedChange={setIsStMode}
+                  className="cursor-pointer"
+                />
+              </div>
+            </div>
+          </div>
+        )}
         <div className="flex-1 flex flex-row w-full gap-x-2">
           <Button
             className="flex-1 h-8 rounded-full"
