@@ -7,28 +7,28 @@ import { Input } from '@/components/ui/input';
 import { useDebounce } from '@/hooks/use-debounce';
 import { verifyAuth } from '@/lib/auth';
 import {
-    cn,
-    decodeHTMLEntities,
-    formatCurrency,
-    formatInteger,
-    getAvatarUrl,
-    notifyError,
-    urlEncode,
+  cn,
+  decodeHTMLEntities,
+  formatCurrency,
+  formatInteger,
+  getAvatarUrl,
+  notifyError,
+  urlEncode,
 } from '@/lib/utils';
 import { useStore } from '@/store';
 import { LoaderCircleIcon, SearchIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import {
-    fatchTinygrailCharacterData,
-    fetchCharacterDetailData,
-    fetchCharacterPoolAmount,
-    fetchGensokyoCharacterData,
+  fatchTinygrailCharacterData,
+  fetchCharacterDetailData,
+  fetchCharacterPoolAmount,
+  fetchGensokyoCharacterData,
 } from '../../service/character';
 import {
-    fetchUserCharacterData,
-    onActiveStockChange,
-    onTemplesChange,
+  fetchUserCharacterData,
+  onActiveStockChange,
+  onTemplesChange,
 } from '../../service/user';
 
 /**
@@ -107,7 +107,9 @@ export function Guidepost({ onClose }: { onClose: () => void }) {
       }
     } catch (err) {
       const errMsg = err instanceof Error ? err.message : '获取角色详情失败';
-      notifyError(errMsg);
+      console.error(errMsg);
+      setLastGuidepost(null);
+      localStorage.removeItem('tinygrail-magic:lastGuidepost');
     }
   };
 

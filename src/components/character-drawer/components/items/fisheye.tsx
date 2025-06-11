@@ -100,7 +100,9 @@ export function Fisheye({ onClose }: { onClose: () => void }) {
       }
     } catch (err) {
       const errMsg = err instanceof Error ? err.message : '获取角色详情失败';
-      notifyError(errMsg);
+      console.error(errMsg);
+      setLastFisheye(null);
+      localStorage.removeItem('tinygrail-magic:lastFisheye');
     }
   };
 

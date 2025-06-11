@@ -5,11 +5,11 @@ import BadgeLevel from '@/components/ui/badge-level';
 import { Input } from '@/components/ui/input';
 import { useDebounce } from '@/hooks/use-debounce';
 import {
-    decodeHTMLEntities,
-    formatInteger,
-    getAvatarUrl,
-    notifyError,
-    urlEncode,
+  decodeHTMLEntities,
+  formatInteger,
+  getAvatarUrl,
+  notifyError,
+  urlEncode,
 } from '@/lib/utils';
 import { useStore } from '@/store';
 import { SearchIcon } from 'lucide-react';
@@ -90,7 +90,9 @@ export function Stardust({ onClose }: { onClose: () => void }) {
       }
     } catch (err) {
       const errMsg = err instanceof Error ? err.message : '获取角色详情失败';
-      notifyError(errMsg);
+      console.error(errMsg);
+      setLastStardust(null);
+      localStorage.removeItem('tinygrail-magic:lastStardust');
     }
   };
 
