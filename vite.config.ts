@@ -8,8 +8,7 @@ import {
   APP_DESCRIPTION,
   APP_NAME,
   APP_VERSION,
-  UPDATE_CHECK_URL,
-  UPDATE_URL,
+  UPDATE_URL
 } from './src/config';
 
 export default defineConfig({
@@ -22,7 +21,7 @@ export default defineConfig({
         name: APP_NAME,
         description: APP_DESCRIPTION,
         downloadURL: UPDATE_URL,
-        updateURL: UPDATE_CHECK_URL,
+        updateURL: UPDATE_URL,
         version: APP_VERSION,
         author: APP_AUTHOR,
         icon: 'https://tinygrail.com/favicon.ico',
