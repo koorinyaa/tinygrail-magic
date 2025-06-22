@@ -164,7 +164,7 @@ export function CharacterSellForm({
             <SelectTrigger className="w-full">
               <SelectValue placeholder="选择订单类型" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="z-100">
               <SelectGroup>
                 <SelectItem
                   value="default"

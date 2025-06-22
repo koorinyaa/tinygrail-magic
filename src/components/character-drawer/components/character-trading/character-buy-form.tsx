@@ -150,7 +150,8 @@ export function CharacterBuyForm({
         <div className="w-10 text-sm opacity-60">金额</div>
         <div
           className={cn('flex-1 w-full text-sm truncate', {
-            'text-red-400 dark:text-red-600': buyFormData.price * buyFormData.amount > balance,
+            'text-red-400 dark:text-red-600':
+              buyFormData.price * buyFormData.amount > balance,
           })}
         >
           ₵{formatCurrency(buyFormData.price * buyFormData.amount)}
@@ -171,7 +172,7 @@ export function CharacterBuyForm({
             <SelectTrigger className="w-full">
               <SelectValue placeholder="选择订单类型" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="z-100">
               <SelectGroup>
                 <SelectItem
                   value="default"
