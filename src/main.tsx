@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.css';
+import { HeroUIProvider } from '@heroui/react';
 
 /**
  * 初始化tinygrail按钮
@@ -77,7 +78,9 @@ const createReactDom = (): void => {
 
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
-      <App />
+      <HeroUIProvider>
+        <App />
+      </HeroUIProvider>
     </React.StrictMode>
   );
 };

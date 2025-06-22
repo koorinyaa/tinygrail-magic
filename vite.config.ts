@@ -1,3 +1,4 @@
+import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react-swc';
 import path from 'path';
 import { defineConfig } from 'vite';
@@ -11,10 +12,10 @@ import {
   UPDATE_URL,
 } from './src/config';
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     react(),
+    tailwindcss(),
     monkey({
       entry: 'src/main.tsx',
       userscript: {
@@ -35,6 +36,10 @@ export default defineConfig({
   ],
   build: {
     minify: true,
+    lib: {
+      entry: './src/main.tsx',
+      name: 'tinygrail-magic',
+    },
   },
   resolve: {
     alias: {
