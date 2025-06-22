@@ -28,7 +28,7 @@ export function RedEnvelopeDialog({
   // 加载状态
   const [loading, setLoading] = useState(false);
   // 红包金额
-  const [amount, setAmount] = useState(100);
+  const [amount, setAmount] = useState(10000);
   // 留言
   const [message, setMessage] = useState('');
 

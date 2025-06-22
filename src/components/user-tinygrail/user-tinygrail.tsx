@@ -6,6 +6,7 @@ import {
   UserLinkPageValue,
   UserTemplePageValue,
 } from '@/api/user';
+import { RedEnvelopeDialog } from '@/components/red-envelope-dialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -33,7 +34,6 @@ import {
 import { useStore } from '@/store';
 import { HelpCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { RedEnvelopeDialog } from './components/red-envelope-dialog';
 import { UserCharacter } from './components/user-character';
 import { UserIco } from './components/user-ico';
 import { UserLink } from './components/user-link';
