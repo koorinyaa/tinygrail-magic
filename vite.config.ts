@@ -1,5 +1,4 @@
-import tailwindcss from '@tailwindcss/vite';
-import react from '@vitejs/plugin-react';
+import react from '@vitejs/plugin-react-swc';
 import path from 'path';
 import { defineConfig } from 'vite';
 import monkey from 'vite-plugin-monkey';
@@ -8,19 +7,20 @@ import {
   APP_DESCRIPTION,
   APP_NAME,
   APP_VERSION,
-  UPDATE_URL
+  DOWNLOAD_URL,
+  UPDATE_URL,
 } from './src/config';
 
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     react(),
-    tailwindcss(),
     monkey({
       entry: 'src/main.tsx',
       userscript: {
         name: APP_NAME,
         description: APP_DESCRIPTION,
-        downloadURL: UPDATE_URL,
+        downloadURL: DOWNLOAD_URL,
         updateURL: UPDATE_URL,
         version: APP_VERSION,
         author: APP_AUTHOR,

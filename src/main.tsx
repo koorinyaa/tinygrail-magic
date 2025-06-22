@@ -3,7 +3,9 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import './index.css';
 
-// 初始化入口按钮
+/**
+ * 初始化tinygrail按钮
+ */
 const initTinygrailButton = (): void => {
   // 创建tinygrail按钮
   const tinygrailButtonLink = document.createElement('div');
@@ -13,8 +15,16 @@ const initTinygrailButton = (): void => {
   tinygrailButtonLink.addEventListener('click', handleTinygrailButtonClick);
 };
 
-// 处理tinygrail按钮点击事件
+/**
+ * 处理tinygrail按钮点击事件
+ */
 const handleTinygrailButtonClick = (): void => {
+  // 清除url的hash值
+  const url = new URL(window.location.href);
+  console.log(url);
+  url.hash = '';
+  window.history.replaceState({}, '', url.toString());
+
   // 移动端缩放适配
   document.querySelector('meta[name="viewport"]')?.remove();
   const metaElement = document.createElement('meta');
@@ -55,16 +65,16 @@ if (isNotInIframe()) {
   initTinygrailButton();
 }
 
-// 挂载ReactDOM
+/**
+ * 挂载ReactDOM
+ */
 const createReactDom = (): void => {
   console.info('Initializing tinygrail-magic...');
-  
-  // 创建一个专用的容器元素
+
   const rootElement = document.createElement('div');
   rootElement.id = 'root';
   document.body.appendChild(rootElement);
-  
-  // 将React应用挂载到专用容器上
+
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
       <App />
