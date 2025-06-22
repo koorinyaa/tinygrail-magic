@@ -9,7 +9,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { APP_VERSION } from '@/config';
 import { formatCurrency, getAvatarUrl, isEmpty } from '@/lib/utils';
 import { useStore } from '@/store';
 import {
@@ -22,7 +21,12 @@ import {
   TicketPlus,
   Trophy,
 } from 'lucide-react';
-import { NavProjects, NavSecondary, NavUpdate } from './sidebar-navigation';
+import {
+  NavFooter,
+  NavProjects,
+  NavSecondary,
+  NavUpdate,
+} from './sidebar-navigation';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { userAssets, updateInfo } = useStore();
@@ -137,19 +141,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <NavUpdate />
             </SidebarFooter>
           )}
-          <div className="text-xs text-center p-2">
-            <span title="当前版本" className="opacity-80">
-              {APP_VERSION}
-            </span>
-            <span className="mx-1 opacity-80">·</span>
-            <a
-              href="https://github.com/koorinyaa/tinygrail-magic"
-              target="_black"
-              className="cursor-pointer opacity-80 hover:opacity-100"
-            >
-              GitHub
-            </a>
-          </div>
+          <NavFooter />
         </div>
       </SidebarContent>
     </Sidebar>
