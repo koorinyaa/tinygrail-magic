@@ -65,7 +65,10 @@ function DraggableButton({
       )}
       {...listeners}
       {...attributes}
-      onClick={handleClick}
+      onClick={(e) => {
+        e.stopPropagation();
+        handleClick();
+      }}
     >
       <Avatar
         size="sm"

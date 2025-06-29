@@ -1,8 +1,9 @@
-import App from '@/App';
-import { ORIGINAL_URL_STORAGE_KEY } from '@/constants';
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { HashRouter } from 'react-router-dom';
+import {
+  APP_TITLE,
+  ORIGINAL_HASH_STORAGE_KEY,
+  ORIGINAL_PAGE_TITLE_STORAGE_KEY,
+  ORIGINAL_VIEWPORT_STORAGE_KEY,
+} from '@/constants';
 
 /**
  * 检查当前页面是否在iframe中
@@ -19,26 +20,32 @@ export const isTinygrailMagicHash = (): boolean => {
 };
 
 /**
- * 保存原始URL到会话存储
+ * 将原始hash值保存到会话存储
  */
-export const saveOriginalUrl = (): void => {
-  const currentUrl = window.location.href;
+export const saveOriginalHash = (): void => {
+  const currentHash = window.location.hash;
 
   if (isTinygrailMagicHash()) {
-    // 如果hash为#/tinygrailMagic，则保存去除hash的url
-    const url = new URL(currentUrl);
-    url.hash = '';
-    sessionStorage.setItem(ORIGINAL_URL_STORAGE_KEY, url.toString());
+    // 如果hash为#/tinygrailMagic，则保存空字符串
+    sessionStorage.setItem(ORIGINAL_HASH_STORAGE_KEY, '');
   } else {
-    // 否则保存完整url
-    sessionStorage.setItem(ORIGINAL_URL_STORAGE_KEY, currentUrl);
+    // 否则保存当前hash
+    sessionStorage.setItem(ORIGINAL_HASH_STORAGE_KEY, currentHash);
   }
+};
+
+/**
+ * 清除会话存储中的原始hash值
+ */
+export const clearOriginalHash = (): void => {
+  sessionStorage.removeItem(ORIGINAL_HASH_STORAGE_KEY);
 };
 
 /**
  * 清除URL的hash值
  */
 export const clearUrlHash = (): void => {
+  saveOriginalHash();
   const currentUrl = window.location.href;
   const url = new URL(currentUrl);
   url.hash = '';
@@ -46,10 +53,77 @@ export const clearUrlHash = (): void => {
 };
 
 /**
- * 设置移动端视口
+ * 恢复URL的原始hash值
+ */
+export const restoreOriginalHash = (): void => {
+  const originalHash = sessionStorage.getItem(ORIGINAL_HASH_STORAGE_KEY);
+  if (originalHash !== null) {
+    window.location.hash = originalHash;
+  }
+  clearOriginalHash();
+};
+
+/**
+ * 保存原始页面标题到会话存储
+ */
+export const saveOriginalPageTitle = (): void => {
+  const originalPageTitle = document.title;
+  sessionStorage.setItem(ORIGINAL_PAGE_TITLE_STORAGE_KEY, originalPageTitle);
+};
+
+/**
+ * 清除会话存储中的原始页面标题
+ */
+export const clearOriginalPageTitle = (): void => {
+  sessionStorage.removeItem(ORIGINAL_PAGE_TITLE_STORAGE_KEY);
+};
+
+/**
+ * 设置页面标题
+ */
+export const setupPageTitle = (): void => {
+  saveOriginalPageTitle();
+  document.title = APP_TITLE;
+};
+
+/**
+ * 恢复原始页面标题
+ */
+export const restoreOriginalPageTitle = (): void => {
+  const originalPageTitle = sessionStorage.getItem(ORIGINAL_PAGE_TITLE_STORAGE_KEY);
+  if (originalPageTitle) {
+    document.title = originalPageTitle;
+  }
+  clearOriginalPageTitle();
+};
+
+/**
+ * 保存原始viewport设置
+ */
+export const saveOriginalViewport = (): void => {
+  const viewportMeta = document.querySelector('meta[name="viewport"]');
+  if (viewportMeta) {
+    // 保存原始viewport内容
+    const originalContent = viewportMeta.getAttribute('content') || '';
+    sessionStorage.setItem(ORIGINAL_VIEWPORT_STORAGE_KEY, originalContent);
+  }
+};
+
+/**
+ * 清除会话存储中的原始viewport设置
+ */
+export const clearOriginalViewport = (): void => {
+  sessionStorage.removeItem(ORIGINAL_VIEWPORT_STORAGE_KEY);
+};
+
+/**
+ * 设置移动设备viewport
  */
 export const setupMobileViewport = (): void => {
+  saveOriginalViewport();
+
   document.querySelector('meta[name="viewport"]')?.remove();
+
   const metaElement = document.createElement('meta');
   metaElement.name = 'viewport';
   metaElement.content = 'width=device-width, initial-scale=1';
@@ -57,63 +131,53 @@ export const setupMobileViewport = (): void => {
 };
 
 /**
- * 清除页面内容和样式
+ * 恢复原始viewport设置
  */
-export const clearPageContent = (): void => {
-  document.body.replaceChildren();
-  [...document.querySelectorAll('link[type="text/css"]')].forEach((link) => link.remove());
+export const restoreOriginalViewport = (): void => {
+  const originalViewport = sessionStorage.getItem(ORIGINAL_VIEWPORT_STORAGE_KEY);
+
+  document.querySelector('meta[name="viewport"]')?.remove();
+
+  if (originalViewport !== null) {
+    const metaElement = document.createElement('meta');
+    metaElement.name = 'viewport';
+    metaElement.content = originalViewport;
+    document.head.insertBefore(metaElement, document.head.firstChild);
+  }
+
+  clearOriginalViewport();
 };
 
 /**
- * 设置文档样式
+ * 隐藏body
  */
-export const setupDocumentStyle = (): void => {
-  // 添加className
-  document.body.className = 'tinygrailMagic';
-
-  // 设置字体大小
-  document.documentElement.style.fontSize = '16px';
-
-  // 禁止移动端下拉刷新行为
-  document.documentElement.style.overscrollBehavior = 'none';
+export const hideBody = (): void => {
+  document.body.style.display = 'none';
 };
 
 /**
- * 设置页面标题和图标
+ * 显示body
  */
-export const setupPageTitleAndIcon = (): void => {
-  document.title = '「小圣杯」最萌大战';
-  document.head
-    .querySelector<HTMLLinkElement>('link[type="image/x-icon"]')
-    ?.setAttribute('href', 'https://tinygrail.com/favicon.ico');
-};
-
-/**
- * 挂载React应用
- */
-export const mountReactApp = (): void => {
-  const rootElement = document.createElement('div');
-  rootElement.id = 'root';
-  document.body.appendChild(rootElement);
-
-  ReactDOM.createRoot(rootElement).render(
-    <React.StrictMode>
-      <HashRouter>
-        <App />
-      </HashRouter>
-    </React.StrictMode>,
-  );
+export const showBody = (): void => {
+  document.body.style.display = 'block';
 };
 
 /**
  * 初始化页面
  */
 export const initializePage = (): void => {
-  saveOriginalUrl();
   clearUrlHash();
+  setupPageTitle();
   setupMobileViewport();
-  clearPageContent();
-  setupDocumentStyle();
-  setupPageTitleAndIcon();
-  mountReactApp();
+  hideBody();
+};
+
+/**
+ * 恢复页面
+ */
+export const restorePage = (): void => {
+  restoreOriginalHash();
+  restoreOriginalPageTitle();
+  restoreOriginalViewport();
+  showBody();
 };

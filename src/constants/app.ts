@@ -1,0 +1,1 @@
+export const APP_TITLE = '「小圣杯」最萌大战';

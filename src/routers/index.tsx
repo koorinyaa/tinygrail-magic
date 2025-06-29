@@ -4,7 +4,7 @@ import { Navigate, RouteObject, useRoutes } from 'react-router-dom';
 // 创建路由配置
 const newRoutes: RouteObject[] = [
   {
-    path: '/',
+    path: '*',
     element: <Navigate to="/topWeek" />,
   },
   {

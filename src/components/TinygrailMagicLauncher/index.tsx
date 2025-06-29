@@ -1,5 +1,5 @@
-import DraggableButton from '@/components/TinygrailMagicLauncherButton/components/DraggableButton';
-import { LAUNCHER_BUTTON_POSITION_STORAGE_KEY, TINYGRAIL_ICON_BASE64 } from '@/constants';
+import { TINYGRAIL_ICON_BASE64 } from '@/constants';
+import { createAppStore, createLauncherStore } from '@/stores';
 import { initializePage } from '@/utils/initializers';
 import {
   DndContext,
@@ -11,12 +11,15 @@ import {
 } from '@dnd-kit/core';
 import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { useEffect, useRef, useState } from 'react';
+import DraggableButton from './components/DraggableButton';
 
 // 按钮位置边界常量
 const MIN_Y_OFFSET = 100; // 距离顶部的最小距离
 const MAX_Y_OFFSET = 64; // 距离底部的最小距离
 
-function TinygrailMagicLauncherButton() {
+function TinygrailMagicLauncher() {
+  const { showApp } = createAppStore();
+  const { buttonPosition, setButtonPosition } = createLauncherStore();
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isOnLeft, setIsOnLeft] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -37,33 +40,24 @@ function TinygrailMagicLauncherButton() {
   // 更新位置
   const updatePosition = () => {
     try {
-      const savedPosition = localStorage.getItem(LAUNCHER_BUTTON_POSITION_STORAGE_KEY);
-
       // 设置上下边界
       const windowHeight = window.innerHeight;
       const windowWidth = window.innerWidth;
       const minY = -windowHeight + MIN_Y_OFFSET; // 顶部边界
       const maxY = -MAX_Y_OFFSET; // 底部边界
 
-      if (savedPosition) {
-        const parsedData = JSON.parse(savedPosition);
+      // 从store中获取保存的位置
+      const { yPercent, isOnLeft: storedIsOnLeft } = buttonPosition;
 
-        // 将百分比转换为像素位置
-        const yPixel = (parsedData.yPercent * windowHeight) / 100;
-        // 应用上下边界限制
-        const limitedY = Math.max(minY, Math.min(maxY, yPixel));
+      // 将百分比转换为像素位置
+      const yPixel = (yPercent * windowHeight) / 100;
+      // 应用上下边界限制
+      const limitedY = Math.max(minY, Math.min(maxY, yPixel));
 
-        // 根据isOnLeft决定x坐标
-        const xPos = parsedData.isOnLeft ? 0 : windowWidth;
-        setPosition({ x: xPos, y: limitedY });
-        setIsOnLeft(parsedData.isOnLeft);
-      } else {
-        // 默认位置，应用上下边界限制
-        const defaultY = -320;
-        const limitedY = Math.max(minY, Math.min(maxY, defaultY));
-        setPosition({ x: windowWidth, y: limitedY });
-        setIsOnLeft(false);
-      }
+      // 根据isOnLeft决定x坐标
+      const xPos = storedIsOnLeft ? 0 : windowWidth;
+      setPosition({ x: xPos, y: limitedY });
+      setIsOnLeft(storedIsOnLeft);
     } catch (e) {
       console.error('解析按钮位置失败', e);
     }
@@ -123,11 +117,8 @@ function TinygrailMagicLauncherButton() {
     // 计算y位置为百分比
     const yPercent = (newY / windowHeight) * 100;
 
-    // 保存位置
-    localStorage.setItem(
-      LAUNCHER_BUTTON_POSITION_STORAGE_KEY,
-      JSON.stringify({ yPercent, isOnLeft: shouldStickToLeft }),
-    );
+    // 保存位置到store
+    setButtonPosition({ yPercent, isOnLeft: shouldStickToLeft });
   };
 
   /**
@@ -136,6 +127,7 @@ function TinygrailMagicLauncherButton() {
   const handleButtonClick = () => {
     console.info('Initializing tinygrail-magic...');
     initializePage();
+    showApp();
   };
 
   return (
@@ -152,4 +144,4 @@ function TinygrailMagicLauncherButton() {
   );
 }
 
-export default TinygrailMagicLauncherButton;
+export default TinygrailMagicLauncher;

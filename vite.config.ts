@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react-swc';
 import path from 'path';
 import { defineConfig } from 'vite';
 import monkey from 'vite-plugin-monkey';
+
 import {
   APP_AUTHOR,
   APP_DESCRIPTION,

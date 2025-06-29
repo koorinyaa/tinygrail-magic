@@ -14,11 +14,16 @@ export const createStorageKey = (key: string, version?: string): string => {
 };
 
 /**
- * 原始URL存储键名
+ * 原始Hash存储键名
  */
-export const ORIGINAL_URL_STORAGE_KEY = createStorageKey('originalUrl');
+export const ORIGINAL_HASH_STORAGE_KEY = createStorageKey('originalHash');
 
 /**
- * 启动器按钮位置存储键名
+ * 原始页面标题存储键名
  */
-export const LAUNCHER_BUTTON_POSITION_STORAGE_KEY = createStorageKey('launcher-button-position');
+export const ORIGINAL_PAGE_TITLE_STORAGE_KEY = createStorageKey('originalPageTitle');
+
+/**
+ * 原始viewport设置存储键名
+ */
+export const ORIGINAL_VIEWPORT_STORAGE_KEY = createStorageKey('originalViewport');

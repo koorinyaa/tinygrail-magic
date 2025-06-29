@@ -1,29 +1,66 @@
-import TinygrailMagicLauncherButton from '@/components/TinygrailMagicLauncherButton';
-import {
-  initializePage,
-  isNotInIframe,
-  isTinygrailMagicHash,
-} from '@/utils/initializers';
+import App from '@/App';
+import { initializePage, isTinygrailMagicHash } from '@/utils/initializers';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { HashRouter } from 'react-router-dom';
 import './index.css';
+import cssText from './index.css?inline';
 
 /**
- * 初始化tinygrailMagic启动器按钮
+ * 挂载App
  */
-const initTinygrailMagicLauncherButton = (): void => {
-  const container = document.createElement('div');
-  container.className = 'tinygrailMagic';
-  document.body.appendChild(container);
+const initShadowDOMApp = (): void => {
+  let targetDocument: Document;
 
-  ReactDOM.createRoot(container).render(<TinygrailMagicLauncherButton />);
+  try {
+    // 尝试获取顶层窗口
+    const topWindow = window.top;
+    if (topWindow) {
+      targetDocument = topWindow.document;
+    } else {
+      return;
+    }
+  } catch (e) {
+    console.warn('无法访问顶层窗口');
+    return;
+  }
+
+  // 检查是否已经存在容器
+  const existingContainer = targetDocument.getElementById('tinygrailMagicContainer');
+  if (existingContainer) {
+    console.warn('已存在tinygrailMagic容器，跳过初始化');
+    return;
+  }
+
+  // 创建一个与body同级的容器
+  const container = targetDocument.createElement('div');
+  container.id = 'tinygrailMagicContainer';
+  targetDocument.documentElement.appendChild(container);
+
+  // 创建shadowDOM
+  const shadowRoot = container.attachShadow({ mode: 'open' });
+
+  // 动态创建样式表
+  const styleElement = targetDocument.createElement('style');
+  styleElement.textContent = cssText;
+  shadowRoot.appendChild(styleElement);
+
+  // 在shadowDOM中创建挂载点
+  const mountPoint = targetDocument.createElement('div');
+  mountPoint.id = 'tinygrailMagicRoot';
+  shadowRoot.appendChild(mountPoint);
+
+  // 挂载App
+  ReactDOM.createRoot(mountPoint).render(
+    <React.StrictMode>
+      <HashRouter>
+        <App />
+      </HashRouter>
+    </React.StrictMode>,
+  );
 };
 
-/**
- * 如果当前页面不在iframe中，则初始化tinygrailMagic启动器按钮
- */
-if (isNotInIframe()) {
-  initTinygrailMagicLauncherButton();
-}
+initShadowDOMApp();
 
 /**
  * 如果当前页面hash值为tinygrailMagic，则直接初始化页面
