@@ -6,24 +6,37 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,css,md}\"",
+    "format:check": "prettier --check \"src/**/*.{js,jsx,ts,tsx,css,md}\""
   },
   "dependencies": {
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/modifiers": "^9.0.0",
     "@heroui/react": "^2.8.0-beta.10",
+    "@tabler/icons-react": "^3.34.0",
     "@tailwindcss/postcss": "^4.1.10",
     "@tailwindcss/vite": "^4.1.10",
+    "ahooks": "^3.8.5",
+    "axios": "^1.10.0",
+    "clsx": "^2.1.1",
     "framer-motion": "^12.18.1",
     "postcss": "^8.5.6",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-router-dom": "^7.6.2",
+    "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.10",
-    "tw-animate-css": "^1.3.4"
+    "tw-animate-css": "^1.3.4",
+    "zustand": "^5.0.5"
   },
   "devDependencies": {
     "@types/node": "^22.13.11",
     "@types/react": "^18.3.16",
     "@types/react-dom": "^18.3.5",
     "@vitejs/plugin-react-swc": "^3.0.0",
+    "prettier": "^3.6.2",
+    "prettier-plugin-tailwindcss": "^0.6.13",
     "typescript": "^5.7.2",
     "vite": "^6.0.3",
     "vite-plugin-monkey": "^5.0.0"

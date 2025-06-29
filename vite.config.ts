@@ -6,7 +6,9 @@ import monkey from 'vite-plugin-monkey';
 import {
   APP_AUTHOR,
   APP_DESCRIPTION,
+  APP_ICON,
   APP_NAME,
+  APP_PROJECT_URL,
   APP_VERSION,
   DOWNLOAD_URL,
   UPDATE_URL,
@@ -25,21 +27,18 @@ export default defineConfig({
         updateURL: UPDATE_URL,
         version: APP_VERSION,
         author: APP_AUTHOR,
-        icon: 'https://tinygrail.com/favicon.ico',
-        namespace: 'https://github.com/koorinyaa/tinygrail-magic',
+        icon: APP_ICON,
+        namespace: APP_PROJECT_URL,
         match: ['*://*.bgm.tv/*', '*://*.bangumi.tv/*', '*://*.chii.in/*'],
       },
       build: {
         metaFileName: true,
+        systemjs: 'inline',
       },
     }),
   ],
   build: {
     minify: true,
-    lib: {
-      entry: './src/main.tsx',
-      name: 'tinygrail-magic',
-    },
   },
   resolve: {
     alias: {

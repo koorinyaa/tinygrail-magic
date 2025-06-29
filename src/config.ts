@@ -3,7 +3,11 @@ export const APP_NAME = 'Tinygrail Magic';
 export const APP_VERSION = '1.0.5';
 export const APP_AUTHOR = 'koorinyaa';
 export const APP_DESCRIPTION = '全新的小圣杯界面';
+export const APP_PROJECT_URL = 'https://github.com/koorinyaa/tinygrail-magic';
+export const APP_ICON = 'https://tinygrail.com/favicon.ico';
 
 // 更新检查配置
-export const UPDATE_URL = 'https://cdn.jsdelivr.net/gh/koorinyaa/tinygrail-magic@main/dist/tinygrail-magic.meta.js';
-export const DOWNLOAD_URL = 'https://cdn.jsdelivr.net/gh/koorinyaa/tinygrail-magic@main/dist/tinygrail-magic.user.js';
+export const UPDATE_URL =
+  'https://cdn.jsdelivr.net/gh/koorinyaa/tinygrail-magic@main/dist/tinygrail-magic.meta.js';
+export const DOWNLOAD_URL =
+  'https://cdn.jsdelivr.net/gh/koorinyaa/tinygrail-magic@main/dist/tinygrail-magic.user.js';

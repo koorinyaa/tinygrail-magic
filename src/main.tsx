@@ -1,86 +1,33 @@
-import React from 'react';
+import TinygrailMagicLauncherButton from '@/components/TinygrailMagicLauncherButton';
+import {
+  initializePage,
+  isNotInIframe,
+  isTinygrailMagicHash,
+} from '@/utils/initializers';
 import ReactDOM from 'react-dom/client';
-import App from './App';
 import './index.css';
-import { HeroUIProvider } from '@heroui/react';
 
 /**
- * 初始化tinygrail按钮
+ * 初始化tinygrailMagic启动器按钮
  */
-const initTinygrailButton = (): void => {
-  // 创建tinygrail按钮
-  const tinygrailButtonLink = document.createElement('div');
-  tinygrailButtonLink.id = 'tinygrailMagicButton';
-  document.body.appendChild(tinygrailButtonLink);
+const initTinygrailMagicLauncherButton = (): void => {
+  const container = document.createElement('div');
+  container.className = 'tinygrailMagic';
+  document.body.appendChild(container);
 
-  tinygrailButtonLink.addEventListener('click', handleTinygrailButtonClick);
+  ReactDOM.createRoot(container).render(<TinygrailMagicLauncherButton />);
 };
 
 /**
- * 处理tinygrail按钮点击事件
+ * 如果当前页面不在iframe中，则初始化tinygrailMagic启动器按钮
  */
-const handleTinygrailButtonClick = (): void => {
-  // 清除url的hash值
-  const url = new URL(window.location.href);
-  console.log(url);
-  url.hash = '';
-  window.history.replaceState({}, '', url.toString());
-
-  // 移动端缩放适配
-  document.querySelector('meta[name="viewport"]')?.remove();
-  const metaElement = document.createElement('meta');
-  metaElement.name = 'viewport';
-  metaElement.content = 'width=device-width, initial-scale=1';
-  document.head.insertBefore(metaElement, document.head.firstChild);
-
-  // 清除body元素和css
-  document.body.replaceChildren();
-  [...document.querySelectorAll('link[type="text/css"]')].forEach((link) =>
-    link.remove()
-  );
-
-  // 添加className
-  document.body.className = 'tinygrailMagic';
-
-  // 设置字体大小
-  document.documentElement.style.fontSize = '16px';
-
-  // 禁止移动端下拉刷新行为
-  document.documentElement.style.overscrollBehavior = 'none';
-
-  // 修改标题和图标
-  document.title = '「小圣杯」最萌大战';
-  document.head
-    .querySelector<HTMLLinkElement>('link[type="image/x-icon"]')
-    ?.setAttribute('href', 'https://tinygrail.com/favicon.ico');
-
-  createReactDom();
-};
-
-// 检查当前页面是否在iframe中
-const isNotInIframe = (): boolean => {
-  return window.self === window.top;
-};
-
 if (isNotInIframe()) {
-  initTinygrailButton();
+  initTinygrailMagicLauncherButton();
 }
 
 /**
- * 挂载ReactDOM
+ * 如果当前页面hash值为tinygrailMagic，则直接初始化页面
  */
-const createReactDom = (): void => {
-  console.info('Initializing tinygrail-magic...');
-
-  const rootElement = document.createElement('div');
-  rootElement.id = 'root';
-  document.body.appendChild(rootElement);
-
-  ReactDOM.createRoot(rootElement).render(
-    <React.StrictMode>
-      <HeroUIProvider>
-        <App />
-      </HeroUIProvider>
-    </React.StrictMode>
-  );
-};
+if (isTinygrailMagicHash()) {
+  initializePage();
+}
