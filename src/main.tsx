@@ -1,5 +1,4 @@
 import App from '@/App';
-import { initializePage, isTinygrailMagicHash } from '@/utils/initializers';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { HashRouter } from 'react-router-dom';
@@ -61,10 +60,3 @@ const initShadowDOMApp = (): void => {
 };
 
 initShadowDOMApp();
-
-/**
- * 如果当前页面hash值为tinygrailMagic，则直接初始化页面
- */
-if (isTinygrailMagicHash()) {
-  initializePage();
-}
