@@ -1,9 +1,8 @@
 import { createLayoutStore } from '@/stores';
-import { Button, Modal, ModalContent } from '@heroui/react';
+import { Modal, ModalContent } from '@heroui/react';
 import { configResponsive, useResponsive } from 'ahooks';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect } from 'react';
-import { TbX } from 'react-icons/tb';
 import MainMenu from './components/MainMenu';
 import SecondaryMenu from './components/SecondaryMenu';
 import UpdateNotice from './components/UpdateNotice';
@@ -57,6 +56,8 @@ const Sidebar = () => {
       <Modal
         isOpen={isOpen && !isLargeScreen}
         size="5xl"
+        backdrop="blur"
+        scrollBehavior="outside"
         onOpenChange={setSidebarOpen}
         motionProps={{
           variants: {
