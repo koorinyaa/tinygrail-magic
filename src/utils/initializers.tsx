@@ -43,6 +43,14 @@ export const saveOriginalUrl = (): void => {
 };
 
 /**
+ * 清除会话存储中的原始URL
+ */
+export const clearOriginalUrl = (): void => {
+  sessionStorage.removeItem(ORIGINAL_URL_STORAGE_KEY);
+};
+
+
+/**
  * 清除URL的hash值
  */
 export const clearUrlHash = (): void => {
@@ -116,6 +124,7 @@ export const mountReactApp = (): void => {
 export const goBackToBangumi = (): void => {
   window.location.href = sessionStorage.getItem(ORIGINAL_URL_STORAGE_KEY) || '';
   window.location.reload();
+  clearOriginalUrl();
 };
 
 /**
