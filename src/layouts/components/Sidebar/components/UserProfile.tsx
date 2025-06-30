@@ -3,7 +3,7 @@ import { TbTransfer } from 'react-icons/tb';
 
 function UserProfile() {
   return (
-    <div className="overflow-hidden px-3 py-2">
+    <div className="px-3 py-2">
       <User
         classNames={{
           name: 'max-w-38 truncate',

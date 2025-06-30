@@ -36,7 +36,7 @@ const Sidebar = () => {
           'fixed top-0 left-0 z-40': !isLargeScreen,
         })}
       >
-        <div className="flex h-full flex-col overflow-y-auto p-4">
+        <div className="flex h-full flex-col overflow-y-auto px-3 py-4">
           <UserProfile />
           <MainMenu />
           <SecondaryMenu />
