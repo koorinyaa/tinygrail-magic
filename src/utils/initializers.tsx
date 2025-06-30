@@ -131,6 +131,7 @@ export const goBackToBangumi = (): void => {
  * 初始化页面
  */
 export const initializePage = (): void => {
+  console.info('Initializing tinygrail-magic...');
   saveOriginalUrl();
   clearUrlHash();
   setupMobileViewport();

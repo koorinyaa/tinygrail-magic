@@ -122,7 +122,6 @@ function TinygrailMagicLauncher() {
    * 点击按钮
    */
   const handleButtonClick = () => {
-    console.info('Initializing tinygrail-magic...');
     initializePage();
   };
 
