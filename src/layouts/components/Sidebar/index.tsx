@@ -1,8 +1,9 @@
-import { createLayoutStore } from '@/stores';
-import { cn } from '@/utils/helpers';
+import { createAppStore, createLayoutStore } from '@/stores';
+import { Button, Modal, ModalContent } from '@heroui/react';
 import { configResponsive, useResponsive } from 'ahooks';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect } from 'react';
+import { TbX } from 'react-icons/tb';
 import MainMenu from './components/MainMenu';
 import SecondaryMenu from './components/SecondaryMenu';
 import UpdateNotice from './components/UpdateNotice';
@@ -18,44 +19,75 @@ const Sidebar = () => {
   const responsive = useResponsive();
   const isLargeScreen = responsive['lg'];
   // 侧边栏状态
-  const { sidebar, setSidebarOpen, closeSidebar } = createLayoutStore();
+  const { sidebar, setSidebarOpen } = createLayoutStore();
   const { isOpen } = sidebar;
+  const { appRoot } = createAppStore();
 
   useEffect(() => {
     setSidebarOpen(isLargeScreen);
   }, [isLargeScreen]);
 
+  const sidebarContent = (
+    <div className="flex h-full flex-col overflow-y-auto px-3 py-4">
+      <UserProfile />
+      <MainMenu />
+      <SecondaryMenu />
+      <UpdateNotice />
+      <VersionInfo />
+    </div>
+  );
+
   return (
     <>
-      {/* 侧边栏 */}
-      <motion.div
-        initial={isLargeScreen ? { x: 0 } : { x: -256 }}
-        animate={{ x: isOpen ? 0 : -256 }}
-        transition={{ duration: 0.2 }}
-        className={cn('bg-content1 rounded-r-large h-full w-64 shadow-xs', {
-          'fixed top-0 left-0 z-40': !isLargeScreen,
-        })}
-      >
-        <div className="flex h-full flex-col overflow-y-auto px-3 py-4">
-          <UserProfile />
-          <MainMenu />
-          <SecondaryMenu />
-          <UpdateNotice />
-          <VersionInfo />
-        </div>
-      </motion.div>
+      {/* 桌面端侧边栏 */}
+      <AnimatePresence>
+        {isOpen && isLargeScreen && (
+          <motion.div
+            initial={{ x: -256 }}
+            animate={{ x: 0 }}
+            exit={{ x: -256 }}
+            transition={{ duration: 0.2 }}
+            className="bg-content1 rounded-r-large h-full w-64 shadow-xs"
+          >
+            {sidebarContent}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* 移动端遮罩层 */}
-      {!isLargeScreen && isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.5 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
-          className="bg-overlay fixed inset-0 z-30"
-          onClick={closeSidebar}
-        />
-      )}
+      {/* 移动端侧边栏 */}
+      <Modal
+        isOpen={isOpen && !isLargeScreen}
+        size="5xl"
+        onOpenChange={setSidebarOpen}
+        portalContainer={appRoot}
+        closeButton={
+          <Button isIconOnly variant="light" size="sm" onPressEnd={() => setSidebarOpen(false)}>
+            <TbX className="size-4" />
+          </Button>
+        }
+        motionProps={{
+          variants: {
+            enter: {
+              y: 0,
+              opacity: 1,
+              transition: {
+                duration: 0.3,
+                ease: 'easeOut',
+              },
+            },
+            exit: {
+              y: -20,
+              opacity: 0,
+              transition: {
+                duration: 0.2,
+                ease: 'easeIn',
+              },
+            },
+          },
+        }}
+      >
+        <ModalContent>{sidebarContent}</ModalContent>
+      </Modal>
     </>
   );
 };
