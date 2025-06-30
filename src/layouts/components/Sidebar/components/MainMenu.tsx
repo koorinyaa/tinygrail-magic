@@ -1,16 +1,16 @@
 import { createLayoutStore } from '@/stores';
 import { cn } from '@/utils/helpers';
 import { Listbox, ListboxItem, ListboxSection } from '@heroui/react';
-import {
-  IconBusinessplan,
-  IconCards,
-  IconChartBar,
-  IconFlame,
-  IconFlare,
-  IconHexagonPlus,
-  IconLibraryPhoto,
-} from '@tabler/icons-react';
 import { configResponsive, useResponsive } from 'ahooks';
+import {
+  TbBusinessplan,
+  TbCards,
+  TbChartBar,
+  TbFlame,
+  TbFlare,
+  TbHexagonPlus,
+  TbLibraryPhoto,
+} from 'react-icons/tb';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 configResponsive({
@@ -30,37 +30,37 @@ function MainMenu() {
     Pages: [
       {
         key: 'topWeek',
-        icon: IconFlame,
+        icon: TbFlame,
         label: '每周萌王',
         path: '/topWeek',
       },
       {
         key: 'starTower',
-        icon: IconFlare,
+        icon: TbFlare,
         label: '通天塔',
         path: '/starTower',
       },
       {
         key: 'character',
-        icon: IconBusinessplan,
+        icon: TbBusinessplan,
         label: '角色',
         path: '/character',
       },
       {
         key: 'ico',
-        icon: IconHexagonPlus,
+        icon: TbHexagonPlus,
         label: 'ICO',
         path: '/ico',
       },
       {
         key: 'ranking',
-        icon: IconChartBar,
+        icon: TbChartBar,
         label: '排行榜',
         path: '/ranking',
       },
       {
         key: 'lastTemple',
-        icon: IconLibraryPhoto,
+        icon: TbLibraryPhoto,
         label: '最新圣殿',
         path: '/lastTemple',
       },
@@ -68,7 +68,7 @@ function MainMenu() {
     Account: [
       {
         key: 'myTinygrail',
-        icon: IconCards,
+        icon: TbCards,
         label: '我的小圣杯',
         path: '/myTinygrail',
       },

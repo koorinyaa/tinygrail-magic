@@ -1,14 +1,14 @@
 import { createAppStore } from '@/stores';
 import { restorePage } from '@/utils/initializers';
 import { Listbox, ListboxItem } from '@heroui/react';
-import { IconLink } from '@tabler/icons-react';
+import { TbLink } from 'react-icons/tb';
 
 function SecondaryMenu() {
   const { hideApp } = createAppStore();
   const menuItems = [
     {
       key: 'fuyuake',
-      icon: IconLink,
+      icon: TbLink,
       label: 'fuyuake',
       onPressEnd: () => {
         window.open('https://fuyuake.top');
@@ -16,7 +16,7 @@ function SecondaryMenu() {
     },
     {
       key: 'bangumi',
-      icon: IconLink,
+      icon: TbLink,
       label: '返回bangumi',
       onPressEnd: () => {
         restorePage();

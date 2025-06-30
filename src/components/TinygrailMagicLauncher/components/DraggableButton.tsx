@@ -34,7 +34,7 @@ function DraggableButton({
   }, [isDragging]);
 
   const style = {
-    bottom: `${-position.y}px`,
+    top: `${position.y}px`,
     transform: transform ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
   };
 

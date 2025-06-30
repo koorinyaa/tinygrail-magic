@@ -4,6 +4,7 @@ import { createAppStore } from '@/stores';
 import { initializePage, isTinygrailMagicHash } from '@/utils/initializers';
 import { HeroUIProvider } from '@heroui/react';
 import { useEffect } from 'react';
+import { HashRouter } from 'react-router-dom';
 
 export default function App() {
   const { isAppVisible, showApp } = createAppStore();
@@ -18,14 +19,8 @@ export default function App() {
   }, []);
 
   return (
-    <>
-      {isAppVisible ? (
-        <HeroUIProvider>
-          <Router />
-        </HeroUIProvider>
-      ) : (
-        <TinygrailMagicLauncher />
-      )}
-    </>
+    <HashRouter>
+      <HeroUIProvider>{isAppVisible ? <Router /> : <TinygrailMagicLauncher />}</HeroUIProvider>
+    </HashRouter>
   );
 }

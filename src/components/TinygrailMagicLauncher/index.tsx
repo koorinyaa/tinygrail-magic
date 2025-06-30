@@ -14,8 +14,8 @@ import { useEffect, useRef, useState } from 'react';
 import DraggableButton from './components/DraggableButton';
 
 // 按钮位置边界常量
-const MIN_Y_OFFSET = 100; // 距离顶部的最小距离
-const MAX_Y_OFFSET = 64; // 距离底部的最小距离
+const MIN_Y_OFFSET = 64; // 距离顶部的最小距离
+const MAX_Y_OFFSET = 100; // 距离底部的最小距离
 
 function TinygrailMagicLauncher() {
   const { showApp } = createAppStore();
@@ -43,21 +43,22 @@ function TinygrailMagicLauncher() {
       // 设置上下边界
       const windowHeight = window.innerHeight;
       const windowWidth = window.innerWidth;
-      const minY = -windowHeight + MIN_Y_OFFSET; // 顶部边界
-      const maxY = -MAX_Y_OFFSET; // 底部边界
+      const minY = MIN_Y_OFFSET; // 顶部边界
+      const maxY = windowHeight - MAX_Y_OFFSET; // 底部边界
 
       // 从store中获取保存的位置
-      const { yPercent, isOnLeft: storedIsOnLeft } = buttonPosition;
+      const { yPosition, isOnLeft } = buttonPosition;
 
-      // 将百分比转换为像素位置
-      const yPixel = (yPercent * windowHeight) / 100;
       // 应用上下边界限制
-      const limitedY = Math.max(minY, Math.min(maxY, yPixel));
+      const limitedY = Math.max(minY, Math.min(maxY, yPosition ?? 360));
+      if (limitedY !== yPosition) {
+        setButtonPosition({ yPosition: limitedY, isOnLeft });
+      }
 
       // 根据isOnLeft决定x坐标
-      const xPos = storedIsOnLeft ? 0 : windowWidth;
+      const xPos = isOnLeft ? 0 : windowWidth;
       setPosition({ x: xPos, y: limitedY });
-      setIsOnLeft(storedIsOnLeft);
+      setIsOnLeft(isOnLeft);
     } catch (e) {
       console.error('解析按钮位置失败', e);
     }
@@ -73,7 +74,7 @@ function TinygrailMagicLauncher() {
       const windowHeight = window.innerHeight;
 
       // 检查当前位置是否超出边界
-      if (-position.y > windowHeight - MIN_Y_OFFSET) {
+      if (position.y < MIN_Y_OFFSET || position.y > windowHeight - MAX_Y_OFFSET) {
         updatePosition();
       }
     };
@@ -99,8 +100,8 @@ function TinygrailMagicLauncher() {
     // 限制上下边界
     const windowHeight = window.innerHeight;
     const windowWidth = window.innerWidth;
-    const minY = -windowHeight + MIN_Y_OFFSET; // 顶部边界
-    const maxY = -MAX_Y_OFFSET; // 底部边界
+    const minY = MIN_Y_OFFSET; // 顶部边界
+    const maxY = windowHeight - MAX_Y_OFFSET; // 底部边界
 
     newY = Math.max(minY, Math.min(maxY, newY));
 
@@ -114,11 +115,8 @@ function TinygrailMagicLauncher() {
     // 设置新位置
     setPosition({ x: newX, y: newY });
 
-    // 计算y位置为百分比
-    const yPercent = (newY / windowHeight) * 100;
-
-    // 保存位置到store
-    setButtonPosition({ yPercent, isOnLeft: shouldStickToLeft });
+    // 保存位置到store，直接使用像素值
+    setButtonPosition({ yPosition: newY, isOnLeft: shouldStickToLeft });
   };
 
   /**

@@ -9,11 +9,10 @@
 
   font-family:
     'PingFang SC', 'HarmonyOS_Regular', 'Helvetica Neue', 'Microsoft YaHei', Helvetica, Arial,
-    'Hiragino Sans GB', 'Heiti SC', 'WenQuanYi Micro Hei', sans-serif !important;
+    'Hiragino Sans GB', 'Heiti SC', 'WenQuanYi Micro Hei', sans-serif;
 
   * {
     scrollbar-width: thin;
-    scrollbar-color: var(--border) transparent;
   }
 
   /* Webkit滚动条样式 */
@@ -24,10 +23,5 @@
 
   ::-webkit-scrollbar-track {
     background-color: transparent;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background-color: var(--border);
-    border-radius: var(--radius-md);
   }
 }

@@ -1,7 +1,6 @@
 import App from '@/App';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { HashRouter } from 'react-router-dom';
 import './index.css';
 import cssText from './index.css?inline';
 
@@ -52,9 +51,7 @@ const initShadowDOMApp = (): void => {
   // 挂载App
   ReactDOM.createRoot(mountPoint).render(
     <React.StrictMode>
-      <HashRouter>
-        <App />
-      </HashRouter>
+      <App />
     </React.StrictMode>,
   );
 };

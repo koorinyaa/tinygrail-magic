@@ -5,7 +5,7 @@ import { LauncherStore } from './types';
 
 // 默认按钮位置
 const DEFAULT_BUTTON_POSITION = {
-  yPercent: -30, // 默认在垂直中上位置
+  yPosition: 360, // 默认像素位置
   isOnLeft: false, // 默认靠右
 };
 
