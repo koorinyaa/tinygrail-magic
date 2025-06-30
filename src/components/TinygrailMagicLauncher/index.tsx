@@ -1,5 +1,5 @@
 import { TINYGRAIL_ICON_BASE64 } from '@/constants';
-import { createAppStore, createLauncherStore } from '@/stores';
+import { createLauncherStore } from '@/stores';
 import { initializePage } from '@/utils/initializers';
 import {
   DndContext,
@@ -18,7 +18,6 @@ const MIN_Y_OFFSET = 64; // 距离顶部的最小距离
 const MAX_Y_OFFSET = 100; // 距离底部的最小距离
 
 function TinygrailMagicLauncher() {
-  const { showApp } = createAppStore();
   const { buttonPosition, setButtonPosition } = createLauncherStore();
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isOnLeft, setIsOnLeft] = useState(false);
@@ -125,7 +124,6 @@ function TinygrailMagicLauncher() {
   const handleButtonClick = () => {
     console.info('Initializing tinygrail-magic...');
     initializePage();
-    showApp();
   };
 
   return (

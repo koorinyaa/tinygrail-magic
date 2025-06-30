@@ -1,16 +1,14 @@
-import { createAppStore } from '@/stores';
-import { restorePage } from '@/utils/initializers';
+import { goBackToBangumi } from '@/utils/initializers';
 import { Listbox, ListboxItem } from '@heroui/react';
 import { TbLink } from 'react-icons/tb';
 
 function SecondaryMenu() {
-  const { hideApp } = createAppStore();
   const menuItems = [
     {
       key: 'fuyuake',
       icon: TbLink,
       label: 'fuyuake',
-      onPressEnd: () => {
+      onPress: () => {
         window.open('https://fuyuake.top');
       },
     },
@@ -18,9 +16,8 @@ function SecondaryMenu() {
       key: 'bangumi',
       icon: TbLink,
       label: '返回bangumi',
-      onPressEnd: () => {
-        restorePage();
-        hideApp();
+      onPress: () => {
+        goBackToBangumi();
       },
     },
   ];
@@ -31,7 +28,7 @@ function SecondaryMenu() {
         {menuItems.map((item) => (
           <ListboxItem
             key={item.key}
-            onPressEnd={item.onPressEnd}
+            onPress={item.onPress}
             startContent={<item.icon className="size-5" />}
           >
             {item.label}

@@ -2,14 +2,22 @@
 @import 'tw-animate-css';
 @config "../tailwind.config.js";
 
-#tinygrailMagicRoot {
+.tinygrailMagic {
   @import 'tailwindcss/preflight.css' layer(base);
   @import 'tailwindcss/theme.css' layer(theme);
   @import 'tailwindcss/utilities.css' layer(utilities);
 
   font-family:
     'PingFang SC', 'HarmonyOS_Regular', 'Helvetica Neue', 'Microsoft YaHei', Helvetica, Arial,
-    'Hiragino Sans GB', 'Heiti SC', 'WenQuanYi Micro Hei', sans-serif;
+    'Hiragino Sans GB', 'Heiti SC', 'WenQuanYi Micro Hei', sans-serif !important;
+  background-color: #f3f4f6;
+  box-sizing: border-box;
+  border: 0 solid;
+  margin: 0;
+  padding: 0;
+  width: auto !important;
+  min-width: auto !important;
+  max-width: none !important;
 
   * {
     scrollbar-width: thin;

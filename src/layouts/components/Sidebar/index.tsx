@@ -1,4 +1,4 @@
-import { createAppStore, createLayoutStore } from '@/stores';
+import { createLayoutStore } from '@/stores';
 import { Button, Modal, ModalContent } from '@heroui/react';
 import { configResponsive, useResponsive } from 'ahooks';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -21,7 +21,6 @@ const Sidebar = () => {
   // 侧边栏状态
   const { sidebar, setSidebarOpen } = createLayoutStore();
   const { isOpen } = sidebar;
-  const { appRoot } = createAppStore();
 
   useEffect(() => {
     setSidebarOpen(isLargeScreen);
@@ -59,12 +58,6 @@ const Sidebar = () => {
         isOpen={isOpen && !isLargeScreen}
         size="5xl"
         onOpenChange={setSidebarOpen}
-        portalContainer={appRoot}
-        closeButton={
-          <Button isIconOnly variant="light" size="sm" onPressEnd={() => setSidebarOpen(false)}>
-            <TbX className="size-4" />
-          </Button>
-        }
         motionProps={{
           variants: {
             enter: {

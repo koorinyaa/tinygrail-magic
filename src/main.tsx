@@ -1,59 +1,31 @@
-import App from '@/App';
+import TinygrailMagicLauncher from '@/components/TinygrailMagicLauncher';
+import { initializePage, isNotInIframe, isTinygrailMagicHash } from '@/utils/initializers';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import cssText from './index.css?inline';
 
 /**
- * 挂载App
+ * 挂载小圣杯启动器
  */
-const initShadowDOMApp = (): void => {
-  let targetDocument: Document;
+const mountTinygrailMagicLauncher = () => {
+  const rootElement = document.createElement('div');
+  rootElement.className = 'tinygrailMagic';
+  document.body.appendChild(rootElement);
 
-  try {
-    // 尝试获取顶层窗口
-    const topWindow = window.top;
-    if (topWindow) {
-      targetDocument = topWindow.document;
-    } else {
-      return;
-    }
-  } catch (e) {
-    console.warn('无法访问顶层窗口');
-    return;
-  }
-
-  // 检查是否已经存在容器
-  const existingContainer = targetDocument.getElementById('tinygrailMagicContainer');
-  if (existingContainer) {
-    console.warn('已存在tinygrailMagic容器，跳过初始化');
-    return;
-  }
-
-  // 创建一个与body同级的容器
-  const container = targetDocument.createElement('div');
-  container.id = 'tinygrailMagicContainer';
-  targetDocument.documentElement.appendChild(container);
-
-  // 创建shadowDOM
-  const shadowRoot = container.attachShadow({ mode: 'open' });
-
-  // 动态创建样式表
-  const styleElement = targetDocument.createElement('style');
-  styleElement.textContent = cssText;
-  shadowRoot.appendChild(styleElement);
-
-  // 在shadowDOM中创建挂载点
-  const mountPoint = targetDocument.createElement('div');
-  mountPoint.id = 'tinygrailMagicRoot';
-  shadowRoot.appendChild(mountPoint);
-
-  // 挂载App
-  ReactDOM.createRoot(mountPoint).render(
+  ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
-      <App />
+      <TinygrailMagicLauncher />
     </React.StrictMode>,
   );
 };
 
-initShadowDOMApp();
+// 如果当前页面不在iframe中，则挂载小圣杯启动器
+if (isNotInIframe()) {
+  mountTinygrailMagicLauncher();
+}
+
+// 如果当前页面hash值为tinygrailMagic，则直接初始化页面
+if (isTinygrailMagicHash()) {
+  console.info('Initializing tinygrail-magic...');
+  initializePage();
+}

@@ -14,16 +14,6 @@ export const createStorageKey = (key: string, version?: string): string => {
 };
 
 /**
- * 原始Hash存储键名
+ * 原始url存储键名
  */
-export const ORIGINAL_HASH_STORAGE_KEY = createStorageKey('originalHash');
-
-/**
- * 原始页面标题存储键名
- */
-export const ORIGINAL_PAGE_TITLE_STORAGE_KEY = createStorageKey('originalPageTitle');
-
-/**
- * 原始viewport设置存储键名
- */
-export const ORIGINAL_VIEWPORT_STORAGE_KEY = createStorageKey('originalViewport');
+export const ORIGINAL_URL_STORAGE_KEY = createStorageKey('originalUrl');

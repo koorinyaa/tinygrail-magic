@@ -83,7 +83,7 @@ function MainMenu() {
             {items.map((item) => (
               <ListboxItem
                 key={item.key}
-                onPressEnd={() => {
+                onPress={() => {
                   navigate(item.path);
                   if (!isLargeScreen) {
                     closeSidebar();
