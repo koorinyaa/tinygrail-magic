@@ -24,7 +24,7 @@ function SecondaryMenu() {
 
   return (
     <div className="w-full py-2">
-      <Listbox aria-label="sidebar secondary menu" color="secondary" variant="light">
+      <Listbox aria-label="secondary menu" color="secondary" variant="light">
         {menuItems.map((item) => (
           <ListboxItem
             key={item.key}

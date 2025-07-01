@@ -3,13 +3,11 @@ import { cn } from '@/utils/helpers';
 import { Listbox, ListboxItem, ListboxSection } from '@heroui/react';
 import { configResponsive, useResponsive } from 'ahooks';
 import {
-  TbBusinessplan,
   TbCards,
   TbChartBar,
   TbFlame,
   TbFlare,
-  TbHexagonPlus,
-  TbLibraryPhoto,
+  TbGhost3
 } from 'react-icons/tb';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -17,7 +15,11 @@ configResponsive({
   lg: 1024,
 });
 
-function MainMenu() {
+interface MainMenuProps {
+  type: 'sidebar' | 'bottombar';
+}
+
+function MainMenu({ type = 'sidebar' }: MainMenuProps) {
   // 屏幕尺寸
   const responsive = useResponsive();
   const isLargeScreen = responsive['lg'];
@@ -31,7 +33,7 @@ function MainMenu() {
       {
         key: 'topWeek',
         icon: TbFlame,
-        label: '每周萌王',
+        label: '萌王',
         path: '/topWeek',
       },
       {
@@ -42,27 +44,15 @@ function MainMenu() {
       },
       {
         key: 'character',
-        icon: TbBusinessplan,
+        icon: TbGhost3,
         label: '角色',
         path: '/character',
-      },
-      {
-        key: 'ico',
-        icon: TbHexagonPlus,
-        label: 'ICO',
-        path: '/ico',
       },
       {
         key: 'ranking',
         icon: TbChartBar,
         label: '排行榜',
         path: '/ranking',
-      },
-      {
-        key: 'lastTemple',
-        icon: TbLibraryPhoto,
-        label: '最新圣殿',
-        path: '/lastTemple',
       },
     ],
     Account: [
@@ -77,32 +67,35 @@ function MainMenu() {
 
   return (
     <div className="w-full flex-1 py-2">
-      <Listbox aria-label="sidebar main menu" color="secondary" variant="light">
-        {Object.entries(menuItems).map(([sectionTitle, items]) => (
-          <ListboxSection title={sectionTitle} key={sectionTitle}>
-            {items.map((item) => (
-              <ListboxItem
-                key={item.key}
-                onPress={() => {
-                  navigate(item.path);
-                  if (!isLargeScreen) {
-                    closeSidebar();
-                  }
-                }}
-                startContent={<item.icon className="size-5 opacity-60" />}
-                classNames={{
-                  base: cn({
-                    'text-secondary bg-secondary/20': currentPath === item.path,
-                  }),
-                  title: 'font-medium',
-                }}
-                aria-selected={currentPath === item.path}
-              >
-                {item.label}
-              </ListboxItem>
-            ))}
-          </ListboxSection>
-        ))}
+      <Listbox aria-label="main menu" color="secondary" variant="light">
+        {Object.entries(menuItems).map(([sectionTitle, items]) => {
+          if (type === 'bottombar' && sectionTitle === 'Pages') return null;
+          return (
+            <ListboxSection title={sectionTitle} key={sectionTitle}>
+              {items.map((item) => (
+                <ListboxItem
+                  key={item.key}
+                  onPress={() => {
+                    navigate(item.path);
+                    if (!isLargeScreen) {
+                      closeSidebar();
+                    }
+                  }}
+                  startContent={<item.icon className="size-5 opacity-60" />}
+                  classNames={{
+                    base: cn({
+                      'text-secondary bg-secondary/20': currentPath === item.path,
+                    }),
+                    title: 'font-medium',
+                  }}
+                  aria-selected={currentPath === item.path}
+                >
+                  {item.label}
+                </ListboxItem>
+              ))}
+            </ListboxSection>
+          );
+        })}
       </Listbox>
     </div>
   );
